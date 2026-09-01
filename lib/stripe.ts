@@ -48,9 +48,10 @@ export async function createStripeCheckoutSession({
 
   const stripeInstance = getStripe();
 
-  // Resolve base URL: priority given to origin, then NEXT_PUBLIC_APP_URL, then localhost
+  // Resolve base URL: priority given to origin, then APP_URL, then NEXT_PUBLIC_APP_URL, then production domain
   const appUrl =
     originUrl ||
+    process.env.APP_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
     'https://every-posting.vercel.app';
 
@@ -60,14 +61,14 @@ export async function createStripeCheckoutSession({
 
   if (planType === 'pro') {
     priceId =
-      process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ||
       process.env.STRIPE_PRO_PRICE_ID ||
-      process.env.STRIPE_PRO_MONTHLY_PRICE_ID;
+      process.env.STRIPE_PRO_MONTHLY_PRICE_ID ||
+      process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID;
     mode = 'subscription';
   } else if (planType === 'lifetime') {
     priceId =
-      process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID ||
-      process.env.STRIPE_LIFETIME_PRICE_ID;
+      process.env.STRIPE_LIFETIME_PRICE_ID ||
+      process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID;
     mode = 'payment';
   } else {
     throw new Error(`Invalid plan type requested: ${planType}`);
@@ -75,7 +76,7 @@ export async function createStripeCheckoutSession({
 
   if (!priceId || priceId.includes('YOUR_') || priceId.includes('price_xxx')) {
     throw new Error(
-      `Stripe Price ID for plan "${planType}" is not configured. Please set NEXT_PUBLIC_STRIPE_PRO_PRICE_ID or NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID in Vercel Project Settings.`
+      `Stripe Price ID for plan "${planType}" is not configured. Please set STRIPE_PRO_PRICE_ID or STRIPE_LIFETIME_PRICE_ID in Vercel Project Settings.`
     );
   }
 
