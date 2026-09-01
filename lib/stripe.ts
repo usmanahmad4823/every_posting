@@ -19,8 +19,13 @@ export interface CreateCheckoutParams {
 export async function createStripeCheckoutSession({ planType, userEmail }: CreateCheckoutParams) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-  if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('mock') || process.env.STRIPE_SECRET_KEY.includes('xxxx')) {
-    // Return mock checkout URL for testing when Stripe keys are not set yet
+  if (
+    !process.env.STRIPE_SECRET_KEY ||
+    process.env.STRIPE_SECRET_KEY.includes('mock') ||
+    process.env.STRIPE_SECRET_KEY.includes('xxxx') ||
+    process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE')
+  ) {
+    // Demo Mode: Simulates successful checkout redirect to dashboard when real Stripe keys are not plugged
     return {
       url: `${appUrl}/dashboard?payment_success=true&plan=${planType}`,
     };
