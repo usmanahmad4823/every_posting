@@ -1,15 +1,22 @@
 import Stripe from 'stripe';
 
-// Ensure server-side initialization of Stripe SDK
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
+/**
+ * Get initialized Stripe instance dynamically.
+ * Uses a safe fallback key during Next.js static build module evaluation to prevent build errors.
+ */
+export function getStripe(): Stripe {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_for_build';
+  return new Stripe(stripeSecretKey, {
+    apiVersion: '2025-02-24.acacia' as any,
+    appInfo: {
+      name: 'EveryPosting SaaS',
+      version: '1.0.0',
+    },
+  });
+}
 
-export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-02-24.acacia' as any,
-  appInfo: {
-    name: 'EveryPosting SaaS',
-    version: '1.0.0',
-  },
-});
+// Export default stripe instance for legacy calls
+export const stripe = getStripe();
 
 export interface CreateCheckoutParams {
   planType: 'pro' | 'lifetime';
@@ -27,12 +34,19 @@ export async function createStripeCheckoutSession({
   userEmail,
   originUrl,
 }: CreateCheckoutParams) {
-  // Validate that STRIPE_SECRET_KEY is configured
-  if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('mock') || process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE')) {
+  // Validate that real STRIPE_SECRET_KEY is configured when user initiates checkout
+  if (
+    !process.env.STRIPE_SECRET_KEY ||
+    process.env.STRIPE_SECRET_KEY.includes('mock') ||
+    process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE') ||
+    process.env.STRIPE_SECRET_KEY.includes('placeholder')
+  ) {
     throw new Error(
-      'STRIPE_SECRET_KEY is not configured or contains placeholders. Please add your test key (sk_test_...) to process.env.'
+      'STRIPE_SECRET_KEY is not configured or contains placeholders in environment variables. Please add your Stripe Test Secret Key (sk_test_...) in Vercel Project Settings.'
     );
   }
+
+  const stripeInstance = getStripe();
 
   // Resolve base URL: priority given to origin, then NEXT_PUBLIC_APP_URL, then localhost
   const appUrl =
@@ -61,12 +75,12 @@ export async function createStripeCheckoutSession({
 
   if (!priceId || priceId.includes('YOUR_') || priceId.includes('price_xxx')) {
     throw new Error(
-      `Stripe Price ID for plan "${planType}" is not configured. Please set the environment variable in Vercel or .env.local.`
+      `Stripe Price ID for plan "${planType}" is not configured. Please set NEXT_PUBLIC_STRIPE_PRO_PRICE_ID or NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID in Vercel Project Settings.`
     );
   }
 
   // Create real Stripe Checkout Session
-  const session = await stripe.checkout.sessions.create({
+  const session = await stripeInstance.checkout.sessions.create({
     payment_method_types: ['card'],
     mode,
     customer_email: userEmail || undefined,
