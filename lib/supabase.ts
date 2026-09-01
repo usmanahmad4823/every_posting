@@ -2,7 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import { GenerationResult, NicheType, OutputFormat, UserProfile, FeedbackData } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://demo-everyposting.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'demo-anon-key';
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  'demo-anon-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

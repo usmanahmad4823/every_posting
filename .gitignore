@@ -88,3 +88,5 @@ Desktop.ini
 tmp/
 temp/
 scratch/
+
+/lib/generated/prisma
