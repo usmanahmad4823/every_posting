@@ -14,10 +14,12 @@ export interface CreateCheckoutParams {
   planType: 'pro' | 'lifetime';
   userId?: string;
   userEmail?: string;
+  originUrl?: string;
 }
 
-export async function createStripeCheckoutSession({ planType, userEmail }: CreateCheckoutParams) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+export async function createStripeCheckoutSession({ planType, userEmail, originUrl }: CreateCheckoutParams) {
+  // Dynamically resolve URL: uses request origin if provided, otherwise env var or localhost fallback
+  const appUrl = originUrl || process.env.NEXT_PUBLIC_APP_URL || 'https://every-posting.vercel.app';
 
   if (
     !process.env.STRIPE_SECRET_KEY ||
@@ -25,7 +27,7 @@ export async function createStripeCheckoutSession({ planType, userEmail }: Creat
     process.env.STRIPE_SECRET_KEY.includes('xxxx') ||
     process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE')
   ) {
-    // Demo Mode: Simulates successful checkout redirect to dashboard when real Stripe keys are not plugged
+    // Demo Mode: Simulates successful checkout redirect to dashboard on current domain when Stripe keys are not plugged
     return {
       url: `${appUrl}/dashboard?payment_success=true&plan=${planType}`,
     };
@@ -33,8 +35,8 @@ export async function createStripeCheckoutSession({ planType, userEmail }: Creat
 
   const isLifetime = planType === 'lifetime';
   const priceId = isLifetime
-    ? process.env.STRIPE_LIFETIME_PRICE_ID
-    : process.env.STRIPE_PRO_MONTHLY_PRICE_ID;
+    ? process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID || process.env.STRIPE_LIFETIME_PRICE_ID
+    : process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || process.env.STRIPE_PRO_MONTHLY_PRICE_ID;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],

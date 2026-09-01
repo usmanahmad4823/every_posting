@@ -14,10 +14,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Valid plan type (pro or lifetime) is required.' }, { status: 400 });
     }
 
+    // Extract dynamic request origin (e.g. https://everyposting.vercel.app or https://your-custom-domain.com)
+    const originUrl = req.headers.get('origin') || req.headers.get('referer')?.replace(/\/$/, '') || undefined;
+
     const session = await createStripeCheckoutSession({
       planType,
       userEmail,
       userId,
+      originUrl,
     });
 
     return NextResponse.json({ url: session.url });
