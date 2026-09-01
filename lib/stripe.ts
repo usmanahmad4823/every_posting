@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
+// Ensure server-side initialization of Stripe SDK
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
 
 export const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-02-24.acacia' as any,
@@ -17,43 +18,75 @@ export interface CreateCheckoutParams {
   originUrl?: string;
 }
 
-export async function createStripeCheckoutSession({ planType, userEmail, originUrl }: CreateCheckoutParams) {
-  // Dynamically resolve URL: uses request origin if provided, otherwise env var or localhost fallback
-  const appUrl = originUrl || process.env.NEXT_PUBLIC_APP_URL || 'https://every-posting.vercel.app';
-
-  if (
-    !process.env.STRIPE_SECRET_KEY ||
-    process.env.STRIPE_SECRET_KEY.includes('mock') ||
-    process.env.STRIPE_SECRET_KEY.includes('xxxx') ||
-    process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE')
-  ) {
-    // Demo Mode: Simulates successful checkout redirect to dashboard on current domain when Stripe keys are not plugged
-    return {
-      url: `${appUrl}/dashboard?payment_success=true&plan=${planType}`,
-    };
+/**
+ * Server-side creation of a real Stripe Hosted Checkout Session
+ */
+export async function createStripeCheckoutSession({
+  planType,
+  userId,
+  userEmail,
+  originUrl,
+}: CreateCheckoutParams) {
+  // Validate that STRIPE_SECRET_KEY is configured
+  if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('mock') || process.env.STRIPE_SECRET_KEY.includes('YOUR_STRIPE')) {
+    throw new Error(
+      'STRIPE_SECRET_KEY is not configured or contains placeholders. Please add your test key (sk_test_...) to process.env.'
+    );
   }
 
-  const isLifetime = planType === 'lifetime';
-  const priceId = isLifetime
-    ? process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID || process.env.STRIPE_LIFETIME_PRICE_ID
-    : process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || process.env.STRIPE_PRO_MONTHLY_PRICE_ID;
+  // Resolve base URL: priority given to origin, then NEXT_PUBLIC_APP_URL, then localhost
+  const appUrl =
+    originUrl ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    'https://every-posting.vercel.app';
 
+  // Secure server-side Price ID Mapping (prevents client-side price manipulation)
+  let priceId: string | undefined;
+  let mode: 'subscription' | 'payment';
+
+  if (planType === 'pro') {
+    priceId =
+      process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ||
+      process.env.STRIPE_PRO_PRICE_ID ||
+      process.env.STRIPE_PRO_MONTHLY_PRICE_ID;
+    mode = 'subscription';
+  } else if (planType === 'lifetime') {
+    priceId =
+      process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID ||
+      process.env.STRIPE_LIFETIME_PRICE_ID;
+    mode = 'payment';
+  } else {
+    throw new Error(`Invalid plan type requested: ${planType}`);
+  }
+
+  if (!priceId || priceId.includes('YOUR_') || priceId.includes('price_xxx')) {
+    throw new Error(
+      `Stripe Price ID for plan "${planType}" is not configured. Please set the environment variable in Vercel or .env.local.`
+    );
+  }
+
+  // Create real Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    mode: isLifetime ? 'payment' : 'subscription',
-    customer_email: userEmail || 'creator@everyposting.com',
+    mode,
+    customer_email: userEmail || undefined,
     line_items: [
       {
         price: priceId,
         quantity: 1,
       },
     ],
-    success_url: `${appUrl}/dashboard?payment_success=true&plan=${planType}`,
+    success_url: `${appUrl}/dashboard?payment_success=true&plan=${planType}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${appUrl}/pricing?canceled=true`,
     metadata: {
+      userId: userId || '',
       planType,
     },
   });
+
+  if (!session.url) {
+    throw new Error('Failed to obtain checkout URL from Stripe session.');
+  }
 
   return { url: session.url };
 }

@@ -3,26 +3,34 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Check, Zap, Flame, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Check, Zap, Flame, ShieldCheck, AlertCircle } from 'lucide-react';
 
 export default function PricingPage() {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleCheckout = async (planType: 'pro' | 'lifetime') => {
     setLoadingPlan(planType);
+    setErrorMsg(null);
+
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planType }),
       });
+
       const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'Failed to initialize Stripe Checkout Session');
       }
-    } catch (e) {
-      window.location.href = `/dashboard?plan=${planType}`;
-    } finally {
+
+      // Redirect directly to Stripe Hosted Checkout Page (checkout.stripe.com)
+      window.location.href = data.url;
+    } catch (e: any) {
+      console.error('[Pricing Checkout Error]:', e);
+      setErrorMsg(e.message || 'Unable to connect to Stripe Checkout. Please check your configuration.');
       setLoadingPlan(null);
     }
   };
@@ -42,6 +50,13 @@ export default function PricingPage() {
             Turn every single audio recording or video script into 7 days of ready-to-post social media content.
           </p>
         </div>
+
+        {errorMsg && (
+          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-3 font-medium shadow-sm">
+            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-20">
@@ -128,7 +143,10 @@ export default function PricingPage() {
                 className="w-full bg-white text-[#FF529A] hover:bg-slate-50 py-3.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all"
               >
                 {loadingPlan === 'pro' ? (
-                  <span>Redirecting...</span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-[#FF529A] border-t-transparent rounded-full animate-spin" />
+                    Connecting to Stripe...
+                  </span>
                 ) : (
                   <>
                     <Zap className="w-4 h-4 fill-[#FF529A]" />
@@ -185,7 +203,10 @@ export default function PricingPage() {
               className="w-full btn-aiigen-primary font-extrabold py-3.5 text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-pink-500/25"
             >
               {loadingPlan === 'lifetime' ? (
-                <span>Loading...</span>
+                <span className="flex items-center gap-2 text-white">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Connecting to Stripe...
+                </span>
               ) : (
                 <>
                   <ShieldCheck className="w-4 h-4 text-white" />

@@ -2,28 +2,35 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Zap, Flame, ShieldCheck } from 'lucide-react';
+import { Check, Sparkles, Zap, Flame, ShieldCheck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export function PricingSection() {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleCheckout = async (planType: 'pro' | 'lifetime') => {
     setLoadingPlan(planType);
+    setErrorMsg(null);
+
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planType }),
       });
+
       const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'Failed to initialize Stripe Checkout Session');
       }
-    } catch (e) {
-      console.error('Checkout error:', e);
-      window.location.href = `/dashboard?plan=${planType}`;
-    } finally {
+
+      // Redirect directly to Stripe Hosted Checkout Page (checkout.stripe.com)
+      window.location.href = data.url;
+    } catch (e: any) {
+      console.error('[Pricing Section Checkout Error]:', e);
+      setErrorMsg(e.message || 'Unable to connect to Stripe Checkout.');
       setLoadingPlan(null);
     }
   };
@@ -43,6 +50,13 @@ export function PricingSection() {
             Whether you want to try it out or secure lifetime access, we have a plan built for your production scale.
           </p>
         </div>
+
+        {errorMsg && (
+          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-3 font-medium shadow-sm">
+            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
@@ -226,7 +240,7 @@ export function PricingSection() {
                 </span>
               ) : (
                 <>
-                  <ShieldCheck className="w-4 h-4" />
+                  <ShieldCheck className="w-4 h-4 text-white" />
                   <span>Get Lifetime Deal ($199)</span>
                 </>
               )}

@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
@@ -10,4 +5,62 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String         @id @default(uuid())
+  email                     String         @unique
+  fullName                  String?        @map("full_name")
+  subscriptionTier          String         @default("free") @map("subscription_tier")
+  generationsUsedThisMonth  Int            @default(0) @map("generations_used_this_month")
+  monthlyGenerationLimit    Int            @default(10) @map("monthly_generation_limit")
+  hasSeenReviewPrompt       Boolean        @default(false) @map("has_seen_review_prompt")
+  stripeCustomerId          String?        @map("stripe_customer_id")
+  createdAt                 DateTime       @default(now()) @map("created_at")
+  subscriptions             Subscription[]
+  generations               Generation[]
+  feedbacks                 Feedback[]
+
+  @@map("users")
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  userId               String?  @map("user_id")
+  stripeSubscriptionId String   @unique @map("stripe_subscription_id")
+  stripeCustomerId     String?  @map("stripe_customer_id")
+  stripePriceId        String?  @map("stripe_price_id")
+  status               String   @default("active")
+  currentPeriodEnd     DateTime? @map("current_period_end")
+  createdAt            DateTime @default(now()) @map("created_at")
+  user                 User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Generation {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  niche            String
+  inputTranscript  String   @map("input_transcript")
+  selectedFormats  String[] @map("selected_formats")
+  outputs          Json
+  createdAt        DateTime @default(now()) @map("created_at")
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("generations")
+}
+
+model Feedback {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  generationId String?  @map("generation_id")
+  rating       Int
+  reviewText   String?  @map("review_text")
+  source       String   @default("micro_prompt")
+  createdAt    DateTime @default(now()) @map("created_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("feedback")
 }
