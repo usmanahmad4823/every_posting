@@ -15,8 +15,94 @@ let mockUserUsageCount = 3; // Start with 3/10 used for demo
 let mockFeedbackRecords: FeedbackData[] = [];
 let mockHasSeenReviewPrompt = false;
 
+// Check if real Supabase keys are configured
+export function isSupabaseConfigured(): boolean {
+  return (
+    !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-project-ref') &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting') &&
+    !!supabaseAnonKey &&
+    !supabaseAnonKey.includes('demo-anon-key')
+  );
+}
+
+// REAL SUPABASE SIGN UP FUNCTION
+export async function signUpUser(fullName: string, email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    // Demo Mode Fallback
+    localStorage.setItem('everyposting_user', JSON.stringify({ fullName, email, loggedIn: true, tier: 'free' }));
+    return { success: true, user: { email, fullName } };
+  }
+
+  try {
+    // 1. Create Auth User in Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName },
+      },
+    });
+
+    if (authError) return { success: false, error: authError.message };
+
+    const userId = authData.user?.id;
+
+    if (userId) {
+      // 2. Save User Record in Supabase `users` Table
+      const { error: dbError } = await supabase.from('users').upsert({
+        id: userId,
+        email,
+        full_name: fullName,
+        subscription_tier: 'free',
+        generations_used_this_month: 0,
+        monthly_generation_limit: 10,
+        has_seen_review_prompt: false,
+      });
+
+      if (dbError) console.warn('Supabase users table insert warning:', dbError);
+    }
+
+    localStorage.setItem('everyposting_user', JSON.stringify({ id: userId, fullName, email, loggedIn: true, tier: 'free' }));
+    return { success: true, user: authData.user };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Failed to sign up in Supabase' };
+  }
+}
+
+// REAL SUPABASE SIGN IN FUNCTION
+export async function signInUser(email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    // Demo Mode Fallback
+    localStorage.setItem('everyposting_user', JSON.stringify({ email, loggedIn: true, tier: 'free' }));
+    return { success: true, user: { email } };
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { success: false, error: error.message };
+
+    localStorage.setItem('everyposting_user', JSON.stringify({ id: data.user.id, email: data.user.email, loggedIn: true }));
+    return { success: true, user: data.user };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Failed to sign in' };
+  }
+}
+
+// REAL SUPABASE SIGN OUT
+export async function signOutUser(): Promise<void> {
+  localStorage.removeItem('everyposting_user');
+  if (isSupabaseConfigured()) {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn('Supabase signout warning:', e);
+    }
+  }
+}
+
 export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfile> {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (!isSupabaseConfigured()) {
     return {
       id: userId,
       email: 'creator@everyposting.com',
@@ -29,21 +115,24 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
   }
 
   try {
+    const { data: sessionUser } = await supabase.auth.getUser();
+    const currentId = sessionUser.user?.id || userId;
+
     const { data, error } = await supabase
       .from('users')
       .select('*')
-      .eq('id', userId)
+      .eq('id', currentId)
       .single();
 
     if (error || !data) {
       return {
-        id: userId,
-        email: 'creator@everyposting.com',
-        fullName: 'Alex River',
+        id: currentId,
+        email: sessionUser.user?.email || 'creator@everyposting.com',
+        fullName: sessionUser.user?.user_metadata?.full_name || 'Alex River',
         subscriptionTier: 'free',
-        generationsUsedThisMonth: mockUserUsageCount,
+        generationsUsedThisMonth: 0,
         monthlyGenerationLimit: 10,
-        hasSeenReviewPrompt: mockHasSeenReviewPrompt,
+        hasSeenReviewPrompt: false,
       };
     }
 
@@ -101,17 +190,20 @@ export async function saveGenerationRecord(
   mockUserUsageCount += 1;
   mockGenerationHistory.unshift(newRecord);
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (isSupabaseConfigured()) {
     try {
+      const { data: sessionUser } = await supabase.auth.getUser();
+      const currentId = sessionUser.user?.id || userId;
+
       await supabase.from('generations').insert({
-        user_id: userId,
+        user_id: currentId,
         niche,
         input_transcript: transcript,
         selected_formats: selectedFormats,
         outputs,
       });
 
-      await supabase.rpc('increment_user_generations', { user_id_input: userId });
+      await supabase.rpc('increment_user_generations', { user_id_input: currentId });
     } catch (e) {
       console.warn('Supabase DB save warning (using in-memory fallback):', e);
     }
@@ -121,14 +213,18 @@ export async function saveGenerationRecord(
 }
 
 export async function getGenerationHistory(_userId = 'demo-user-1'): Promise<GenerationResult[]> {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (!isSupabaseConfigured()) {
     return mockGenerationHistory;
   }
 
   try {
+    const { data: sessionUser } = await supabase.auth.getUser();
+    const currentId = sessionUser.user?.id || _userId;
+
     const { data, error } = await supabase
       .from('generations')
       .select('*')
+      .eq('user_id', currentId)
       .order('created_at', { ascending: false });
 
     if (error || !data) return mockGenerationHistory;
@@ -147,9 +243,12 @@ export async function getGenerationHistory(_userId = 'demo-user-1'): Promise<Gen
 
 export async function clearGenerationHistory(_userId = 'demo-user-1'): Promise<void> {
   mockGenerationHistory = [];
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (isSupabaseConfigured()) {
     try {
-      await supabase.from('generations').delete().eq('user_id', _userId);
+      const { data: sessionUser } = await supabase.auth.getUser();
+      const currentId = sessionUser.user?.id || _userId;
+
+      await supabase.from('generations').delete().eq('user_id', currentId);
     } catch (e) {
       console.warn('Failed to delete Supabase generations:', e);
     }
@@ -159,10 +258,13 @@ export async function clearGenerationHistory(_userId = 'demo-user-1'): Promise<v
 export async function saveFeedbackRecord(feedback: FeedbackData): Promise<boolean> {
   mockFeedbackRecords.push(feedback);
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (isSupabaseConfigured()) {
     try {
+      const { data: sessionUser } = await supabase.auth.getUser();
+      const currentId = sessionUser.user?.id || feedback.userId || 'demo-user-1';
+
       const { error } = await supabase.from('feedback').insert({
-        user_id: feedback.userId || 'demo-user-1',
+        user_id: currentId,
         generation_id: feedback.generationId || null,
         rating: feedback.rating,
         review_text: feedback.reviewText || null,
@@ -180,9 +282,12 @@ export async function saveFeedbackRecord(feedback: FeedbackData): Promise<boolea
 
 export async function markUserSeenReviewPrompt(userId = 'demo-user-1'): Promise<void> {
   mockHasSeenReviewPrompt = true;
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-supabase')) {
+  if (isSupabaseConfigured()) {
     try {
-      await supabase.from('users').update({ has_seen_review_prompt: true }).eq('id', userId);
+      const { data: sessionUser } = await supabase.auth.getUser();
+      const currentId = sessionUser.user?.id || userId;
+
+      await supabase.from('users').update({ has_seen_review_prompt: true }).eq('id', currentId);
     } catch (e) {
       console.warn('Supabase user review prompt flag warning:', e);
     }

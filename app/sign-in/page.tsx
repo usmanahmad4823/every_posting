@@ -2,23 +2,30 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, ArrowRight, User } from 'lucide-react';
+import { Sparkles, ArrowRight, User, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { signInUser } from '@/lib/supabase';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg(null);
 
-    setTimeout(() => {
-      localStorage.setItem('everyposting_user', JSON.stringify({ email, loggedIn: true }));
+    const res = await signInUser(email, password);
+
+    if (res.success) {
       router.push('/dashboard');
-    }, 600);
+    } else {
+      setErrorMsg(res.error || 'Failed to sign in. Please check your credentials.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +46,13 @@ export default function SignInPage() {
         </div>
 
         <div className="aiigen-card p-6 sm:p-8 bg-white border border-[#E4E4E7] shadow-xl">
+          {errorMsg && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSignIn} className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-[#71717A] mb-1.5">

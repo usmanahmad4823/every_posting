@@ -2,24 +2,31 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { signUpUser } from '@/lib/supabase';
 
 export default function SignUpPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg(null);
 
-    setTimeout(() => {
-      localStorage.setItem('everyposting_user', JSON.stringify({ fullName, email, loggedIn: true }));
+    const res = await signUpUser(fullName, email, password);
+
+    if (res.success) {
       router.push('/dashboard');
-    }, 600);
+    } else {
+      setErrorMsg(res.error || 'Failed to create account in Supabase.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,6 +47,13 @@ export default function SignUpPage() {
         </div>
 
         <div className="aiigen-card p-6 sm:p-8 bg-white border border-[#E4E4E7] shadow-xl">
+          {errorMsg && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-[#71717A] mb-1.5">
@@ -89,7 +103,7 @@ export default function SignUpPage() {
               className="w-full btn-aiigen-primary font-extrabold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25 mt-2"
             >
               {loading ? (
-                <span>Creating Account...</span>
+                <span>Creating Account & Saving in Supabase...</span>
               ) : (
                 <>
                   <span>Create Account</span>
