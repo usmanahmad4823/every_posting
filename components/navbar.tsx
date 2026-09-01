@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, LogOut, Settings, CreditCard, ChevronDown } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSparkleBurst } from '@/components/ui/sparkle-burst';
+import { useRouter } from 'next/navigation';
+import { signOutUser } from '@/lib/supabase';
 
 const NAV_LINKS = [
   { href: '#features', label: 'Niches' },
@@ -19,6 +21,12 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeHover, setActiveHover] = useState<string | null>(null);
 
+  // User Auth & Subscription State
+  const [user, setUser] = useState<{ fullName?: string; email?: string; loggedIn?: boolean; tier?: string } | null>(null);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
   const { triggerBurst, SparkleContainer } = useSparkleBurst();
 
   useEffect(() => {
@@ -28,6 +36,56 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Check auth state from localStorage / session
+  useEffect(() => {
+    function checkUser() {
+      const stored = localStorage.getItem('everyposting_user');
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    }
+
+    checkUser();
+    window.addEventListener('storage', checkUser);
+    return () => window.removeEventListener('storage', checkUser);
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOutUser();
+    setUser(null);
+    setProfileDropdownOpen(false);
+    router.push('/sign-in');
+  };
+
+  const getInitials = (name?: string, email?: string) => {
+    if (name && name.trim()) {
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (email) return email.slice(0, 2).toUpperCase();
+    return 'CU';
+  };
+
+  const userTier = user?.tier || 'free';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 pointer-events-none">
@@ -90,7 +148,7 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Section: Live AI Engine Indicator & CTAs */}
+          {/* Right Section: Live AI Engine Indicator, User Profile Dropdown & Studio App CTA */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Live AI Status Pill */}
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700">
@@ -98,15 +156,101 @@ export function Navbar() {
               <span>Claude 3.5 Active</span>
             </div>
 
-            <Link
-              href="/sign-in"
-              className="text-xs font-semibold text-[#52525B] hover:text-[#FF529A] px-3 py-2 transition-colors hidden sm:flex items-center gap-1.5"
-            >
-              <User className="w-3.5 h-3.5 text-[#FF529A]" />
-              <span>Sign In</span>
-            </Link>
+            {/* DYNAMIC AUTH NAVBAR STATE */}
+            {user?.loggedIn ? (
+              /* User Authenticated Profile Pill & Dropdown Menu */
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center gap-2 p-1.5 pr-2.5 rounded-full bg-white hover:bg-pink-50 border border-[#FFC2DA] shadow-sm transition-all group"
+                >
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#FF529A] to-purple-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs">
+                    {getInitials(user.fullName, user.email)}
+                  </div>
+                  <span className="text-xs font-bold text-[#0A0A0C] hidden sm:block">
+                    {user.fullName ? user.fullName.split(' ')[0] : 'Creator'}
+                  </span>
 
-            {/* Sparkle Burst Primary Button */}
+                  {/* Active Subscription Badge Pill */}
+                  <span
+                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 ${
+                      userTier === 'pro'
+                        ? 'bg-[#FF529A] text-white'
+                        : userTier === 'lifetime'
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-slate-100 text-[#52525B]'
+                    }`}
+                  >
+                    {userTier === 'pro' && '⚡ PRO'}
+                    {userTier === 'lifetime' && '👑 LIFETIME'}
+                    {userTier === 'free' && 'FREE'}
+                  </span>
+
+                  <ChevronDown className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#FF529A] transition-transform duration-200" />
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                <AnimatePresence>
+                  {profileDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-[#FFC2DA] shadow-2xl p-2 z-50 pointer-events-auto"
+                    >
+                      <div className="px-3 py-2 border-b border-[#E4E4E7] mb-1">
+                        <p className="text-xs font-bold text-[#0A0A0C] truncate">
+                          {user.fullName || 'Creator User'}
+                        </p>
+                        <p className="text-[11px] text-[#71717A] truncate font-medium">{user.email}</p>
+                        <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-50 text-[#FF529A] border border-pink-200 text-[10px] font-bold uppercase">
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>{userTier} package active</span>
+                        </div>
+                      </div>
+
+                      <Link
+                        href="/account"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
+                      >
+                        <Settings className="w-4 h-4 text-[#FF529A]" />
+                        <span>Account Settings</span>
+                      </Link>
+
+                      <Link
+                        href="/pricing"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
+                      >
+                        <CreditCard className="w-4 h-4 text-[#FF529A]" />
+                        <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
+                      </Link>
+
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-[#E4E4E7] pt-2"
+                      >
+                        <LogOut className="w-4 h-4 text-rose-600" />
+                        <span>Sign Out</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              /* User Unauthenticated: Show Sign In Button */
+              <Link
+                href="/sign-in"
+                className="text-xs font-semibold text-[#52525B] hover:text-[#FF529A] px-3 py-2 transition-colors hidden sm:flex items-center gap-1.5"
+              >
+                <User className="w-3.5 h-3.5 text-[#FF529A]" />
+                <span>Sign In</span>
+              </Link>
+            )}
+
+            {/* Studio App Sparkle CTA Button */}
             <div className="relative">
               <SparkleContainer />
               <Link
@@ -132,7 +276,7 @@ export function Navbar() {
         </motion.div>
       </div>
 
-      {/* Creative Mobile Glass Overlay Menu */}
+      {/* Mobile Glass Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -167,13 +311,33 @@ export function Navbar() {
               </nav>
 
               <div className="pt-3 border-t border-[#E4E4E7] flex flex-col gap-2">
-                <Link
-                  href="/sign-in"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="btn-aiigen-secondary py-3 text-center text-xs font-bold rounded-2xl border-[#FFC2DA]"
-                >
-                  Sign In
-                </Link>
+                {user?.loggedIn ? (
+                  <>
+                    <Link
+                      href="/account"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="btn-aiigen-secondary py-3 text-center text-xs font-bold rounded-2xl border-[#FFC2DA] flex items-center justify-center gap-2"
+                    >
+                      <User className="w-4 h-4 text-[#FF529A]" />
+                      <span>My Profile & Settings ({userTier.toUpperCase()})</span>
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="py-3 text-center text-xs font-bold text-rose-600 bg-rose-50 rounded-2xl border border-rose-200"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/sign-in"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="btn-aiigen-secondary py-3 text-center text-xs font-bold rounded-2xl border-[#FFC2DA]"
+                  >
+                    Sign In / Create Account
+                  </Link>
+                )}
+
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}

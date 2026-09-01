@@ -1,23 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Sparkles, Zap, Flame, ShieldCheck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function PricingSection() {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [user, setUser] = useState<{ id?: string; email?: string; loggedIn?: boolean; tier?: string } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const stored = localStorage.getItem('everyposting_user');
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        setUser(null);
+      }
+    }
+  }, []);
 
   const handleCheckout = async (planType: 'pro' | 'lifetime') => {
-    setLoadingPlan(planType);
     setErrorMsg(null);
+
+    // Require Login before subscribing
+    if (!user || !user.loggedIn) {
+      setErrorMsg('Please sign in or create an account first before subscribing to a plan.');
+      setTimeout(() => {
+        router.push(`/sign-in?redirect=/pricing&plan=${planType}`);
+      }, 1200);
+      return;
+    }
+
+    setLoadingPlan(planType);
 
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planType }),
+        body: JSON.stringify({
+          planType,
+          userEmail: user.email,
+          userId: user.id,
+        }),
       });
 
       const data = await res.json();
@@ -34,6 +62,8 @@ export function PricingSection() {
       setLoadingPlan(null);
     }
   };
+
+  const userTier = user?.tier || 'free';
 
   return (
     <section id="pricing" className="py-24 relative z-10 bg-[#F5F5F7]">
@@ -52,9 +82,19 @@ export function PricingSection() {
         </div>
 
         {errorMsg && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-3 font-medium shadow-sm">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-            <span>{errorMsg}</span>
+          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center justify-between gap-3 font-medium shadow-sm">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+            {!user?.loggedIn && (
+              <Link
+                href="/sign-in?redirect=/pricing"
+                className="px-3 py-1 bg-white hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-lg border border-rose-300 transition-colors shrink-0"
+              >
+                Sign In Now →
+              </Link>
+            )}
           </div>
         )}
 
@@ -151,23 +191,21 @@ export function PricingSection() {
                     <Check className="w-4 h-4 text-white shrink-0" />
                     <span>Full Generation History database</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-white shrink-0" />
-                    <span>Cancel anytime in 1 click</span>
-                  </li>
                 </ul>
               </div>
 
               <button
                 onClick={() => handleCheckout('pro')}
-                disabled={loadingPlan === 'pro'}
-                className="w-full bg-white text-[#FF529A] hover:bg-slate-50 py-3.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all"
+                disabled={loadingPlan === 'pro' || userTier === 'pro'}
+                className="w-full bg-white text-[#FF529A] hover:bg-slate-50 py-3.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all disabled:opacity-80"
               >
                 {loadingPlan === 'pro' ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-[#FF529A] border-t-transparent rounded-full animate-spin" />
-                    Redirecting to Checkout...
+                    Connecting to Stripe...
                   </span>
+                ) : userTier === 'pro' ? (
+                  <span>✓ Pro Plan Active</span>
                 ) : (
                   <>
                     <Zap className="w-4 h-4 fill-[#FF529A]" />
@@ -191,10 +229,16 @@ export function PricingSection() {
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
                   One-Time Pay
                 </span>
-                <div className="flex items-center gap-1 text-xs font-bold text-amber-600 animate-pulse">
-                  <Flame className="w-4 h-4 fill-amber-500" />
-                  <span>37 / 100 claimed</span>
-                </div>
+                {userTier === 'lifetime' ? (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-white uppercase">
+                    ● ACTIVE NOW
+                  </span>
+                ) : (
+                  <div className="flex items-center gap-1 text-xs font-bold text-amber-600 animate-pulse">
+                    <Flame className="w-4 h-4 fill-amber-500" />
+                    <span>37 / 100 claimed</span>
+                  </div>
+                )}
               </div>
 
               <h3 className="text-2xl font-extrabold text-[#0A0A0C] mt-4">Lifetime Deal</h3>
@@ -221,23 +265,21 @@ export function PricingSection() {
                   <Check className="w-4 h-4 text-[#FF529A] shrink-0" />
                   <span>Priority Claude 3.5 Sonnet processing</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#FF529A] shrink-0" />
-                  <span>VIP Founder Support & Requests</span>
-                </li>
               </ul>
             </div>
 
             <button
               onClick={() => handleCheckout('lifetime')}
-              disabled={loadingPlan === 'lifetime'}
-              className="w-full btn-aiigen-primary font-extrabold py-3.5 text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-pink-500/25"
+              disabled={loadingPlan === 'lifetime' || userTier === 'lifetime'}
+              className="w-full btn-aiigen-primary font-extrabold py-3.5 text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-pink-500/25 disabled:opacity-80"
             >
               {loadingPlan === 'lifetime' ? (
                 <span className="flex items-center gap-2 text-white">
                   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Loading Checkout...
+                  Connecting to Stripe...
                 </span>
+              ) : userTier === 'lifetime' ? (
+                <span>✓ Lifetime Active</span>
               ) : (
                 <>
                   <ShieldCheck className="w-4 h-4 text-white" />

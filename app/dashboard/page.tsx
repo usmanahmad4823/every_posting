@@ -66,11 +66,30 @@ export default function DashboardPage() {
 
   const activeConfig = NICHE_CONFIGS[selectedNiche];
 
+  const [paymentSuccessMsg, setPaymentSuccessMsg] = useState<string | null>(null);
+
   useEffect(() => {
     async function loadUserData() {
+      // Check for payment success URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPaymentSuccess = urlParams.get('payment_success') === 'true';
+      const successPlan = urlParams.get('plan') as 'pro' | 'lifetime' | null;
+
+      if (isPaymentSuccess && successPlan) {
+        const storedUser = localStorage.getItem('everyposting_user');
+        if (storedUser) {
+          try {
+            const parsed = JSON.parse(storedUser);
+            parsed.tier = successPlan;
+            localStorage.setItem('everyposting_user', JSON.stringify(parsed));
+          } catch {}
+        }
+        setPaymentSuccessMsg(`Congratulations! Your ${successPlan.toUpperCase()} Plan subscription is now ACTIVE!`);
+      }
+
       const profile = await getUserProfile();
       setUsageCount(profile.generationsUsedThisMonth);
-      setTier(profile.subscriptionTier);
+      setTier(successPlan || profile.subscriptionTier);
 
       const savedKey = localStorage.getItem('everyposting_custom_key');
       if (savedKey) setCustomApiKey(savedKey);
@@ -252,6 +271,21 @@ export default function DashboardPage() {
         {/* Manual Feedback Trigger Modal */}
         <MilestoneReviewModal isOpen={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} />
 
+        {paymentSuccessMsg && (
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-bold flex items-center justify-between shadow-md animate-bounce">
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span>{paymentSuccessMsg}</span>
+            </div>
+            <button
+              onClick={() => setPaymentSuccessMsg(null)}
+              className="text-emerald-700 hover:text-emerald-950 font-extrabold text-xs px-2 py-1 rounded bg-white/60"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Header Title & Key Modal Trigger */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#E4E4E7]">
           <div>
@@ -260,6 +294,17 @@ export default function DashboardPage() {
                 Studio Dashboard
               </span>
               <span className="text-xs text-[#71717A] font-medium">| Repurpose AI v2.0</span>
+              <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase ${
+                tier === 'pro'
+                  ? 'bg-[#FF529A] text-white shadow-xs'
+                  : tier === 'lifetime'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'bg-slate-100 text-[#52525B]'
+              }`}>
+                {tier === 'pro' && '⚡ PRO ACTIVE'}
+                {tier === 'lifetime' && '👑 LIFETIME ACTIVE'}
+                {tier === 'free' && 'FREE TIER'}
+              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
               Content Repurposing Studio
