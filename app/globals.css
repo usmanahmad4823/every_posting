@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --canvas-bg: #F5F5F7;
+    --canvas-card: #FFFFFF;
+    --heading-color: #0A0A0C;
+    --body-color: #1E293B;
+    --muted-color: #64748B;
+    --border-color: #E4E4E7;
+    --accent-pink: #FF529A;
+    --accent-purple: #9333EA;
+    --accent-blue: #0088FF;
+    --accent-coral: #FF5500;
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+    color: var(--body-color);
+    font-family: var(--font-geist-sans), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+    selection-background-color: rgba(255, 82, 154, 0.2);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Background Dot Overlay for Light Canvas */
+.bg-aiigen-dots {
+  background-image: radial-gradient(rgba(255, 82, 154, 0.12) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* aiigen.webflow.io Pink Multi-Color Aura Gradient Background Frame */
+.aura-gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, #FF529A 0%, #9333EA 40%, #FF007A 70%, #FF5500 100%);
+  padding: 2px;
+  border-radius: 26px;
+  box-shadow: 0 20px 50px -10px rgba(255, 82, 154, 0.3);
+}
+
+.aura-gradient-border-inner {
+  background: #FFFFFF;
+  border-radius: 24px;
+}
+
+.aura-gradient-border-dark {
+  background: #FF529A;
+  border-radius: 24px;
+}
+
+/* Aiigen White Card Component Style */
+.aiigen-card {
+  background: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aiigen-card:hover {
+  border-color: #FF529A;
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(255, 82, 154, 0.2);
+}
+
+/* Aiigen Pill Badge */
+.aiigen-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #FFC2DA;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0A0A0C;
+  box-shadow: 0 2px 8px rgba(255, 82, 154, 0.08);
+}
+
+/* Primary Solid Pink Action Button (#FF529A) */
+.btn-aiigen-primary {
+  background: #FF529A;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 14px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-aiigen-primary:hover {
+  background: #E04085;
+  transform: scale(1.02) translateY(-1px);
+  box-shadow: 0 10px 25px -5px rgba(255, 82, 154, 0.4);
+}
+
+/* Secondary White Action Button */
+.btn-aiigen-secondary {
+  background: #FFFFFF;
+  color: #0A0A0C;
+  border: 1px solid #FFC2DA;
+  font-weight: 600;
+  border-radius: 14px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-aiigen-secondary:hover {
+  background: #FFF0F6;
+  border-color: #FF529A;
+  transform: translateY(-1px);
+}
+
+/* Pink Icon Box Utility */
+.icon-box-black {
+  background-color: #FF529A;
+  color: #FFFFFF;
+  padding: 10px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 82, 154, 0.25);
+}
+
+/* Typography Utilities */
+.text-aiigen-title {
+  color: #0A0A0C;
+  letter-spacing: -0.03em;
+}
+
+.text-gradient-aura {
+  background: linear-gradient(135deg, #FF529A 0%, #9333EA 50%, #FF007A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFC2DA;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF529A;
 }
