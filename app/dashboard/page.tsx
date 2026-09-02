@@ -542,8 +542,21 @@ export default function DashboardPage() {
               </div>
 
               {history.length === 0 ? (
-                <div className="text-center py-6 text-xs text-[#94A3B8] bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] font-medium">
-                  No generations saved yet. Paste a transcript to create your first content set!
+                <div className="text-center py-6 px-4 bg-[#F8FAFC] rounded-2xl border-2 border-dashed border-[#E2E8F0] flex flex-col items-center">
+                  <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#FF529A] mb-2 border border-pink-100">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-bold text-[#0A0A0C]">No generations saved yet</h4>
+                  <p className="text-[11px] text-[#71717A] mt-0.5 mb-3 leading-relaxed">
+                    Paste a transcript above or test with demo data to generate your first social content batch!
+                  </p>
+                  <button
+                    onClick={handleLoadSample}
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#FF529A] hover:bg-pink-50 border border-pink-200 flex items-center gap-1.5 shadow-2xs transition-all"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Insert Demo Sample →</span>
+                  </button>
                 </div>
               ) : (
                 <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
