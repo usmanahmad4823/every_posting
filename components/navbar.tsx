@@ -220,24 +220,24 @@ export function Navbar() {
               </Link>
             )}
 
-            {/* Studio App Sparkle CTA Button - Mobile Compact Text XS */}
-            <div className="relative">
+            {/* Studio App Sparkle CTA Button - Desktop & Tablet */}
+            <div className="relative hidden sm:block">
               <SparkleContainer />
               <Link
                 href="/dashboard"
                 onClick={triggerBurst}
-                className="btn-aiigen-primary text-[11px] sm:text-xs font-extrabold px-3 sm:px-5 py-1.5 sm:py-2.5 flex items-center gap-1 sm:gap-2 shadow-md shadow-pink-500/25 group rounded-full"
+                className="btn-aiigen-primary text-xs font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 flex items-center gap-1.5 shadow-md shadow-pink-500/25 group rounded-full"
               >
-                <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-white group-hover:scale-110 transition-transform" />
+                <Zap className="w-3.5 h-3.5 fill-white group-hover:scale-110 transition-transform" />
                 <span>Studio</span>
-                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-full text-[#0A0A0C] hover:bg-[#F5F5F7] border border-[#E4E4E7] transition-colors ml-0.5"
+              className="md:hidden p-1.5 sm:p-2 rounded-full text-[#0A0A0C] hover:bg-[#F5F5F7] border border-[#E4E4E7] transition-colors"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4 text-[#FF529A]" /> : <Menu className="w-4 h-4" />}
@@ -257,6 +257,15 @@ export function Navbar() {
             className="md:hidden max-w-6xl mx-auto mt-1.5 pointer-events-auto"
           >
             <div className="bg-white/95 backdrop-blur-2xl rounded-2xl border border-[#FFC2DA] p-4 shadow-xl space-y-3">
+              {/* Studio Mobile CTA */}
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full btn-aiigen-primary text-xs font-extrabold py-3 flex items-center justify-center gap-2 shadow-md shadow-pink-500/25 rounded-xl"
+              >
+                <Zap className="w-4 h-4 fill-white" />
+                <span>Open Repurposing Studio →</span>
+              </Link>
               <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-[#FF529A]">
                   <Sparkles className="w-3.5 h-3.5" />
