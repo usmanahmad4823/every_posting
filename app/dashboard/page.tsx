@@ -27,6 +27,7 @@ import {
   Eye,
   EyeOff,
   Settings,
+  ChevronDown,
 } from 'lucide-react';
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
@@ -82,6 +83,7 @@ export default function DashboardPage() {
   const activeConfig = NICHE_CONFIGS[selectedNiche];
 
   const [paymentSuccessMsg, setPaymentSuccessMsg] = useState<string | null>(null);
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadUserData() {
@@ -312,30 +314,20 @@ export default function DashboardPage() {
             </h1>
           </div>
 
-                 <div className="flex items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto max-w-full overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setShowKeyModal(true)}
-              className="flex-1 sm:flex-none justify-center px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white hover:bg-pink-50 text-[#0A0A0C] border border-[#FFC2DA] text-[10px] sm:text-xs font-extrabold flex items-center gap-1 sm:gap-2 shadow-xs transition-all whitespace-nowrap active:scale-95 shrink-0"
+              className="px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white hover:bg-pink-50 text-[#0A0A0C] border border-[#FFC2DA] text-xs font-extrabold flex items-center gap-1.5 shadow-xs transition-all whitespace-nowrap active:scale-95 shrink-0"
             >
               <Key className="w-3.5 h-3.5 text-[#FF529A] shrink-0" />
-              <span>{customApiKey ? 'API Active' : 'Plug Key'}</span>
-              <span className="hidden sm:inline">{customApiKey ? '' : 'Anthropic'}</span>
+              <span>{customApiKey ? 'API Active' : 'Plug Key Anthropic'}</span>
             </button>
 
             <Link
-              href="/pricing"
-              className="flex-1 sm:flex-none justify-center btn-aiigen-primary px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-extrabold flex items-center gap-1 sm:gap-2 shadow-md shadow-pink-500/25 rounded-xl whitespace-nowrap active:scale-95 shrink-0"
-            >
-              <Zap className="w-3.5 h-3.5 fill-white shrink-0" />
-              <span className="sm:hidden">{user.plan === 'free' ? 'Upgrade' : 'Billing'}</span>
-              <span className="hidden sm:inline">{user.plan === 'free' ? 'Upgrade Plan' : 'Manage Subscription'}</span>
-            </Link>
-
-            <Link
               href="/account"
-              className="px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white hover:bg-slate-100 text-[#0A0A0C] border border-[#E4E4E7] text-[10px] sm:text-xs font-extrabold transition-all shadow-xs flex items-center gap-1 shrink-0 whitespace-nowrap active:scale-95"
+              className="px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white hover:bg-slate-100 text-[#0A0A0C] border border-[#E4E4E7] text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
             >
-              <Settings className="w-3.5 h-3.5 text-[#71717A] sm:hidden shrink-0" />
+              <Settings className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
               <span>Settings</span>
             </Link>
           </div>
@@ -412,181 +404,189 @@ export default function DashboardPage() {
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-8">
           {/* LEFT SIDEBAR: Niche Selector & Usage & History */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* 1. Niche Selector Box */}
-            <div className="aiigen-card p-5 bg-white border border-[#E4E4E7]">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#71717A] mb-3 flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-[#FF529A]" />
-                Select Niche Profile
-              </h3>
+          <div className="lg:col-span-4 space-y-3 sm:space-y-4 lg:space-y-6">
+            {/* 1. Niche Selector Box - Sleek & Minimal Segmented Switcher */}
+            <div className="aiigen-card p-3 sm:p-4 bg-white border border-[#E4E4E7]">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#71717A] flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5 text-[#FF529A]" />
+                  Select Niche Profile:
+                </h3>
+                <span className="text-[10px] font-extrabold text-[#FF529A] bg-pink-50 px-2 py-0.5 rounded-full border border-pink-200 capitalize">
+                  {selectedNiche === 'podcaster' ? 'Podcasters' : selectedNiche === 'youtuber' ? 'YouTube' : 'Coaches'}
+                </span>
+              </div>
 
-              <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-1 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
                 <button
                   onClick={() => handleNicheSelect('podcaster')}
-                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                  className={`py-2 px-1.5 rounded-lg text-center transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 ${
                     selectedNiche === 'podcaster'
-                      ? 'bg-pink-50 border-[#FF529A] text-[#0A0A0C] font-bold shadow-sm'
-                      : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#FF529A]'
+                      ? 'bg-white text-[#0A0A0C] font-extrabold shadow-xs border border-[#FFC2DA] ring-1 ring-[#FF529A]/20'
+                      : 'text-[#64748B] hover:text-[#0A0A0C] font-semibold'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-pink-100 text-[#FF529A]">
-                      <Mic className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0A0A0C]">Podcasters</div>
-                      <div className="text-[11px] text-[#64748B] font-normal">Show Notes & Tweet Threads</div>
-                    </div>
-                  </div>
-                  {selectedNiche === 'podcaster' && <ChevronRight className="w-4 h-4 text-[#FF529A]" />}
+                  <Mic className={`w-3.5 h-3.5 shrink-0 ${selectedNiche === 'podcaster' ? 'text-[#FF529A]' : 'text-[#94A3B8]'}`} />
+                  <span className="text-[10px] sm:text-xs truncate">Podcasters</span>
                 </button>
 
                 <button
                   onClick={() => handleNicheSelect('youtuber')}
-                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                  className={`py-2 px-1.5 rounded-lg text-center transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 ${
                     selectedNiche === 'youtuber'
-                      ? 'bg-pink-50 border-[#FF529A] text-[#0A0A0C] font-bold shadow-sm'
-                      : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#FF529A]'
+                      ? 'bg-white text-[#0A0A0C] font-extrabold shadow-xs border border-[#FFC2DA] ring-1 ring-[#FF529A]/20'
+                      : 'text-[#64748B] hover:text-[#0A0A0C] font-semibold'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-pink-100 text-[#FF529A]">
-                      <PlaySquare className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0A0A0C]">YouTube Creators</div>
-                      <div className="text-[11px] text-[#64748B] font-normal">Twitter Threads & Blog Posts</div>
-                    </div>
-                  </div>
-                  {selectedNiche === 'youtuber' && <ChevronRight className="w-4 h-4 text-[#FF529A]" />}
+                  <PlaySquare className={`w-3.5 h-3.5 shrink-0 ${selectedNiche === 'youtuber' ? 'text-[#FF529A]' : 'text-[#94A3B8]'}`} />
+                  <span className="text-[10px] sm:text-xs truncate">YouTube</span>
                 </button>
 
                 <button
                   onClick={() => handleNicheSelect('coach')}
-                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                  className={`py-2 px-1.5 rounded-lg text-center transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 ${
                     selectedNiche === 'coach'
-                      ? 'bg-pink-50 border-[#FF529A] text-[#0A0A0C] font-bold shadow-sm'
-                      : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#FF529A]'
+                      ? 'bg-white text-[#0A0A0C] font-extrabold shadow-xs border border-[#FFC2DA] ring-1 ring-[#FF529A]/20'
+                      : 'text-[#64748B] hover:text-[#0A0A0C] font-semibold'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-pink-100 text-[#FF529A]">
-                      <GraduationCap className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0A0A0C]">Coaches & Consultants</div>
-                      <div className="text-[11px] text-[#64748B] font-normal">LinkedIn Posts & Emails</div>
-                    </div>
-                  </div>
-                  {selectedNiche === 'coach' && <ChevronRight className="w-4 h-4 text-[#FF529A]" />}
+                  <GraduationCap className={`w-3.5 h-3.5 shrink-0 ${selectedNiche === 'coach' ? 'text-[#FF529A]' : 'text-[#94A3B8]'}`} />
+                  <span className="text-[10px] sm:text-xs truncate">Coaches</span>
                 </button>
               </div>
             </div>
 
-            {/* 2. Usage Meter Box */}
-            <div className="aiigen-card p-5 bg-white border border-[#E4E4E7]">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#71717A]">
-                  Monthly Generation Usage
-                </span>
-                <span className="text-xs font-bold text-[#0A0A0C] uppercase bg-[#F4F4F5] px-2 py-0.5 rounded border border-[#E4E4E7]">
-                  {customApiKey ? 'Custom API Key' : `${tier} plan`}
-                </span>
+            {/* 2. Usage Meter Box - Sleek & Ultra-Minimal */}
+            <div className="aiigen-card p-3 sm:p-4 bg-white border border-[#E4E4E7]">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-[11px] sm:text-xs font-extrabold text-[#0A0A0C]">
+                    Monthly Usage:
+                  </span>
+                  <span className="text-[11px] sm:text-xs font-bold text-[#FF529A]">
+                    {customApiKey ? '0' : usageCount}/{customApiKey || tier !== 'free' ? '∞' : usageLimit}
+                  </span>
+                  <span className="text-[10px] text-[#71717A] hidden sm:inline">
+                    ({customApiKey || tier !== 'free' ? 'Unlimited' : `${usageLimit - usageCount} left`})
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase bg-slate-100 text-[#71717A] px-2 py-0.5 rounded-full border border-slate-200">
+                    {customApiKey ? 'Custom Key' : `${tier} plan`}
+                  </span>
+                  {tier === 'free' && !customApiKey && (
+                    <Link
+                      href="/pricing"
+                      className="text-[10px] sm:text-xs font-bold text-[#FF529A] hover:underline"
+                    >
+                      Upgrade →
+                    </Link>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-3 mb-2 flex items-center justify-between text-xs font-medium">
-                <span className="text-[#334155]">
-                  <strong className="text-[#0A0A0C]">{customApiKey ? '0' : usageCount}</strong> /{' '}
-                  {customApiKey || tier !== 'free' ? '∞' : usageLimit} used this month
-                </span>
-                <span className="text-[#FF529A] font-bold">
-                  {customApiKey || tier !== 'free' ? 'Unlimited' : `${usageLimit - usageCount} remaining`}
-                </span>
-              </div>
-
-              <div className="w-full h-2 rounded-full bg-[#E2E8F0] overflow-hidden mb-3">
+              {/* Sleek Minimal Progress Bar */}
+              <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden">
                 <div
-                  className="h-full bg-[#FF529A] transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-[#FF529A] to-purple-600 transition-all duration-300 rounded-full"
                   style={{
                     width: `${customApiKey || tier !== 'free' ? 100 : Math.min(100, (usageCount / usageLimit) * 100)}%`,
                   }}
                 />
               </div>
-
-              {!customApiKey && tier === 'free' && usageCount >= 8 && (
-                <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2 mb-3 font-medium">
-                  <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
-                  <span>Approaching limit. Upgrade or plug your custom Anthropic API key.</span>
-                </div>
-              )}
-
-              <Link
-                href="/pricing"
-                className="w-full text-center py-2 text-xs font-bold text-[#FF529A] hover:text-pink-800 bg-pink-50 hover:bg-pink-100 rounded-xl border border-pink-200 block transition-colors"
-              >
-                Upgrade to Pro →
-              </Link>
             </div>
 
-            {/* 3. Generation History List & Feedback Trigger Link */}
-            <div className="aiigen-card p-5 bg-white border border-[#E4E4E7]">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#71717A] flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[#FF529A]" />
-                  Generation History ({history.length})
-                </h3>
-
-                <button
-                  onClick={() => setShowFeedbackModal(true)}
-                  className="text-xs font-bold text-[#FF529A] hover:underline flex items-center gap-1"
+            {/* 3. Generation History List (Desktop View Only) */}
+            <div className="hidden lg:block">
+              <div className="aiigen-card p-4 sm:p-5 bg-white border border-[#E4E4E7]">
+                <div
+                  onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                  className="flex items-center justify-between cursor-pointer select-none py-0.5 group"
                 >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Send Feedback</span>
-                </button>
-              </div>
-
-              {history.length === 0 ? (
-                <div className="text-center py-6 px-4 bg-[#F8FAFC] rounded-2xl border-2 border-dashed border-[#E2E8F0] flex flex-col items-center">
-                  <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#FF529A] mb-2 border border-pink-100">
-                    <Sparkles className="w-4 h-4" />
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-pink-50 text-[#FF529A]">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C]">
+                      Generation History ({history.length})
+                    </h3>
                   </div>
-                  <h4 className="text-xs font-bold text-[#0A0A0C]">No generations saved yet</h4>
-                  <p className="text-[11px] text-[#71717A] mt-0.5 mb-3 leading-relaxed">
-                    Paste a transcript above or test with demo data to generate your first social content batch!
-                  </p>
-                  <button
-                    onClick={handleLoadSample}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#FF529A] hover:bg-pink-50 border border-pink-200 flex items-center gap-1.5 shadow-2xs transition-all"
-                  >
-                    <FileText className="w-3.5 h-3.5" />
-                    <span>Insert Demo Sample →</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
-                  {history.map((item) => (
+
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     <button
-                      key={item.id}
-                      onClick={() => handleSelectHistoryItem(item)}
-                      className="w-full text-left p-3 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 border border-[#E2E8F0] hover:border-[#FF529A] transition-colors group"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowFeedbackModal(true);
+                      }}
+                      className="text-[10px] sm:text-xs font-bold text-[#FF529A] hover:underline flex items-center gap-1 whitespace-nowrap shrink-0 px-1.5 py-0.5 rounded-lg bg-pink-50/80 border border-pink-200"
                     >
-                      <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="font-bold text-[#0A0A0C] capitalize group-hover:text-[#FF529A]">
-                          {item.niche}
-                        </span>
-                        <span className="text-[10px] text-[#94A3B8]">
-                          {new Date(item.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[#64748B] line-clamp-1 italic font-mono">
-                        &quot;{item.transcriptSnippet}&quot;
-                      </p>
+                      <MessageSquare className="w-3 h-3 text-[#FF529A] shrink-0" />
+                      <span>Feedback</span>
                     </button>
-                  ))}
+
+                    <div className="p-1 rounded-lg hover:bg-slate-100 text-[#71717A] group-hover:text-[#FF529A] transition-colors shrink-0">
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isHistoryExpanded ? 'rotate-180' : ''}`} />
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                <AnimatePresence>
+                  {isHistoryExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden pt-3 border-t border-[#E4E4E7] mt-3"
+                    >
+                      {history.length === 0 ? (
+                        <div className="text-center py-6 px-4 bg-[#F8FAFC] rounded-2xl border-2 border-dashed border-[#E2E8F0] flex flex-col items-center">
+                          <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#FF529A] mb-2 border border-pink-100">
+                            <Sparkles className="w-4 h-4" />
+                          </div>
+                          <h4 className="text-xs font-bold text-[#0A0A0C]">No generations saved yet</h4>
+                          <p className="text-[11px] text-[#71717A] mt-0.5 mb-3 leading-relaxed">
+                            Paste a transcript above or test with demo data to generate your first social content batch!
+                          </p>
+                          <button
+                            onClick={handleLoadSample}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#FF529A] hover:bg-pink-50 border border-pink-200 flex items-center gap-1.5 shadow-2xs transition-all"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            <span>Insert Demo Sample →</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+                          {history.map((item) => (
+                            <button
+                              key={item.id}
+                              onClick={() => handleSelectHistoryItem(item)}
+                              className="w-full text-left p-3 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 border border-[#E2E8F0] hover:border-[#FF529A] transition-colors group"
+                            >
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="font-bold text-[#0A0A0C] capitalize group-hover:text-[#FF529A]">
+                                  {item.niche}
+                                </span>
+                                <span className="text-[10px] text-[#94A3B8]">
+                                  {new Date(item.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-[#64748B] line-clamp-1 italic font-mono">
+                                &quot;{item.transcriptSnippet}&quot;
+                              </p>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
@@ -693,34 +693,48 @@ export default function DashboardPage() {
                 )}
               </AnimatePresence>
 
-              {/* Format Checkbox Selector */}
+              {/* Format Checkbox Selector - Minimal & 100% Understandable */}
               <div className="mb-5 sm:mb-6">
-                <label className="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#71717A] mb-2.5">
-                  Select Desired Output Formats:
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#71717A]">
+                    Select Output Formats:
+                  </label>
+                  <span className="text-[10px] font-extrabold text-[#FF529A] bg-pink-50 px-2 py-0.5 rounded-full border border-pink-200">
+                    {selectedFormats.length} Selected
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-2.5">
                   {activeConfig.supportedFormats.map((format) => {
                     const isChecked = selectedFormats.includes(format.id);
                     return (
                       <div
                         key={format.id}
                         onClick={() => toggleFormat(format.id)}
-                        className={`p-2.5 sm:p-3.5 rounded-xl border cursor-pointer flex items-center gap-2.5 transition-all ${
+                        className={`p-2 sm:p-2.5 rounded-xl border cursor-pointer flex items-center gap-2 transition-all group ${
                           isChecked
-                            ? 'bg-pink-50/90 border-[#FF529A] text-[#0A0A0C] font-semibold shadow-xs ring-1 ring-[#FF529A]/30'
+                            ? 'bg-pink-50/90 border-[#FF529A] text-[#0A0A0C] font-extrabold shadow-2xs ring-1 ring-[#FF529A]/30'
                             : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#0A0A0C] hover:bg-white'
                         }`}
                       >
                         <div
-                          className={`w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0 ${
-                            isChecked ? 'bg-[#FF529A] border-[#FF529A] text-white scale-105' : 'border-[#CBD5E1]'
+                          className={`w-4 h-4 rounded-md flex items-center justify-center border transition-all shrink-0 ${
+                            isChecked ? 'bg-[#FF529A] border-[#FF529A] text-white scale-105 shadow-2xs' : 'border-[#CBD5E1] bg-white group-hover:border-[#FF529A]'
                           }`}
                         >
-                          {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
+                          {isChecked ? (
+                            <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" />
+                          ) : (
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-[#FF529A]" />
+                          )}
                         </div>
-                        <div className="min-w-0">
-                          <div className="text-[11px] sm:text-xs font-extrabold text-[#0A0A0C] truncate">{format.label}</div>
-                          <div className="text-[9px] sm:text-[10px] text-[#64748B] font-normal line-clamp-1">{format.description}</div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[11px] sm:text-xs font-extrabold text-[#0A0A0C] truncate leading-snug">
+                            {format.label}
+                          </div>
+                          <div className="text-[9px] sm:text-[10px] text-[#64748B] font-normal truncate hidden sm:block">
+                            {format.description}
+                          </div>
                         </div>
                       </div>
                     );
@@ -844,6 +858,95 @@ export default function DashboardPage() {
                 </motion.div>
               )}
             </AnimatePresence>
+            {/* Generation History List (Mobile View - Foldable & Positioned at the End of Screen) */}
+            <div className="block lg:hidden pt-4 border-t border-[#E4E4E7] mt-8">
+              <div className="aiigen-card p-4 sm:p-5 bg-white border border-[#E4E4E7]">
+                <div
+                  onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                  className="flex items-center justify-between cursor-pointer select-none py-0.5 group"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-pink-50 text-[#FF529A]">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C]">
+                      Generation History ({history.length})
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowFeedbackModal(true);
+                      }}
+                      className="text-[10px] sm:text-xs font-bold text-[#FF529A] hover:underline flex items-center gap-1 whitespace-nowrap shrink-0 px-1.5 py-0.5 rounded-lg bg-pink-50/80 border border-pink-200"
+                    >
+                      <MessageSquare className="w-3 h-3 text-[#FF529A] shrink-0" />
+                      <span>Feedback</span>
+                    </button>
+
+                    <div className="p-1 rounded-lg hover:bg-slate-100 text-[#71717A] group-hover:text-[#FF529A] transition-colors shrink-0">
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isHistoryExpanded ? 'rotate-180' : ''}`} />
+                    </div>
+                  </div>
+                </div>
+
+                <AnimatePresence>
+                  {isHistoryExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden pt-3 border-t border-[#E4E4E7] mt-3"
+                    >
+                      {history.length === 0 ? (
+                        <div className="text-center py-6 px-4 bg-[#F8FAFC] rounded-2xl border-2 border-dashed border-[#E2E8F0] flex flex-col items-center">
+                          <div className="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#FF529A] mb-2 border border-pink-100">
+                            <Sparkles className="w-4 h-4" />
+                          </div>
+                          <h4 className="text-xs font-bold text-[#0A0A0C]">No generations saved yet</h4>
+                          <p className="text-[11px] text-[#71717A] mt-0.5 mb-3 leading-relaxed">
+                            Paste a transcript above or test with demo data to generate your first social content batch!
+                          </p>
+                          <button
+                            onClick={handleLoadSample}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#FF529A] hover:bg-pink-50 border border-pink-200 flex items-center gap-1.5 shadow-2xs transition-all"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            <span>Insert Demo Sample →</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+                          {history.map((item) => (
+                            <button
+                              key={item.id}
+                              onClick={() => handleSelectHistoryItem(item)}
+                              className="w-full text-left p-3 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 border border-[#E2E8F0] hover:border-[#FF529A] transition-colors group"
+                            >
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="font-bold text-[#0A0A0C] capitalize group-hover:text-[#FF529A]">
+                                  {item.niche}
+                                </span>
+                                <span className="text-[10px] text-[#94A3B8]">
+                                  {new Date(item.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-[#64748B] line-clamp-1 italic font-mono">
+                                &quot;{item.transcriptSnippet}&quot;
+                              </p>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </div>
