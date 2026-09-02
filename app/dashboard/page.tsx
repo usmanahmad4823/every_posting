@@ -26,6 +26,7 @@ import {
   AlertTriangle,
   Eye,
   EyeOff,
+  Settings,
 } from 'lucide-react';
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
@@ -311,26 +312,31 @@ export default function DashboardPage() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+                 <div className="flex items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto max-w-full overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
             <button
               onClick={() => setShowKeyModal(true)}
-              className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-pink-50 text-[#0A0A0C] border border-[#FFC2DA] text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+              className="flex-1 sm:flex-none justify-center px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white hover:bg-pink-50 text-[#0A0A0C] border border-[#FFC2DA] text-[10px] sm:text-xs font-extrabold flex items-center gap-1 sm:gap-2 shadow-xs transition-all whitespace-nowrap active:scale-95 shrink-0"
             >
-              <Key className="w-4 h-4 text-[#FF529A]" />
-              <span>{customApiKey ? 'API Key Active' : 'Plug Anthropic Key'}</span>
+              <Key className="w-3.5 h-3.5 text-[#FF529A] shrink-0" />
+              <span>{customApiKey ? 'API Active' : 'Plug Key'}</span>
+              <span className="hidden sm:inline">{customApiKey ? '' : 'Anthropic'}</span>
             </button>
+
             <Link
               href="/pricing"
-              className="btn-aiigen-primary text-xs font-bold px-4 py-2.5 flex items-center gap-1.5 shadow-sm shadow-pink-500/25"
+              className="flex-1 sm:flex-none justify-center btn-aiigen-primary px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-extrabold flex items-center gap-1 sm:gap-2 shadow-md shadow-pink-500/25 rounded-xl whitespace-nowrap active:scale-95 shrink-0"
             >
-              <Zap className="w-3.5 h-3.5 fill-white" />
-              <span>Upgrade Plan</span>
+              <Zap className="w-3.5 h-3.5 fill-white shrink-0" />
+              <span className="sm:hidden">{user.plan === 'free' ? 'Upgrade' : 'Billing'}</span>
+              <span className="hidden sm:inline">{user.plan === 'free' ? 'Upgrade Plan' : 'Manage Subscription'}</span>
             </Link>
+
             <Link
               href="/account"
-              className="btn-aiigen-secondary text-xs font-semibold px-3.5 py-2.5 border-[#FFC2DA]"
+              className="px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white hover:bg-slate-100 text-[#0A0A0C] border border-[#E4E4E7] text-[10px] sm:text-xs font-extrabold transition-all shadow-xs flex items-center gap-1 shrink-0 whitespace-nowrap active:scale-95"
             >
-              Settings
+              <Settings className="w-3.5 h-3.5 text-[#71717A] sm:hidden shrink-0" />
+              <span>Settings</span>
             </Link>
           </div>
         </div>
