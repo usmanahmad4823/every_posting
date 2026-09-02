@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { User, ShieldCheck, CreditCard, LogOut, ArrowRight, Key, Trash2, Edit2, Check } from 'lucide-react';
+import { User, ShieldCheck, CreditCard, LogOut, ArrowRight, Key, Trash2, Edit2, Check, Eye, EyeOff } from 'lucide-react';
 import { clearGenerationHistory, signOutUser, supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/components/providers/user-provider';
@@ -11,6 +11,7 @@ import { PlanBadge } from '@/components/ui/plan-badge';
 export default function AccountPage() {
   const { user, invalidateUser, updateUserLocally } = useUser();
   const [customKey, setCustomKey] = useState<string>('');
+  const [showKeyText, setShowKeyText] = useState<boolean>(false);
   const [keySaved, setKeySaved] = useState<boolean>(false);
   const [clearedMessage, setClearedMessage] = useState<boolean>(false);
 
@@ -185,13 +186,23 @@ export default function AccountPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 items-center">
-              <input
-                type="password"
-                value={customKey}
-                onChange={(e) => setCustomKey(e.target.value)}
-                placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
-                className="flex-1 w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 text-xs text-[#0A0A0C] font-mono focus:outline-none focus:border-[#FF529A]"
-              />
+              <div className="relative flex-1 w-full">
+                <input
+                  type={showKeyText ? 'text' : 'password'}
+                  value={customKey}
+                  onChange={(e) => setCustomKey(e.target.value)}
+                  placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
+                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 pr-10 text-xs text-[#0A0A0C] font-mono focus:outline-none focus:border-[#FF529A]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowKeyText(!showKeyText)}
+                  className="absolute right-3 top-3 text-[#71717A] hover:text-[#0A0A0C]"
+                  title={showKeyText ? 'Hide API key' : 'Show API key'}
+                >
+                  {showKeyText ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
               <button
                 onClick={handleSaveKey}
                 className="w-full sm:w-auto btn-aiigen-primary text-xs font-bold px-5 py-3 shadow-md shadow-pink-500/25 shrink-0"
