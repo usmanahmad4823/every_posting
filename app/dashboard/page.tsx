@@ -24,6 +24,8 @@ import {
   X,
   MessageSquare,
   AlertTriangle,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
@@ -61,8 +63,15 @@ export default function DashboardPage() {
 
   const [customApiKey, setCustomApiKey] = useState<string>('');
   const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
+  const [showKeyText, setShowKeyText] = useState<boolean>(false);
   const [showMilestoneModal, setShowMilestoneModal] = useState<boolean>(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 2500);
+  };
 
   // HCI State: Error Handling & Form Shake
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -217,6 +226,7 @@ export default function DashboardPage() {
       .join('\n');
     navigator.clipboard.writeText(compiled);
     setCopiedAll(true);
+    triggerToast('Copied all outputs to clipboard! 📋');
     setTimeout(() => setCopiedAll(false), 2000);
   };
 
@@ -249,6 +259,7 @@ export default function DashboardPage() {
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
+    triggerToast(`Exported as .${type.toUpperCase()} file! 📥`);
   };
 
   const handleSelectHistoryItem = (item: GenerationResult) => {
@@ -354,13 +365,23 @@ export default function DashboardPage() {
                   Bring your own Anthropic Claude API Key (`sk-ant-...`) for unlimited direct generations without using free platform credits.
                 </p>
 
-                <input
-                  type="password"
-                  value={customApiKey}
-                  onChange={(e) => setCustomApiKey(e.target.value)}
-                  placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 text-xs text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-mono mb-4"
-                />
+                <div className="relative mb-4">
+                  <input
+                    type={showKeyText ? 'text' : 'password'}
+                    value={customApiKey}
+                    onChange={(e) => setCustomApiKey(e.target.value)}
+                    placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
+                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 pr-10 text-xs text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKeyText(!showKeyText)}
+                    className="absolute right-3 top-3 text-[#71717A] hover:text-[#0A0A0C]"
+                    title={showKeyText ? 'Hide API key' : 'Show API key'}
+                  >
+                    {showKeyText ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
 
                 <div className="flex items-center justify-end gap-3">
                   <button
@@ -806,6 +827,34 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Floating Toast Popup Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-6 right-6 z-50 bg-[#0A0A0C] text-white px-4 py-3 rounded-2xl border border-[#FF529A]/40 shadow-2xl flex items-center gap-2.5 text-xs font-bold pointer-events-none"
+          >
+            <Sparkles className="w-4 h-4 text-[#FF529A]" />
+            <span>{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Sticky Bottom Generation Action Bar */}
+      {transcript.trim().length > 0 && !isGenerating && (
+        <div className="block sm:hidden fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-[#FFC2DA] z-40 shadow-2xl">
+          <button
+            onClick={handleGenerate}
+            className="w-full btn-aiigen-primary font-extrabold text-xs py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25"
+          >
+            <Sparkles className="w-4 h-4 text-white" />
+            <span>Generate AI Content ({selectedFormats.length} Formats)</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
