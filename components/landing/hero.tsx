@@ -171,69 +171,69 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-aiigen-title leading-[1.08] tracking-tightest">
+          <h1 className="text-3xl sm:text-6xl md:text-7xl font-extrabold text-aiigen-title leading-[1.1] sm:leading-[1.08] tracking-tight">
             Intelligent AI agents that <span className="text-gradient-aura">work like your team</span>
           </h1>
-          <p className="mt-6 text-base sm:text-xl text-[#52525B] max-w-2xl mx-auto leading-relaxed font-medium">
+          <p className="mt-4 sm:mt-6 text-xs sm:text-xl text-[#52525B] max-w-2xl mx-auto leading-relaxed font-medium">
             AI content agents handle tasks, adapt to your niche needs, and boost productivity making social media repurposing faster, smarter, and effortless.
           </p>
 
           {/* DUAL ACTION BUTTONS */}
-          <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-6 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto btn-aiigen-primary text-sm px-8 py-4 flex items-center justify-center gap-2.5 shadow-xl shadow-pink-500/25"
+              className="w-full sm:w-auto btn-aiigen-primary text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-center gap-2 sm:gap-2.5 shadow-xl shadow-pink-500/25"
             >
               <span>Get 14 Days Free Trial</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </Link>
             <Link
               href="#how-it-works"
-              className="w-full sm:w-auto btn-aiigen-secondary text-sm px-7 py-4 flex items-center justify-center gap-2 border-[#FFC2DA] hover:bg-[#FFF0F6]"
+              className="w-full sm:w-auto btn-aiigen-secondary text-xs sm:text-sm px-5 sm:px-7 py-3 sm:py-4 flex items-center justify-center gap-2 border-[#FFC2DA] hover:bg-[#FFF0F6]"
             >
-              <Play className="w-4 h-4 text-[#FF529A] fill-[#FF529A]" />
+              <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF529A] fill-[#FF529A]" />
               <span className="text-[#0A0A0C]">Request a Demo</span>
             </Link>
           </div>
         </motion.div>
 
         {/* INTERACTIVE NICHE SWITCHER PILLS */}
-        <div className="mt-16 text-center">
-          <p className="text-xs uppercase tracking-widest text-[#71717A] font-bold mb-4">
+        <div className="mt-10 sm:mt-16 text-center">
+          <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-bold mb-3 sm:mb-4">
             Select Your Niche Profile:
           </p>
-          <div className="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm">
+          <div className="inline-flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1 sm:p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm">
             <button
               onClick={() => setSelectedNiche('podcaster')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
                 selectedNiche === 'podcaster'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <Mic className="w-4 h-4 text-white" />
+              <Mic className="w-3.5 h-3.5 text-white" />
               <span>Podcaster</span>
             </button>
             <button
               onClick={() => setSelectedNiche('youtuber')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
                 selectedNiche === 'youtuber'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <PlaySquare className="w-4 h-4 text-white" />
+              <PlaySquare className="w-3.5 h-3.5 text-white" />
               <span>YouTube Creator</span>
             </button>
             <button
               onClick={() => setSelectedNiche('coach')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
                 selectedNiche === 'coach'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <GraduationCap className="w-4 h-4 text-white" />
+              <GraduationCap className="w-3.5 h-3.5 text-white" />
               <span>Coach & Consultant</span>
             </button>
           </div>

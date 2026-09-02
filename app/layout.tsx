@@ -25,7 +25,11 @@ export const metadata: Metadata = {
     'content marketing AI',
     'EveryPosting',
   ],
-  authors: [{ name: 'EveryPosting Team' }],
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'EveryPosting | AI Content Repurposing SaaS',
     description:

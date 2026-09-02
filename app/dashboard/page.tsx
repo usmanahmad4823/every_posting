@@ -263,8 +263,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="pt-28 pb-16 min-h-screen bg-[#F5F5F7]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="pt-20 sm:pt-28 pb-10 sm:pb-16 min-h-screen bg-[#F5F5F7]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Milestone Review Modal */}
         <MilestoneReviewModal isOpen={showMilestoneModal} onClose={handleCloseMilestoneModal} />
 
@@ -272,9 +272,9 @@ export default function DashboardPage() {
         <MilestoneReviewModal isOpen={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} />
 
         {paymentSuccessMsg && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-bold flex items-center justify-between shadow-md animate-bounce">
-            <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-bold flex items-center justify-between shadow-md animate-bounce">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" />
               <span>{paymentSuccessMsg}</span>
             </div>
             <button
@@ -287,14 +287,14 @@ export default function DashboardPage() {
         )}
 
         {/* Header Title & Key Modal Trigger */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#E4E4E7]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#E4E4E7]">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-pink-50 text-[#FF529A] border border-pink-200">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+              <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-pink-50 text-[#FF529A] border border-pink-200">
                 Studio Dashboard
               </span>
-              <span className="text-xs text-[#71717A] font-medium">| Repurpose AI v2.0</span>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase ${
+              <span className="text-[10px] sm:text-xs text-[#71717A] font-medium">| Repurpose AI v2.0</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold uppercase ${
                 tier === 'pro'
                   ? 'bg-[#FF529A] text-white shadow-xs'
                   : tier === 'lifetime'
@@ -306,7 +306,7 @@ export default function DashboardPage() {
                 {tier === 'free' && 'FREE TIER'}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
               Content Repurposing Studio
             </h1>
           </div>

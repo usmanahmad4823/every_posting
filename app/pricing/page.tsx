@@ -65,17 +65,17 @@ export default function PricingPage() {
   const userTier = user?.tier || 'free';
 
   return (
-    <div className="pt-32 pb-24 bg-[#F5F5F7] min-h-screen relative overflow-hidden bg-aiigen-dots">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="aiigen-pill mb-3 border-[#FFC2DA]">
+    <div className="pt-20 sm:pt-32 pb-12 sm:pb-24 bg-[#F5F5F7] min-h-screen relative overflow-hidden bg-aiigen-dots">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          <div className="aiigen-pill mb-2 sm:mb-3 border-[#FFC2DA]">
             <span className="w-2 h-2 rounded-full bg-[#FF529A]" />
-            <span className="text-[#0A0A0C]">Transparent Creator Plans</span>
+            <span className="text-[#0A0A0C] text-[10px] sm:text-xs">Transparent Creator Plans</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#0A0A0C] tracking-tightest">
+          <h1 className="text-2xl sm:text-6xl font-extrabold text-[#0A0A0C] tracking-tight">
             Invest in Leverage. Scale Your Audience.
           </h1>
-          <p className="mt-4 text-[#52525B] text-base sm:text-xl font-medium">
+          <p className="mt-2 sm:mt-4 text-[#52525B] text-xs sm:text-xl font-medium">
             Turn every single audio recording or video script into 7 days of ready-to-post social media content.
           </p>
 
