@@ -41,11 +41,11 @@ export function NicheFeaturesSection() {
         </div>
 
         {/* Niche Tabs */}
-        <div className="w-full max-w-full overflow-x-auto pb-1 flex justify-start sm:justify-center mb-8 sm:mb-10 no-scrollbar">
-          <div className="inline-flex items-center p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm gap-1 sm:gap-2 shrink-0 mx-auto max-w-full">
+        <div className="flex justify-center mb-8 sm:mb-10 max-w-full px-2">
+          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm max-w-full">
             <button
               onClick={() => handleNicheChange('podcaster')}
-              className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap ${
                 activeNicheTab === 'podcaster'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
@@ -56,25 +56,27 @@ export function NicheFeaturesSection() {
             </button>
             <button
               onClick={() => handleNicheChange('youtuber')}
-              className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap ${
                 activeNicheTab === 'youtuber'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
               <PlaySquare className="w-3 h-3 sm:w-4 sm:h-4 text-white shrink-0" />
-              <span>YouTube Creators</span>
+              <span className="sm:hidden">YouTube</span>
+              <span className="hidden sm:inline">YouTube Creators</span>
             </button>
             <button
               onClick={() => handleNicheChange('coach')}
-              className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all whitespace-nowrap ${
                 activeNicheTab === 'coach'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
               <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 text-white shrink-0" />
-              <span>Coaches & Consultants</span>
+              <span className="sm:hidden">Coaches</span>
+              <span className="hidden sm:inline">Coaches & Consultants</span>
             </button>
           </div>
         </div>

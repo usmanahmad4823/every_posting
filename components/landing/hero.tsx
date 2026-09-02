@@ -202,11 +202,11 @@ export function HeroSection() {
           <p className="text-[9px] sm:text-xs uppercase tracking-widest text-[#71717A] font-extrabold mb-2.5 sm:mb-4">
             Select Your Niche Profile:
           </p>
-          <div className="w-full max-w-full overflow-x-auto pb-1 flex justify-start sm:justify-center no-scrollbar">
-            <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm shrink-0 mx-auto max-w-full">
+          <div className="flex justify-center max-w-full px-2">
+            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm max-w-full">
               <button
                 onClick={() => setSelectedNiche('podcaster')}
-                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap ${
                   selectedNiche === 'podcaster'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
@@ -217,25 +217,27 @@ export function HeroSection() {
               </button>
               <button
                 onClick={() => setSelectedNiche('youtuber')}
-                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap ${
                   selectedNiche === 'youtuber'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
                 }`}
               >
                 <PlaySquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
-                <span>YouTube Creator</span>
+                <span className="sm:hidden">YouTube</span>
+                <span className="hidden sm:inline">YouTube Creator</span>
               </button>
               <button
                 onClick={() => setSelectedNiche('coach')}
-                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap ${
                   selectedNiche === 'coach'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
                 }`}
               >
                 <GraduationCap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
-                <span>Coach & Consultant</span>
+                <span className="sm:hidden">Coach</span>
+                <span className="hidden sm:inline">Coach & Consultant</span>
               </button>
             </div>
           </div>
