@@ -198,15 +198,15 @@ export function HeroSection() {
         </motion.div>
 
         {/* INTERACTIVE NICHE SWITCHER PILLS */}
-        <div className="mt-10 sm:mt-16 text-center">
-          <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-bold mb-3 sm:mb-4">
+        <div className="mt-8 sm:mt-16 text-center">
+          <p className="text-[9px] sm:text-xs uppercase tracking-widest text-[#71717A] font-extrabold mb-2.5 sm:mb-4">
             Select Your Niche Profile:
           </p>
-          <div className="w-full max-w-full overflow-x-auto pb-2 sm:pb-0 flex justify-start sm:justify-center no-scrollbar">
-            <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm shrink-0 mx-auto max-w-full">
+          <div className="w-full max-w-full overflow-x-auto pb-1 flex justify-start sm:justify-center no-scrollbar">
+            <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm shrink-0 mx-auto max-w-full">
               <button
                 onClick={() => setSelectedNiche('podcaster')}
-                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
                   selectedNiche === 'podcaster'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
@@ -217,7 +217,7 @@ export function HeroSection() {
               </button>
               <button
                 onClick={() => setSelectedNiche('youtuber')}
-                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
                   selectedNiche === 'youtuber'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
@@ -228,7 +228,7 @@ export function HeroSection() {
               </button>
               <button
                 onClick={() => setSelectedNiche('coach')}
-                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                className={`flex items-center gap-1 sm:gap-2 px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-extrabold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
                   selectedNiche === 'coach'
                     ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                     : 'text-[#71717A] hover:text-[#FF529A]'
@@ -242,7 +242,7 @@ export function HeroSection() {
         </div>
 
         {/* CENTRAL VISUAL: DYNAMIC MOCKUP WITH FLOATING ACTIVITY NOTIFICATION CARDS */}
-        <div className="relative mt-8 max-w-5xl mx-auto">
+        <div className="relative mt-6 sm:mt-8 max-w-5xl mx-auto">
           {/* Floating Notification Activity Card Left */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -284,18 +284,18 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="aura-gradient-border relative z-20"
           >
-            <div className="aura-gradient-border-inner p-4 sm:p-6 bg-white">
+            <div className="aura-gradient-border-inner p-2.5 sm:p-6 bg-white">
               {/* Top Window Header */}
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#E4E4E7]">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-500" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500" />
-                  <span className="ml-2 text-xs font-mono text-[#71717A]">
-                    everyposting-studio // {selectedNiche}-ai-agent
+              <div className="flex flex-row items-center justify-between gap-1 pb-3 mb-3 border-b border-[#E4E4E7]">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500 shrink-0" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 shrink-0" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 shrink-0" />
+                  <span className="ml-1 sm:ml-2 text-[10px] sm:text-xs font-mono text-[#71717A] truncate">
+                    everyposting-studio // {selectedNiche}-agent
                   </span>
                 </div>
-                <div className="px-3 py-1 rounded-full text-xs font-semibold bg-pink-50 text-[#FF529A] border border-pink-200">
+                <div className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-xs font-bold bg-pink-50 text-[#FF529A] border border-pink-200 shrink-0 whitespace-nowrap">
                   ● Live Agent Output
                 </div>
               </div>
@@ -307,22 +307,22 @@ export function HeroSection() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.3 }}
-                  className="grid grid-cols-1 md:grid-cols-12 gap-6"
+                  className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6"
                 >
                   {/* Input Transcript Column */}
-                  <div className="md:col-span-5 flex flex-col justify-between p-4 rounded-2xl bg-[#FFF5F9] border border-[#FFC2DA]">
+                  <div className="md:col-span-5 flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FFF5F9] border border-[#FFC2DA]">
                     <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold text-[#71717A] uppercase tracking-wider">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className="text-[10px] sm:text-xs font-bold text-[#71717A] uppercase tracking-wider">
                           Input Transcript ({activeConfig.title})
                         </span>
-                        <span className="text-[11px] text-[#FF529A] font-mono">248 words</span>
+                        <span className="text-[10px] sm:text-[11px] text-[#FF529A] font-mono">248 words</span>
                       </div>
-                      <p className="text-xs text-[#1E293B] font-mono leading-relaxed line-clamp-10 whitespace-pre-line bg-white p-3 rounded-xl border border-[#FFC2DA]">
+                      <p className="text-[11px] sm:text-xs text-[#1E293B] font-mono leading-relaxed line-clamp-6 sm:line-clamp-10 whitespace-pre-line bg-white p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-[#FFC2DA]">
                         {activeConfig.sampleTranscript}
                       </p>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-[#FFC2DA] flex items-center justify-between text-xs text-[#71717A]">
+                    <div className="mt-3 pt-2.5 border-t border-[#FFC2DA] flex items-center justify-between text-[10px] sm:text-xs text-[#71717A]">
                       <span>Niche: <strong className="text-[#0A0A0C]">{activeConfig.title}</strong></span>
                       <span className="text-emerald-600 flex items-center gap-1 font-medium">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Ready
@@ -331,12 +331,12 @@ export function HeroSection() {
                   </div>
 
                   {/* Converted Output Column */}
-                  <div className="md:col-span-7 flex flex-col justify-between p-4 rounded-2xl bg-[#FFF0F6] border border-pink-200 shadow-inner">
+                  <div className="md:col-span-7 flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FFF0F6] border border-pink-200 shadow-inner">
                     <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#FF529A]" />
-                          <span className="text-xs font-bold text-[#0A0A0C] uppercase tracking-wider">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#FF529A] shrink-0" />
+                          <span className="text-[10px] sm:text-xs font-bold text-[#0A0A0C] uppercase tracking-wider">
                             AI Output: {activeConfig.supportedFormats[0].label}
                           </span>
                         </div>
@@ -347,28 +347,28 @@ export function HeroSection() {
                               activeConfig.supportedFormats[0].id
                             )
                           }
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white hover:bg-pink-50 text-[#FF529A] border border-[#FFC2DA] flex items-center gap-1.5 transition-colors shadow-sm"
+                          className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold bg-white hover:bg-pink-50 text-[#FF529A] border border-[#FFC2DA] flex items-center gap-1 transition-colors shadow-xs"
                         >
                           {copiedFormat === activeConfig.supportedFormats[0].id ? (
                             <>
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                               <span className="text-emerald-600 font-bold">Copied!</span>
                             </>
                           ) : (
                             <>
-                              <Copy className="w-3.5 h-3.5 text-[#FF529A]" />
+                              <Copy className="w-3 h-3 text-[#FF529A]" />
                               <span>Copy</span>
                             </>
                           )}
                         </button>
                       </div>
 
-                      <div className="bg-white p-4 rounded-xl border border-[#FFC2DA] text-xs sm:text-sm text-[#1E293B] font-sans leading-relaxed whitespace-pre-line max-h-[260px] overflow-y-auto">
+                      <div className="bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-[#FFC2DA] text-xs sm:text-sm text-[#1E293B] font-sans leading-relaxed whitespace-pre-line max-h-[220px] sm:max-h-[260px] overflow-y-auto">
                         {activeConfig.mockOutput[activeConfig.supportedFormats[0].id]}
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[#FFC2DA] flex items-center justify-between text-xs text-[#71717A]">
+                    <div className="mt-3 pt-2.5 border-t border-[#FFC2DA] flex items-center justify-between text-[10px] sm:text-xs text-[#71717A]">
                       <span>Formats generated: <strong className="text-[#0A0A0C]">{activeConfig.supportedFormats.length} formats</strong></span>
                       <Link href="/dashboard" className="text-[#FF529A] hover:underline font-bold flex items-center gap-1">
                         Open Studio →

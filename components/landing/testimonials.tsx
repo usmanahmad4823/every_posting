@@ -164,27 +164,27 @@ export function TestimonialsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* HEADER SECTION WITH HAPPINESS INDEX */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="aiigen-pill mb-3 border-[#FFC2DA] bg-white inline-flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[#0A0A0C] font-semibold">99.4% Creator Happiness Score</span>
-            <span className="text-[#FF529A] font-bold">• 4.98/5.0 Stars</span>
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="aiigen-pill mb-3 border-[#FFC2DA] bg-white inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="text-[#0A0A0C] font-semibold whitespace-nowrap">99.4% Creator Happiness Score</span>
+            <span className="text-[#FF529A] font-bold whitespace-nowrap">• 4.98/5.0 Stars</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-aiigen-title tracking-tightest mt-2">
+          <h2 className="text-2xl sm:text-5xl font-extrabold text-aiigen-title tracking-tightest mt-2">
             Stories that make creators <span className="text-gradient-aura">smile & scale</span>
           </h2>
-          <p className="mt-4 text-[#52525B] text-base sm:text-lg font-medium leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-[#52525B] text-xs sm:text-lg font-medium leading-relaxed">
             See how top podcasters, YouTubers, and high-ticket coaches turn single transcripts into full content calendars with delight.
           </p>
         </div>
 
         {/* INTERACTIVE NICHE FILTER SWITCHER TABS */}
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm">
+        <div className="w-full max-w-full overflow-x-auto pb-1 flex justify-start sm:justify-center mb-10 sm:mb-12 no-scrollbar">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm shrink-0 mx-auto max-w-full">
             <button
               onClick={() => setActiveFilter('all')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                 activeFilter === 'all'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/25'
                   : 'text-[#71717A] hover:text-[#FF529A]'
@@ -194,7 +194,7 @@ export function TestimonialsSection() {
             </button>
             <button
               onClick={() => setActiveFilter('podcaster')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                 activeFilter === 'podcaster'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/25'
                   : 'text-[#71717A] hover:text-[#FF529A]'
@@ -204,7 +204,7 @@ export function TestimonialsSection() {
             </button>
             <button
               onClick={() => setActiveFilter('youtuber')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                 activeFilter === 'youtuber'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/25'
                   : 'text-[#71717A] hover:text-[#FF529A]'
@@ -214,7 +214,7 @@ export function TestimonialsSection() {
             </button>
             <button
               onClick={() => setActiveFilter('coach')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                 activeFilter === 'coach'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/25'
                   : 'text-[#71717A] hover:text-[#FF529A]'
