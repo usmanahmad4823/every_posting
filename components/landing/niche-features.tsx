@@ -41,39 +41,39 @@ export function NicheFeaturesSection() {
         </div>
 
         {/* Niche Tabs */}
-        <div className="flex justify-center mb-10">
-          <div className="inline-flex p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm gap-2">
+        <div className="w-full max-w-full overflow-x-auto pb-2 sm:pb-0 flex justify-start sm:justify-center mb-10 no-scrollbar">
+          <div className="inline-flex items-center p-1 sm:p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm gap-1 sm:gap-2 shrink-0 mx-auto max-w-full">
             <button
               onClick={() => handleNicheChange('podcaster')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-[11px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
                 activeNicheTab === 'podcaster'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <Mic className="w-4 h-4 text-white" />
+              <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
               <span>Podcasters</span>
             </button>
             <button
               onClick={() => handleNicheChange('youtuber')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-[11px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
                 activeNicheTab === 'youtuber'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <PlaySquare className="w-4 h-4 text-white" />
+              <PlaySquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
               <span>YouTube Creators</span>
             </button>
             <button
               onClick={() => handleNicheChange('coach')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-[11px] sm:text-sm transition-all whitespace-nowrap shrink-0 ${
                 activeNicheTab === 'coach'
                   ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
                   : 'text-[#71717A] hover:text-[#FF529A]'
               }`}
             >
-              <GraduationCap className="w-4 h-4 text-white" />
+              <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
               <span>Coaches & Consultants</span>
             </button>
           </div>

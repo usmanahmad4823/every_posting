@@ -202,40 +202,42 @@ export function HeroSection() {
           <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-bold mb-3 sm:mb-4">
             Select Your Niche Profile:
           </p>
-          <div className="inline-flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1 sm:p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm">
-            <button
-              onClick={() => setSelectedNiche('podcaster')}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
-                selectedNiche === 'podcaster'
-                  ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
-                  : 'text-[#71717A] hover:text-[#FF529A]'
-              }`}
-            >
-              <Mic className="w-3.5 h-3.5 text-white" />
-              <span>Podcaster</span>
-            </button>
-            <button
-              onClick={() => setSelectedNiche('youtuber')}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
-                selectedNiche === 'youtuber'
-                  ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
-                  : 'text-[#71717A] hover:text-[#FF529A]'
-              }`}
-            >
-              <PlaySquare className="w-3.5 h-3.5 text-white" />
-              <span>YouTube Creator</span>
-            </button>
-            <button
-              onClick={() => setSelectedNiche('coach')}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-sm transition-all duration-200 ${
-                selectedNiche === 'coach'
-                  ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
-                  : 'text-[#71717A] hover:text-[#FF529A]'
-              }`}
-            >
-              <GraduationCap className="w-3.5 h-3.5 text-white" />
-              <span>Coach & Consultant</span>
-            </button>
+          <div className="w-full max-w-full overflow-x-auto pb-2 sm:pb-0 flex justify-start sm:justify-center no-scrollbar">
+            <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-2xl bg-white border border-[#FFC2DA] shadow-sm shrink-0 mx-auto max-w-full">
+              <button
+                onClick={() => setSelectedNiche('podcaster')}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                  selectedNiche === 'podcaster'
+                    ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
+                    : 'text-[#71717A] hover:text-[#FF529A]'
+                }`}
+              >
+                <Mic className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
+                <span>Podcaster</span>
+              </button>
+              <button
+                onClick={() => setSelectedNiche('youtuber')}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                  selectedNiche === 'youtuber'
+                    ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
+                    : 'text-[#71717A] hover:text-[#FF529A]'
+                }`}
+              >
+                <PlaySquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
+                <span>YouTube Creator</span>
+              </button>
+              <button
+                onClick={() => setSelectedNiche('coach')}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[10px] sm:text-sm transition-all duration-200 whitespace-nowrap shrink-0 ${
+                  selectedNiche === 'coach'
+                    ? 'bg-[#FF529A] text-white shadow-md shadow-pink-500/30'
+                    : 'text-[#71717A] hover:text-[#FF529A]'
+                }`}
+              >
+                <GraduationCap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
+                <span>Coach & Consultant</span>
+              </button>
+            </div>
           </div>
         </div>
 
