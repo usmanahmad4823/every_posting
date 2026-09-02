@@ -12,11 +12,11 @@ import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
 
 const NAV_LINKS = [
-  { href: '#features', label: 'Niches' },
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#testimonials', label: 'Testimonials' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '/#niches', label: 'Niches' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/#testimonials', label: 'Testimonials' },
+  { href: '/#faq', label: 'FAQ' },
 ];
 
 export function Navbar() {

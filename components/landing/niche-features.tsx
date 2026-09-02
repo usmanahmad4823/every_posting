@@ -25,7 +25,7 @@ export function NicheFeaturesSection() {
   };
 
   return (
-    <section id="features" className="py-24 bg-[#F5F5F7] relative z-10">
+    <section id="niches" className="py-24 bg-[#F5F5F7] relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="aiigen-pill mb-3 border-[#FFC2DA]">
