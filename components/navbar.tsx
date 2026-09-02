@@ -71,14 +71,14 @@ export function Navbar() {
   const userTier = user?.plan || 'free';
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-6 py-2.5 sm:py-4 pointer-events-none">
-      <div className="max-w-6xl mx-auto pointer-events-auto">
+    <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-6 py-2.5 sm:py-4 pointer-events-none max-w-full overflow-hidden">
+      <div className="max-w-6xl mx-auto pointer-events-auto max-w-full">
         {/* Floating Creative Glass Capsule Navbar - Mobile Compact Scaling */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className={`transition-all duration-300 rounded-full border px-3 sm:px-6 py-1.5 sm:py-3 flex items-center justify-between shadow-xl relative ${
+          className={`transition-all duration-300 rounded-full border px-3 sm:px-6 py-1.5 sm:py-3 flex items-center justify-between shadow-xl relative max-w-full overflow-hidden ${
             scrolled
               ? 'bg-white/95 backdrop-blur-xl border-[#FFC2DA] shadow-pink-500/10'
               : 'bg-white/90 backdrop-blur-lg border-white/80 shadow-slate-900/5'

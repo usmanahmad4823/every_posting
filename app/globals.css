@@ -14,11 +14,18 @@
     --accent-coral: #FF5500;
   }
 
+  html {
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
   body {
     background-color: var(--canvas-bg);
     color: var(--body-color);
     font-family: var(--font-geist-sans), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-    overflow-x: hidden;
+    max-width: 100%;
+    overflow-x: hidden !important;
+    position: relative;
     selection-background-color: rgba(255, 82, 154, 0.2);
   }
 }
