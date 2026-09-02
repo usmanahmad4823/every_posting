@@ -40,7 +40,7 @@ export function isSupabaseConfigured(): boolean {
 
 // REAL SUPABASE SIGN UP FUNCTION
 export async function signUpUser(fullName: string, email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
-  const cleanName = fullName.trim() || 'Usman Ahmad';
+  const cleanName = fullName.trim() || email.split('@')[0];
 
   if (!isSupabaseConfigured()) {
     // Demo Mode Fallback
@@ -63,21 +63,19 @@ export async function signUpUser(fullName: string, email: string, password: stri
     const userId = authData.user?.id;
 
     if (userId) {
-      // 2. Save User Record in Supabase `users` Table using Admin Client (Bypasses RLS)
-      const { error: dbError } = await supabaseAdmin.from('users').upsert({
-        id: userId,
-        email,
-        full_name: cleanName,
-        subscription_tier: 'free',
-        generations_used_this_month: 0,
-        monthly_generation_limit: 10,
-        has_seen_review_prompt: false,
-      });
-
-      if (dbError) {
-        console.error('[Supabase DB Insert Error]:', dbError.message);
-      } else {
-        console.log(`[Supabase DB Success] User ${cleanName} (${email}) saved to users table.`);
+      // 2. Save User Record in Supabase `users` Table
+      try {
+        await supabase.from('users').upsert({
+          id: userId,
+          email,
+          full_name: cleanName,
+          subscription_tier: 'free',
+          generations_used_this_month: 0,
+          monthly_generation_limit: 10,
+          has_seen_review_prompt: false,
+        });
+      } catch (dbErr) {
+        console.warn('[Supabase DB Upsert Notice]:', dbErr);
       }
     }
 
@@ -115,23 +113,26 @@ export async function signInUser(email: string, password: string): Promise<{ suc
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { success: false, error: error.message };
 
-    // 1. Check Supabase users table for saved full_name
-    let dbName: string | null = null;
-    try {
-      const { data: dbUser } = await supabase
-        .from('users')
-        .select('full_name')
-        .eq('id', data.user.id)
-        .single();
-      if (dbUser?.full_name) dbName = dbUser.full_name;
-    } catch {}
+    const userId = data.user.id;
+    const finalName = data.user?.user_metadata?.full_name || formattedEmailName;
 
-    // 2. Fallback to Auth Metadata or formatted email
-    const finalName = dbName || data.user?.user_metadata?.full_name || formattedEmailName;
+    // Ensure User Record Exists in Supabase `users` Table upon every login
+    try {
+      await supabase.from('users').upsert({
+        id: userId,
+        email: data.user.email || email,
+        full_name: finalName,
+        subscription_tier: 'free',
+        generations_used_this_month: 0,
+        monthly_generation_limit: 10,
+      }, { onConflict: 'id' });
+    } catch (dbErr) {
+      console.warn('[Supabase Sign-In DB Sync Warning]:', dbErr);
+    }
 
     localStorage.setItem(
       'everyposting_user',
-      JSON.stringify({ id: data.user.id, fullName: finalName, email: data.user.email, loggedIn: true })
+      JSON.stringify({ id: userId, fullName: finalName, email: data.user.email, loggedIn: true })
     );
 
     return { success: true, user: data.user };
