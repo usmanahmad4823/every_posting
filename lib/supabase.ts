@@ -195,9 +195,9 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
         id: currentId,
         email: metaEmail,
         fullName: metaName,
-        subscriptionTier: 'free',
+        subscriptionTier: storedUser?.plan || storedUser?.tier || 'free',
         generationsUsedThisMonth: 0,
-        monthlyGenerationLimit: 10,
+        monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
         hasSeenReviewPrompt: false,
       };
     }
