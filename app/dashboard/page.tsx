@@ -589,27 +589,27 @@ export default function DashboardPage() {
             {/* Input & Formats Container */}
             <div className="aiigen-card p-6 sm:p-8 bg-white border border-[#E4E4E7] shadow-xl">
               {/* Header Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="icon-box-black bg-[#FF529A] p-2 rounded-xl">
-                    <Sparkles className="w-4 h-4 text-white" />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="icon-box-black bg-[#FF529A] p-1.5 sm:p-2 rounded-lg sm:rounded-xl shrink-0">
+                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                   </div>
-                  <h2 className="text-lg font-bold text-[#0A0A0C]">
+                  <h2 className="text-sm sm:text-lg font-extrabold text-[#0A0A0C] truncate">
                     Paste Transcript ({activeConfig.title})
                   </h2>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <button
                     onClick={handleLoadSample}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-50 text-[#FF529A] hover:bg-pink-100 border border-pink-200 flex items-center gap-1.5 transition-colors"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-pink-50 text-[#FF529A] hover:bg-pink-100 border border-pink-200 flex items-center gap-1 sm:gap-1.5 transition-colors whitespace-nowrap shadow-2xs"
                   >
-                    <FileText className="w-3.5 h-3.5" />
+                    <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                     <span>Insert Demo Sample</span>
                   </button>
 
-                  <label className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#0A0A0C] border border-[#E4E4E7] flex items-center gap-1.5 cursor-pointer transition-colors">
-                    <Upload className="w-3.5 h-3.5" />
+                  <label className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#0A0A0C] border border-[#E4E4E7] flex items-center gap-1 sm:gap-1.5 cursor-pointer transition-colors whitespace-nowrap shadow-2xs">
+                    <Upload className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                     <span>Upload .txt / .srt</span>
                     <input type="file" accept=".txt,.srt,.vtt,.md" onChange={handleFileUpload} className="hidden" />
                   </label>
@@ -617,15 +617,15 @@ export default function DashboardPage() {
               </div>
 
               {/* Tone Selection Pills */}
-              <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1">
-                <span className="text-xs font-bold text-[#71717A] uppercase tracking-wider shrink-0">Tone:</span>
+              <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+                <span className="text-[10px] sm:text-xs font-bold text-[#71717A] uppercase tracking-wider shrink-0">Tone:</span>
                 {(['energetic', 'professional', 'viral', 'storytelling'] as ToneStyle[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setSelectedTone(t)}
-                    className={`px-3 py-1 rounded-full text-xs font-bold capitalize transition-all shrink-0 ${
+                    className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-extrabold capitalize transition-all shrink-0 ${
                       selectedTone === t
-                        ? 'bg-[#FF529A] text-white shadow-sm'
+                        ? 'bg-[#FF529A] text-white shadow-xs'
                         : 'bg-[#F8FAFC] text-[#64748B] hover:text-[#0A0A0C] border border-[#E2E8F0]'
                     }`}
                   >
@@ -650,14 +650,14 @@ export default function DashboardPage() {
                     }
                   }}
                   placeholder={`Paste your episode audio transcript, YouTube script, or client call notes here... Or click "Insert Demo Sample" above to test immediately!`}
-                  rows={8}
-                  className={`w-full rounded-2xl p-4 text-sm text-[#0A0A0C] placeholder:text-[#94A3B8] focus:outline-none transition-all font-sans leading-relaxed resize-y font-medium ${
+                  rows={7}
+                  className={`w-full rounded-xl sm:rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm text-[#0A0A0C] placeholder:text-[#94A3B8] focus:outline-none transition-all font-sans leading-relaxed resize-y font-medium ${
                     inputError
                       ? 'bg-rose-50/50 border-2 border-rose-500 focus:ring-2 focus:ring-rose-500'
                       : 'bg-[#F8FAFC] border border-[#E2E8F0] focus:border-[#FF529A] focus:ring-1 focus:ring-[#FF529A]'
                   }`}
                 />
-                <div className="absolute bottom-3 right-4 text-[11px] text-[#94A3B8] font-mono pointer-events-none">
+                <div className="absolute bottom-3 right-4 text-[10px] sm:text-[11px] text-[#94A3B8] font-mono pointer-events-none">
                   {transcript ? `${transcript.split(/\s+/).filter(Boolean).length} words` : '0 words'}
                 </div>
               </motion.div>
@@ -669,7 +669,7 @@ export default function DashboardPage() {
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between gap-3 font-medium shadow-sm"
+                    className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between gap-3 font-medium shadow-xs"
                   >
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
@@ -678,7 +678,7 @@ export default function DashboardPage() {
                     {inputError && (
                       <button
                         onClick={handleLoadSample}
-                        className="px-3 py-1 bg-white hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-300 transition-colors shrink-0"
+                        className="px-2.5 py-1 bg-white hover:bg-rose-100 text-rose-700 font-bold text-[10px] sm:text-xs rounded-lg border border-rose-300 transition-colors shrink-0"
                       >
                         Auto-fill Demo
                       </button>
@@ -688,33 +688,33 @@ export default function DashboardPage() {
               </AnimatePresence>
 
               {/* Format Checkbox Selector */}
-              <div className="mb-6">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#71717A] mb-3">
+              <div className="mb-5 sm:mb-6">
+                <label className="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#71717A] mb-2.5">
                   Select Desired Output Formats:
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {activeConfig.supportedFormats.map((format) => {
                     const isChecked = selectedFormats.includes(format.id);
                     return (
                       <div
                         key={format.id}
                         onClick={() => toggleFormat(format.id)}
-                        className={`p-3 rounded-xl border cursor-pointer flex items-center gap-3 transition-all ${
+                        className={`p-2.5 sm:p-3.5 rounded-xl border cursor-pointer flex items-center gap-2.5 transition-all ${
                           isChecked
-                            ? 'bg-pink-50 border-[#FF529A] text-[#0A0A0C] font-semibold shadow-sm'
-                            : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#0A0A0C]'
+                            ? 'bg-pink-50/90 border-[#FF529A] text-[#0A0A0C] font-semibold shadow-xs ring-1 ring-[#FF529A]/30'
+                            : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:text-[#0A0A0C] hover:bg-white'
                         }`}
                       >
                         <div
-                          className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
-                            isChecked ? 'bg-[#FF529A] border-[#FF529A] text-white' : 'border-[#CBD5E1]'
+                          className={`w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0 ${
+                            isChecked ? 'bg-[#FF529A] border-[#FF529A] text-white scale-105' : 'border-[#CBD5E1]'
                           }`}
                         >
                           {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
                         </div>
-                        <div>
-                          <div className="text-xs font-bold text-[#0A0A0C]">{format.label}</div>
-                          <div className="text-[10px] text-[#64748B] font-normal">{format.description}</div>
+                        <div className="min-w-0">
+                          <div className="text-[11px] sm:text-xs font-extrabold text-[#0A0A0C] truncate">{format.label}</div>
+                          <div className="text-[9px] sm:text-[10px] text-[#64748B] font-normal line-clamp-1">{format.description}</div>
                         </div>
                       </div>
                     );
@@ -726,17 +726,18 @@ export default function DashboardPage() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="w-full btn-aiigen-primary font-extrabold text-base py-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-pink-500/25"
+                className="w-full relative group overflow-hidden btn-aiigen-primary font-extrabold text-xs sm:text-sm py-3.5 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 sm:gap-2.5 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
               >
                 {isGenerating ? (
-                  <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>{generationStep}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin shrink-0" />
+                    <span className="text-xs sm:text-sm">{generationStep}</span>
                   </div>
                 ) : (
                   <>
-                    <Zap className="w-5 h-5 fill-white" />
-                    <span>Generate AI Content ({selectedFormats.length} Formats)</span>
+                    <Zap className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-white group-hover:rotate-12 transition-transform shrink-0" />
+                    <span className="truncate">Generate AI Content ({selectedFormats.length} Formats)</span>
+                    <Sparkles className="w-3.5 h-3.5 text-white/80 group-hover:scale-125 transition-transform shrink-0" />
                   </>
                 )}
               </button>
@@ -858,13 +859,14 @@ export default function DashboardPage() {
 
       {/* Mobile Sticky Bottom Generation Action Bar */}
       {transcript.trim().length > 0 && !isGenerating && (
-        <div className="block sm:hidden fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-[#FFC2DA] z-40 shadow-2xl">
+        <div className="block sm:hidden fixed bottom-0 left-0 right-0 p-2.5 bg-white/95 backdrop-blur-md border-t border-[#FFC2DA] z-40 shadow-2xl">
           <button
             onClick={handleGenerate}
-            className="w-full btn-aiigen-primary font-extrabold text-xs py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25"
+            className="w-full btn-aiigen-primary font-extrabold text-xs py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/30 hover:scale-[1.01] active:scale-[0.98] transition-all"
           >
-            <Sparkles className="w-4 h-4 text-white" />
+            <Zap className="w-3.5 h-3.5 fill-white" />
             <span>Generate AI Content ({selectedFormats.length} Formats)</span>
+            <Sparkles className="w-3.5 h-3.5 text-white/80" />
           </button>
         </div>
       )}
