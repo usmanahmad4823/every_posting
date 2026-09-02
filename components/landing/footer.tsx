@@ -158,7 +158,7 @@ export function Footer() {
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C] mb-4">Product</h4>
               <ul className="space-y-3 text-xs font-semibold text-[#52525B]">
                 <li>
-                  <Link href="#features" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/features" className="hover:text-[#FF529A] transition-colors">
                     Features
                   </Link>
                 </li>
@@ -168,12 +168,12 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="#features" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/integrations" className="hover:text-[#FF529A] transition-colors">
                     Integrations
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/changelog" className="hover:text-[#FF529A] transition-colors">
                     Changelog
                   </Link>
                 </li>
@@ -185,22 +185,22 @@ export function Footer() {
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C] mb-4">Resources</h4>
               <ul className="space-y-3 text-xs font-semibold text-[#52525B]">
                 <li>
-                  <Link href="#faq" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/docs" className="hover:text-[#FF529A] transition-colors">
                     Documentation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#how-it-works" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/tutorials" className="hover:text-[#FF529A] transition-colors">
                     Tutorials
                   </Link>
                 </li>
                 <li>
-                  <Link href="#testimonials" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/blog" className="hover:text-[#FF529A] transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="#faq" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/support" className="hover:text-[#FF529A] transition-colors">
                     Support
                   </Link>
                 </li>
@@ -212,22 +212,22 @@ export function Footer() {
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C] mb-4">Company</h4>
               <ul className="space-y-3 text-xs font-semibold text-[#52525B]">
                 <li>
-                  <Link href="/" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/about" className="hover:text-[#FF529A] transition-colors">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/careers" className="hover:text-[#FF529A] transition-colors">
                     Careers
                   </Link>
                 </li>
                 <li>
-                  <Link href="#faq" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/contact" className="hover:text-[#FF529A] transition-colors">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="/" className="hover:text-[#FF529A] transition-colors">
+                  <Link href="/partners" className="hover:text-[#FF529A] transition-colors">
                     Partners
                   </Link>
                 </li>
@@ -240,9 +240,8 @@ export function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-[#71717A]">
           <p>© 2026 EveryPosting. All rights reserved.</p>
           <div className="flex items-center gap-6 text-xs">
-            <span className="hover:text-[#FF529A] cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-[#FF529A] cursor-pointer transition-colors">Terms of Service</span>
-            <span className="hover:text-[#FF529A] cursor-pointer transition-colors">Cookie Settings</span>
+            <Link href="/privacy" className="hover:text-[#FF529A] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#FF529A] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
