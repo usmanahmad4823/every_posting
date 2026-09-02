@@ -26,15 +26,15 @@ interface UserContextType {
 }
 
 const DEFAULT_USER: UserSessionState = {
-  id: 'user-1',
-  email: 'usmanahmad4t12@gmail.com',
-  fullName: 'Usman Ahmad',
+  id: '',
+  email: '',
+  fullName: '',
   plan: 'free',
   planStatus: 'active',
   generationsUsedThisMonth: 0,
   monthlyGenerationLimit: 10,
   hasSeenReviewPrompt: false,
-  loggedIn: true,
+  loggedIn: false,
 };
 
 const UserContext = createContext<UserContextType>({
@@ -57,26 +57,33 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     } catch {}
   }
 
-  // 2. Fetch fresh user profile & subscription tier from Supabase / DB backend
+  // 2. If no session exists or user is logged out, return guest state
+  if (!storedUser || !storedUser.loggedIn) {
+    return DEFAULT_USER;
+  }
+
+  // 3. Fetch fresh user profile & subscription tier from Supabase / DB backend
   try {
-    const profile = await getUserProfile(storedUser?.id || 'demo-user-1');
+    const profile = await getUserProfile(storedUser.id);
 
     const mappedPlan: PlanType =
-      profile.subscriptionTier || storedUser?.tier || 'free';
+      profile.subscriptionTier || storedUser.tier || storedUser.plan || 'free';
     const mappedStatus: PlanStatus = profile.planStatus || 'active';
 
-    const cleanEmail = profile.email || storedUser?.email || 'usmanahmad4t12@gmail.com';
+    const cleanEmail = profile.email || storedUser.email || '';
     const emailPrefixName = cleanEmail
-      .split('@')[0]
-      .replace(/[._-]/g, ' ')
-      .replace(/\d+/g, ' ')
-      .trim()
-      .replace(/\b\w/g, (c: string) => c.toUpperCase());
+      ? cleanEmail
+          .split('@')[0]
+          .replace(/[._-]/g, ' ')
+          .replace(/\d+/g, ' ')
+          .trim()
+          .replace(/\b\w/g, (c: string) => c.toUpperCase())
+      : '';
 
-    const cleanFullName = profile.fullName || storedUser?.fullName || (emailPrefixName.length > 2 ? emailPrefixName : 'Usman Ahmad');
+    const cleanFullName = profile.fullName || storedUser.fullName || emailPrefixName || 'Creator User';
 
     const updatedSession: UserSessionState = {
-      id: profile.id || storedUser?.id || 'user-1',
+      id: profile.id || storedUser.id || 'user-1',
       email: cleanEmail,
       fullName: cleanFullName,
       plan: mappedPlan,
@@ -94,11 +101,11 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
   } catch (err) {
     console.warn('[UserProvider] Error fetching live profile, using cached fallback:', err);
     return {
-      id: storedUser?.id || 'user-1',
-      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
-      fullName: storedUser?.fullName || 'Usman Ahmad',
-      plan: storedUser?.tier || storedUser?.plan || 'free',
-      planStatus: storedUser?.planStatus || 'active',
+      id: storedUser.id || 'user-1',
+      email: storedUser.email || '',
+      fullName: storedUser.fullName || 'Creator User',
+      plan: storedUser.tier || storedUser.plan || 'free',
+      planStatus: storedUser.planStatus || 'active',
       generationsUsedThisMonth: 0,
       monthlyGenerationLimit: 10,
       loggedIn: true,
