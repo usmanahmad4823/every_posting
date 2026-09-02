@@ -8,6 +8,9 @@ import { useSparkleBurst } from '@/components/ui/sparkle-burst';
 import { useRouter } from 'next/navigation';
 import { signOutUser } from '@/lib/supabase';
 
+import { useUser } from '@/components/providers/user-provider';
+import { PlanBadge } from '@/components/ui/plan-badge';
+
 const NAV_LINKS = [
   { href: '#features', label: 'Niches' },
   { href: '#how-it-works', label: 'How it works' },
@@ -21,8 +24,8 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeHover, setActiveHover] = useState<string | null>(null);
 
-  // User Auth & Subscription State
-  const [user, setUser] = useState<{ fullName?: string; email?: string; loggedIn?: boolean; tier?: string } | null>(null);
+  // Global Reactive User & Subscription State
+  const { user, invalidateUser } = useUser();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -35,26 +38,6 @@ export function Navbar() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Check auth state from localStorage / session
-  useEffect(() => {
-    function checkUser() {
-      const stored = localStorage.getItem('everyposting_user');
-      if (stored) {
-        try {
-          setUser(JSON.parse(stored));
-        } catch {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    }
-
-    checkUser();
-    window.addEventListener('storage', checkUser);
-    return () => window.removeEventListener('storage', checkUser);
   }, []);
 
   // Close dropdown on outside click
@@ -70,7 +53,7 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     await signOutUser();
-    setUser(null);
+    await invalidateUser();
     setProfileDropdownOpen(false);
     router.push('/sign-in');
   };
@@ -85,7 +68,7 @@ export function Navbar() {
     return 'CU';
   };
 
-  const userTier = user?.tier || 'free';
+  const userTier = user?.plan || 'free';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-6 py-2.5 sm:py-4 pointer-events-none">
@@ -172,19 +155,7 @@ export function Navbar() {
                   </span>
 
                   {/* Active Subscription Badge Pill */}
-                  <span
-                    className={`text-[9px] sm:text-[10px] font-extrabold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 ${
-                      userTier === 'pro'
-                        ? 'bg-[#FF529A] text-white'
-                        : userTier === 'lifetime'
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-slate-100 text-[#52525B]'
-                    }`}
-                  >
-                    {userTier === 'pro' && '⚡ PRO'}
-                    {userTier === 'lifetime' && '👑 LIFETIME'}
-                    {userTier === 'free' && 'FREE'}
-                  </span>
+                  <PlanBadge plan={user.plan} planStatus={user.planStatus} />
 
                   <ChevronDown className="w-3 h-3 text-[#71717A] group-hover:text-[#FF529A] transition-transform duration-200" />
                 </button>
@@ -204,9 +175,8 @@ export function Navbar() {
                           {user.fullName || 'Creator User'}
                         </p>
                         <p className="text-[11px] text-[#71717A] truncate font-medium">{user.email}</p>
-                        <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-50 text-[#FF529A] border border-pink-200 text-[10px] font-bold uppercase">
-                          <ShieldCheck className="w-3 h-3" />
-                          <span>{userTier} active</span>
+                        <div className="mt-1.5 flex items-center">
+                          <PlanBadge plan={user.plan} planStatus={user.planStatus} />
                         </div>
                       </div>
 
@@ -319,7 +289,8 @@ export function Navbar() {
                       className="btn-aiigen-secondary py-2 text-center text-xs font-bold rounded-xl border-[#FFC2DA] flex items-center justify-center gap-1.5"
                     >
                       <User className="w-3.5 h-3.5 text-[#FF529A]" />
-                      <span>Account Settings ({userTier.toUpperCase()})</span>
+                      <span>Account Settings</span>
+                      <PlanBadge plan={user.plan} planStatus={user.planStatus} />
                     </Link>
                     <button
                       onClick={handleSignOut}

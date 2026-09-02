@@ -27,12 +27,20 @@ import {
 } from 'lucide-react';
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
-import { getGenerationHistory, getUserProfile } from '@/lib/supabase';
+import { getGenerationHistory } from '@/lib/supabase';
 import { FeedbackPrompt } from '@/components/feedback/feedback-prompt';
 import { MilestoneReviewModal } from '@/components/feedback/milestone-review-modal';
 import { AdvancedOutputPreview } from '@/components/studio/advanced-output-preview';
+import { useUser } from '@/components/providers/user-provider';
+import { PlanBadge } from '@/components/ui/plan-badge';
 
 export default function DashboardPage() {
+  const { user, invalidateUser, updateUserLocally } = useUser();
+
+  const usageCount = user.generationsUsedThisMonth;
+  const usageLimit = user.monthlyGenerationLimit;
+  const tier = user.plan;
+
   const [selectedNiche, setSelectedNiche] = useState<NicheType>('podcaster');
   const [transcript, setTranscript] = useState<string>('');
   const [selectedFormats, setSelectedFormats] = useState<OutputFormat[]>([
@@ -50,9 +58,6 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<GenerationResult[]>([]);
 
   const [copiedAll, setCopiedAll] = useState<boolean>(false);
-  const [usageCount, setUsageCount] = useState<number>(3);
-  const [usageLimit] = useState<number>(10);
-  const [tier, setTier] = useState<'free' | 'pro' | 'lifetime'>('free');
 
   const [customApiKey, setCustomApiKey] = useState<string>('');
   const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
@@ -73,23 +78,16 @@ export default function DashboardPage() {
       // Check for payment success URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       const isPaymentSuccess = urlParams.get('payment_success') === 'true';
-      const successPlan = urlParams.get('plan') as 'pro' | 'lifetime' | null;
+      const successPlan = urlParams.get('plan') as any;
 
       if (isPaymentSuccess && successPlan) {
-        const storedUser = localStorage.getItem('everyposting_user');
-        if (storedUser) {
-          try {
-            const parsed = JSON.parse(storedUser);
-            parsed.tier = successPlan;
-            localStorage.setItem('everyposting_user', JSON.stringify(parsed));
-          } catch {}
-        }
-        setPaymentSuccessMsg(`Congratulations! Your ${successPlan.toUpperCase()} Plan subscription is now ACTIVE!`);
-      }
+        // Optimistically update local user state instantly
+        updateUserLocally({ plan: successPlan, planStatus: 'active' });
+        // Invalidate TanStack query to fetch server source of truth
+        await invalidateUser();
 
-      const profile = await getUserProfile();
-      setUsageCount(profile.generationsUsedThisMonth);
-      setTier(successPlan || profile.subscriptionTier);
+        setPaymentSuccessMsg(`🎉 You're now on the ${successPlan.toUpperCase()} plan! Welcome aboard!`);
+      }
 
       const savedKey = localStorage.getItem('everyposting_custom_key');
       if (savedKey) setCustomApiKey(savedKey);
@@ -98,7 +96,7 @@ export default function DashboardPage() {
       setHistory(pastGenerations);
 
       const hasSeenPrompt = localStorage.getItem('everyposting_seen_review_prompt');
-      if (!profile.hasSeenReviewPrompt && !hasSeenPrompt && profile.generationsUsedThisMonth >= 5) {
+      if (!user.hasSeenReviewPrompt && !hasSeenPrompt && user.generationsUsedThisMonth >= 5) {
         setShowMilestoneModal(true);
       }
     }
@@ -195,7 +193,8 @@ export default function DashboardPage() {
       setActiveResultTab(selectedFormats[0]);
 
       const newUsage = usageCount + 1;
-      setUsageCount(newUsage);
+      updateUserLocally({ generationsUsedThisMonth: newUsage });
+      await invalidateUser();
 
       const hasSeenPrompt = localStorage.getItem('everyposting_seen_review_prompt');
       if (newUsage === 5 && !hasSeenPrompt) {
@@ -294,17 +293,7 @@ export default function DashboardPage() {
                 Studio Dashboard
               </span>
               <span className="text-[10px] sm:text-xs text-[#71717A] font-medium">| Repurpose AI v2.0</span>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold uppercase ${
-                tier === 'pro'
-                  ? 'bg-[#FF529A] text-white shadow-xs'
-                  : tier === 'lifetime'
-                  ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-slate-100 text-[#52525B]'
-              }`}>
-                {tier === 'pro' && '⚡ PRO ACTIVE'}
-                {tier === 'lifetime' && '👑 LIFETIME ACTIVE'}
-                {tier === 'free' && 'FREE TIER'}
-              </span>
+              <PlanBadge plan={user.plan} planStatus={user.planStatus} />
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
               Content Repurposing Studio
