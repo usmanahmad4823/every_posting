@@ -6,7 +6,10 @@ import { Sparkles, ArrowRight, User, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signInUser } from '@/lib/supabase';
 
+import { useUser } from '@/components/providers/user-provider';
+
 export default function SignInPage() {
+  const { invalidateUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,6 +24,7 @@ export default function SignInPage() {
     const res = await signInUser(email, password);
 
     if (res.success) {
+      await invalidateUser();
       router.push('/dashboard');
     } else {
       setErrorMsg(res.error || 'Failed to sign in. Please check your credentials.');
@@ -63,7 +67,7 @@ export default function SignInPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="creator@everyposting.co"
+                placeholder="usman@everyposting.co"
                 className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 text-sm text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-medium"
               />
             </div>

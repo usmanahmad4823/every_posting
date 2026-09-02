@@ -64,7 +64,7 @@ export default function SignUpPage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Alex Morgan"
+                placeholder="Usman Ahmad"
                 className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 text-sm text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-medium"
               />
             </div>
@@ -78,7 +78,7 @@ export default function SignUpPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="alex@everyposting.co"
+                placeholder="usman@everyposting.co"
                 className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 text-sm text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-medium"
               />
             </div>

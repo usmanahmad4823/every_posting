@@ -132,7 +132,7 @@ export default function AccountPage() {
                       </button>
                     </div>
                   )}
-                  <p className="text-xs text-[#71717A] font-medium">{user.email || 'creator@everyposting.com'}</p>
+                  <p className="text-xs text-[#71717A] font-medium">{user.email || 'usmanahmad4t12@gmail.com'}</p>
                 </div>
               </div>
 

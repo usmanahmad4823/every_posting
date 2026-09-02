@@ -13,7 +13,13 @@ const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
   'demo-anon-key';
 
+const supabaseServiceKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ||
+  supabaseAnonKey;
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
 // In-memory demo store fallback when Supabase connection is not yet configured
 let mockGenerationHistory: GenerationResult[] = [];
@@ -34,10 +40,12 @@ export function isSupabaseConfigured(): boolean {
 
 // REAL SUPABASE SIGN UP FUNCTION
 export async function signUpUser(fullName: string, email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
+  const cleanName = fullName.trim() || 'Usman Ahmad';
+
   if (!isSupabaseConfigured()) {
     // Demo Mode Fallback
-    localStorage.setItem('everyposting_user', JSON.stringify({ fullName, email, loggedIn: true, tier: 'free' }));
-    return { success: true, user: { email, fullName } };
+    localStorage.setItem('everyposting_user', JSON.stringify({ fullName: cleanName, email, loggedIn: true, tier: 'free' }));
+    return { success: true, user: { email, fullName: cleanName } };
   }
 
   try {
@@ -46,7 +54,7 @@ export async function signUpUser(fullName: string, email: string, password: stri
       email,
       password,
       options: {
-        data: { full_name: fullName },
+        data: { full_name: cleanName },
       },
     });
 
@@ -55,21 +63,25 @@ export async function signUpUser(fullName: string, email: string, password: stri
     const userId = authData.user?.id;
 
     if (userId) {
-      // 2. Save User Record in Supabase `users` Table
-      const { error: dbError } = await supabase.from('users').upsert({
+      // 2. Save User Record in Supabase `users` Table using Admin Client (Bypasses RLS)
+      const { error: dbError } = await supabaseAdmin.from('users').upsert({
         id: userId,
         email,
-        full_name: fullName,
+        full_name: cleanName,
         subscription_tier: 'free',
         generations_used_this_month: 0,
         monthly_generation_limit: 10,
         has_seen_review_prompt: false,
       });
 
-      if (dbError) console.warn('Supabase users table insert warning:', dbError);
+      if (dbError) {
+        console.error('[Supabase DB Insert Error]:', dbError.message);
+      } else {
+        console.log(`[Supabase DB Success] User ${cleanName} (${email}) saved to users table.`);
+      }
     }
 
-    localStorage.setItem('everyposting_user', JSON.stringify({ id: userId, fullName, email, loggedIn: true, tier: 'free' }));
+    localStorage.setItem('everyposting_user', JSON.stringify({ id: userId, fullName: cleanName, email, loggedIn: true, tier: 'free' }));
     return { success: true, user: authData.user };
   } catch (err: any) {
     return { success: false, error: err.message || 'Failed to sign up in Supabase' };
@@ -78,17 +90,50 @@ export async function signUpUser(fullName: string, email: string, password: stri
 
 // REAL SUPABASE SIGN IN FUNCTION
 export async function signInUser(email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
+  // Generate clean name from email prefix if metadata missing
+  const formattedEmailName = email
+    .split('@')[0]
+    .replace(/[._-]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
   if (!isSupabaseConfigured()) {
-    // Demo Mode Fallback
-    localStorage.setItem('everyposting_user', JSON.stringify({ email, loggedIn: true, tier: 'free' }));
-    return { success: true, user: { email } };
+    // Demo Mode Fallback: Preserve existing name if logged in previously
+    const existing = localStorage.getItem('everyposting_user');
+    let existingName = formattedEmailName;
+    if (existing) {
+      try {
+        const parsed = JSON.parse(existing);
+        if (parsed.fullName) existingName = parsed.fullName;
+      } catch {}
+    }
+
+    localStorage.setItem('everyposting_user', JSON.stringify({ fullName: existingName, email, loggedIn: true, tier: 'free' }));
+    return { success: true, user: { email, fullName: existingName } };
   }
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { success: false, error: error.message };
 
-    localStorage.setItem('everyposting_user', JSON.stringify({ id: data.user.id, email: data.user.email, loggedIn: true }));
+    // 1. Check Supabase users table for saved full_name
+    let dbName: string | null = null;
+    try {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('full_name')
+        .eq('id', data.user.id)
+        .single();
+      if (dbUser?.full_name) dbName = dbUser.full_name;
+    } catch {}
+
+    // 2. Fallback to Auth Metadata or formatted email
+    const finalName = dbName || data.user?.user_metadata?.full_name || formattedEmailName;
+
+    localStorage.setItem(
+      'everyposting_user',
+      JSON.stringify({ id: data.user.id, fullName: finalName, email: data.user.email, loggedIn: true })
+    );
+
     return { success: true, user: data.user };
   } catch (err: any) {
     return { success: false, error: err.message || 'Failed to sign in' };
@@ -108,12 +153,25 @@ export async function signOutUser(): Promise<void> {
 }
 
 export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfile> {
+  let storedUser: any = null;
+  if (typeof window !== 'undefined') {
+    const raw = localStorage.getItem('everyposting_user');
+    if (raw) {
+      try {
+        storedUser = JSON.parse(raw);
+      } catch {}
+    }
+  }
+
+  const fallbackName = storedUser?.fullName || 'Usman Ahmad';
+  const fallbackEmail = storedUser?.email || 'usmanahmad4t12@gmail.com';
+
   if (!isSupabaseConfigured()) {
     return {
       id: userId,
-      email: 'creator@everyposting.com',
-      fullName: 'Alex River',
-      subscriptionTier: 'free',
+      email: fallbackEmail,
+      fullName: fallbackName,
+      subscriptionTier: storedUser?.tier || 'free',
       generationsUsedThisMonth: mockUserUsageCount,
       monthlyGenerationLimit: 10,
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
@@ -123,6 +181,8 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
   try {
     const { data: sessionUser } = await supabase.auth.getUser();
     const currentId = sessionUser.user?.id || userId;
+    const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || fallbackName;
+    const metaEmail = sessionUser.user?.email || storedUser?.email || fallbackEmail;
 
     const { data, error } = await supabase
       .from('users')
@@ -133,8 +193,8 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
     if (error || !data) {
       return {
         id: currentId,
-        email: sessionUser.user?.email || 'creator@everyposting.com',
-        fullName: sessionUser.user?.user_metadata?.full_name || 'Alex River',
+        email: metaEmail,
+        fullName: metaName,
         subscriptionTier: 'free',
         generationsUsedThisMonth: 0,
         monthlyGenerationLimit: 10,
@@ -144,8 +204,8 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
 
     return {
       id: data.id,
-      email: data.email,
-      fullName: data.full_name,
+      email: data.email || metaEmail,
+      fullName: data.full_name || metaName,
       subscriptionTier: data.subscription_tier || 'free',
       generationsUsedThisMonth: data.generations_used_this_month || 0,
       monthlyGenerationLimit: data.monthly_generation_limit || 10,
@@ -154,9 +214,9 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
   } catch {
     return {
       id: userId,
-      email: 'creator@everyposting.com',
-      fullName: 'Alex River',
-      subscriptionTier: 'free',
+      email: fallbackEmail,
+      fullName: fallbackName,
+      subscriptionTier: storedUser?.tier || 'free',
       generationsUsedThisMonth: mockUserUsageCount,
       monthlyGenerationLimit: 10,
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
