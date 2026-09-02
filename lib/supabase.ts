@@ -153,7 +153,7 @@ export async function signOutUser(): Promise<void> {
   }
 }
 
-export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfile> {
+export async function getUserProfile(userId?: string): Promise<UserProfile | null> {
   let storedUser: any = null;
   if (typeof window !== 'undefined') {
     const raw = localStorage.getItem('everyposting_user');
@@ -164,15 +164,21 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
     }
   }
 
-  const fallbackName = storedUser?.fullName || 'Usman Ahmad';
-  const fallbackEmail = storedUser?.email || 'usmanahmad4t12@gmail.com';
+  // If no user session or stored user is logged in, return null
+  if (!storedUser || !storedUser.loggedIn || (!storedUser.id && !userId)) {
+    return null;
+  }
+
+  const activeId = storedUser.id || userId;
+  const fallbackName = storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator';
+  const fallbackEmail = storedUser.email || '';
 
   if (!isSupabaseConfigured()) {
     return {
-      id: userId,
+      id: activeId,
       email: fallbackEmail,
       fullName: fallbackName,
-      subscriptionTier: storedUser?.tier || 'free',
+      subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
       generationsUsedThisMonth: mockUserUsageCount,
       monthlyGenerationLimit: 10,
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
@@ -181,7 +187,9 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
 
   try {
     const { data: sessionUser } = await supabase.auth.getUser();
-    const currentId = sessionUser.user?.id || userId;
+    const currentId = sessionUser.user?.id || activeId;
+    if (!currentId) return null;
+
     const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || fallbackName;
     const metaEmail = sessionUser.user?.email || storedUser?.email || fallbackEmail;
 
@@ -214,19 +222,20 @@ export async function getUserProfile(userId = 'demo-user-1'): Promise<UserProfil
     };
   } catch {
     return {
-      id: userId,
+      id: activeId,
       email: fallbackEmail,
       fullName: fallbackName,
-      subscriptionTier: storedUser?.tier || 'free',
-      generationsUsedThisMonth: mockUserUsageCount,
+      subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
+      generationsUsedThisMonth: 0,
       monthlyGenerationLimit: 10,
-      hasSeenReviewPrompt: mockHasSeenReviewPrompt,
+      hasSeenReviewPrompt: false,
     };
   }
 }
 
 export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowed: boolean; remaining: number }> {
   const profile = await getUserProfile(userId);
+  if (!profile) return { allowed: true, remaining: 10 };
 
   if (profile.subscriptionTier === 'pro' || profile.subscriptionTier === 'lifetime') {
     return { allowed: true, remaining: 9999 };

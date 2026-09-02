@@ -87,6 +87,7 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
   // 4. Fetch fresh user profile & subscription tier from Supabase / DB backend
   try {
     const profile = await getUserProfile(storedUser.id);
+    if (!profile) return DEFAULT_USER;
 
     const mappedPlan: PlanType =
       profile.subscriptionTier || storedUser.plan || storedUser.tier || 'free';
