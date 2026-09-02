@@ -144,8 +144,9 @@ export function Navbar() {
               /* User Authenticated Profile Pill & Dropdown Menu */
               <div className="relative" ref={dropdownRef}>
                 <button
+                  type="button"
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center gap-1 sm:gap-2 p-1 pr-1.5 sm:pr-2.5 rounded-full bg-white hover:bg-pink-50 border border-[#FFC2DA] shadow-xs transition-all group"
+                  className="flex items-center gap-1 sm:gap-2 p-1 pr-1.5 sm:pr-2.5 rounded-full bg-white hover:bg-pink-50 border border-[#FFC2DA] shadow-xs transition-all group cursor-pointer"
                 >
                   <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#FF529A] to-purple-600 text-white font-extrabold text-[10px] sm:text-xs flex items-center justify-center shadow-xs">
                     {getInitials(user.fullName, user.email)}
@@ -157,7 +158,7 @@ export function Navbar() {
                   {/* Active Subscription Badge Pill */}
                   <PlanBadge plan={user.plan} planStatus={user.planStatus} />
 
-                  <ChevronDown className="w-3 h-3 text-[#71717A] group-hover:text-[#FF529A] transition-transform duration-200" />
+                  <ChevronDown className={`w-3 h-3 text-[#71717A] group-hover:text-[#FF529A] transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Profile Dropdown Menu */}
@@ -168,7 +169,7 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-52 sm:w-56 bg-white rounded-2xl border border-[#FFC2DA] shadow-2xl p-2 z-50 pointer-events-auto"
+                      className="absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-[#FFC2DA] shadow-2xl p-2.5 z-50 pointer-events-auto"
                     >
                       <div className="px-3 py-2 border-b border-[#E4E4E7] mb-1">
                         <p className="text-xs font-bold text-[#0A0A0C] truncate">
@@ -179,6 +180,15 @@ export function Navbar() {
                           <PlanBadge plan={user.plan} planStatus={user.planStatus} />
                         </div>
                       </div>
+
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
+                      >
+                        <Zap className="w-3.5 h-3.5 text-[#FF529A]" />
+                        <span>Studio Dashboard</span>
+                      </Link>
 
                       <Link
                         href="/account"
@@ -199,8 +209,9 @@ export function Navbar() {
                       </Link>
 
                       <button
+                        type="button"
                         onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-[#E4E4E7] pt-2"
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-[#E4E4E7] pt-2 cursor-pointer"
                       >
                         <LogOut className="w-3.5 h-3.5 text-rose-600" />
                         <span>Sign Out</span>
@@ -210,14 +221,23 @@ export function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              /* User Unauthenticated: Show Mobile XS Sign In Link */
-              <Link
-                href="/sign-in"
-                className="text-xs font-semibold text-[#52525B] hover:text-[#FF529A] px-2 py-1.5 transition-colors hidden sm:flex items-center gap-1"
-              >
-                <User className="w-3.5 h-3.5 text-[#FF529A]" />
-                <span>Sign In</span>
-              </Link>
+              /* User Unauthenticated: Show Sign In & Sign Up Buttons */
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Link
+                  href="/sign-in"
+                  className="text-xs font-bold text-[#0A0A0C] hover:text-[#FF529A] px-2 sm:px-3 py-1.5 transition-colors flex items-center gap-1"
+                >
+                  <User className="w-3.5 h-3.5 text-[#FF529A]" />
+                  <span>Sign In</span>
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="btn-aiigen-primary text-xs font-extrabold px-3 sm:px-4 py-1.5 sm:py-2 flex items-center gap-1 rounded-full shadow-xs shrink-0"
+                >
+                  <span>Sign Up</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             )}
 
             {/* Studio App Sparkle CTA Button - Desktop & Tablet */}

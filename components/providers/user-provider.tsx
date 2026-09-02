@@ -63,14 +63,14 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
   }
 
   // Handle post-checkout payment reconciliation
-  if (isPaymentSuccess) {
+  if (isPaymentSuccess && storedUser && storedUser.loggedIn) {
     const updated: UserSessionState = {
-      id: storedUser?.id || 'user-1',
-      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
-      fullName: storedUser?.fullName || 'Usman Ahmad',
+      id: storedUser.id,
+      email: storedUser.email,
+      fullName: storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator',
       plan: successPlan,
       planStatus: 'active',
-      generationsUsedThisMonth: storedUser?.generationsUsedThisMonth || 0,
+      generationsUsedThisMonth: storedUser.generationsUsedThisMonth || 0,
       monthlyGenerationLimit: 9999,
       hasSeenReviewPrompt: false,
       loggedIn: true,
@@ -79,8 +79,8 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     return updated;
   }
 
-  // 3. If no session exists or user is logged out, return guest state
-  if (!storedUser || !storedUser.loggedIn) {
+  // 3. If no stored session or user is logged out, return guest state (loggedIn: false)
+  if (!storedUser || !storedUser.loggedIn || !storedUser.id) {
     return DEFAULT_USER;
   }
 
@@ -92,7 +92,7 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
       profile.subscriptionTier || storedUser.plan || storedUser.tier || 'free';
     const mappedStatus: PlanStatus = profile.planStatus || storedUser.planStatus || 'active';
 
-    const cleanEmail = profile.email || storedUser.email || 'usmanahmad4t12@gmail.com';
+    const cleanEmail = profile.email || storedUser.email || '';
     const emailPrefixName = cleanEmail
       ? cleanEmail
           .split('@')[0]
@@ -100,12 +100,12 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
           .replace(/\d+/g, ' ')
           .trim()
           .replace(/\b\w/g, (c: string) => c.toUpperCase())
-      : '';
+      : 'Creator';
 
-    const cleanFullName = profile.fullName || storedUser.fullName || emailPrefixName || 'Usman Ahmad';
+    const cleanFullName = profile.fullName || storedUser.fullName || emailPrefixName;
 
     const updatedSession: UserSessionState = {
-      id: profile.id || storedUser.id || 'user-1',
+      id: profile.id || storedUser.id,
       email: cleanEmail,
       fullName: cleanFullName,
       plan: mappedPlan,
@@ -122,14 +122,16 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     return updatedSession;
   } catch (err) {
     console.warn('[UserProvider] Error fetching live profile, using cached fallback:', err);
+    if (!storedUser || !storedUser.loggedIn) return DEFAULT_USER;
+
     return {
-      id: storedUser?.id || 'user-1',
-      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
-      fullName: storedUser?.fullName || 'Usman Ahmad',
-      plan: storedUser?.plan || storedUser?.tier || 'free',
-      planStatus: storedUser?.planStatus || 'active',
-      generationsUsedThisMonth: storedUser?.generationsUsedThisMonth || 0,
-      monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
+      id: storedUser.id,
+      email: storedUser.email || '',
+      fullName: storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator',
+      plan: storedUser.plan || storedUser.tier || 'free',
+      planStatus: storedUser.planStatus || 'active',
+      generationsUsedThisMonth: storedUser.generationsUsedThisMonth || 0,
+      monthlyGenerationLimit: (storedUser.plan || storedUser.tier) === 'free' ? 10 : 9999,
       loggedIn: true,
     };
   }
