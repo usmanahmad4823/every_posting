@@ -207,15 +207,6 @@ export function Navbar() {
                         <CreditCard className="w-3.5 h-3.5 text-[#FF529A]" />
                         <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
                       </Link>
-
-                      <button
-                        type="button"
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-[#E4E4E7] pt-2 cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5 text-rose-600" />
-                        <span>Sign Out</span>
-                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -266,7 +257,7 @@ export function Navbar() {
         </motion.div>
       </div>
 
-      {/* Mobile Ultra-Compact Glass Drawer (Mobile & Tablet Only: md:hidden) */}
+      {/* Mobile & Tablet Premium Glass Floating Drawer (md:hidden) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -274,49 +265,98 @@ export function Navbar() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden max-w-6xl mx-auto mt-1.5 pointer-events-auto"
+            className="md:hidden max-w-6xl mx-auto mt-2 pointer-events-auto"
           >
-            <div className="bg-white/95 backdrop-blur-2xl rounded-2xl border border-[#FFC2DA] p-3.5 shadow-2xl space-y-2.5">
-              {/* Nav Links Grid */}
-              <nav className="grid grid-cols-2 gap-1.5 text-xs font-bold text-[#0A0A0C]">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+            <div className="bg-white/95 backdrop-blur-2xl rounded-3xl border border-[#FFC2DA] p-4 shadow-2xl space-y-3 relative overflow-hidden">
+              {/* Subtle Ambient Pink Backdrop Glow */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF529A]/10 rounded-full blur-2xl pointer-events-none" />
+
+              {/* Top Header Pill */}
+              <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]/80">
+                <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#FF529A] tracking-wider uppercase">
+                  <Sparkles className="w-3.5 h-3.5 text-[#FF529A]" />
+                  <span>Navigation Hub</span>
+                </div>
+                <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 uppercase tracking-wider">
+                  ● Claude 3.5 Active
+                </span>
+              </div>
+
+              {/* Premium Grid Links */}
+              <nav className="grid grid-cols-2 gap-2 text-xs font-bold text-[#0A0A0C]">
+                <Link
+                  href="/#niches"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                >
+                  <span className="text-xs">🎙️</span>
+                  <span className="font-extrabold">Niches</span>
+                </Link>
+
+                <Link
+                  href="/#how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                >
+                  <span className="text-xs">⚡</span>
+                  <span className="font-extrabold">How It Works</span>
+                </Link>
+
+                <Link
+                  href="/pricing"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                >
+                  <span className="text-xs">💎</span>
+                  <span className="font-extrabold">Pricing</span>
+                </Link>
+
+                <Link
+                  href="/#testimonials"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                >
+                  <span className="text-xs">⭐</span>
+                  <span className="font-extrabold">Reviews</span>
+                </Link>
+
+                <Link
+                  href="/#faq"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                >
+                  <span className="text-xs">❓</span>
+                  <span className="font-extrabold">FAQ</span>
+                </Link>
 
                 {user?.loggedIn ? (
                   <Link
                     href="/account"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold flex items-center justify-center gap-1.5"
+                    className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
                   >
                     <Settings className="w-3.5 h-3.5 text-[#FF529A]" />
-                    <span>Settings</span>
+                    <span className="font-extrabold">Settings</span>
                   </Link>
                 ) : (
                   <Link
                     href="/sign-in"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold"
+                    className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
                   >
-                    Sign In
+                    <User className="w-3.5 h-3.5 text-[#FF529A]" />
+                    <span className="font-extrabold">Sign In</span>
                   </Link>
                 )}
               </nav>
 
-              {/* Single Primary Studio CTA Button */}
+              {/* Primary Glowing Studio CTA Button */}
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full btn-aiigen-primary text-xs font-extrabold py-2.5 flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/25 rounded-xl"
+                className="w-full btn-aiigen-primary text-xs font-extrabold py-3 flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25 rounded-2xl transition-transform hover:scale-[1.01]"
               >
-                <Zap className="w-3.5 h-3.5 fill-white" />
+                <Zap className="w-4 h-4 fill-white" />
                 <span>Open Repurposing Studio →</span>
               </Link>
             </div>
