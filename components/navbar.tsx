@@ -169,44 +169,49 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-3 w-56 sm:w-60 bg-white rounded-2xl border border-[#FFC2DA] shadow-2xl p-2.5 z-[100] pointer-events-auto filter drop-shadow-2xl"
+                      className="absolute right-0 top-full mt-3 w-56 sm:w-60 bg-white/70 backdrop-blur-2xl saturate-180 rounded-2xl border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-white/60 p-2.5 z-[100] pointer-events-auto overflow-hidden"
                     >
-                      <div className="px-3 py-2 border-b border-[#E4E4E7] mb-1">
-                        <p className="text-xs font-bold text-[#0A0A0C] truncate">
-                          {user.fullName || 'Creator User'}
-                        </p>
-                        <p className="text-[11px] text-[#71717A] truncate font-medium">{user.email}</p>
-                        <div className="mt-1.5 flex items-center">
-                          <PlanBadge plan={user.plan} planStatus={user.planStatus} />
+                      {/* Diagonal Glass Sheen Highlight */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/20 to-transparent pointer-events-none" />
+
+                      <div className="relative z-10">
+                        <div className="px-3 py-2 border-b border-white/40 mb-1">
+                          <p className="text-xs font-bold text-[#0A0A0C] truncate">
+                            {user.fullName || 'Creator User'}
+                          </p>
+                          <p className="text-[11px] text-[#71717A] truncate font-medium">{user.email}</p>
+                          <div className="mt-1.5 flex items-center">
+                            <PlanBadge plan={user.plan} planStatus={user.planStatus} />
+                          </div>
                         </div>
+
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#0A0A0C] hover:bg-white/60 hover:text-[#FF529A] rounded-xl transition-colors"
+                        >
+                          <Zap className="w-3.5 h-3.5 text-[#FF529A]" />
+                          <span>Studio Dashboard</span>
+                        </Link>
+
+                        <Link
+                          href="/account"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#0A0A0C] hover:bg-white/60 hover:text-[#FF529A] rounded-xl transition-colors"
+                        >
+                          <Settings className="w-3.5 h-3.5 text-[#FF529A]" />
+                          <span>Account Settings</span>
+                        </Link>
+
+                        <Link
+                          href="/pricing"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#0A0A0C] hover:bg-white/60 hover:text-[#FF529A] rounded-xl transition-colors"
+                        >
+                          <CreditCard className="w-3.5 h-3.5 text-[#FF529A]" />
+                          <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
+                        </Link>
                       </div>
-
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
-                      >
-                        <Zap className="w-3.5 h-3.5 text-[#FF529A]" />
-                        <span>Studio Dashboard</span>
-                      </Link>
-
-                      <Link
-                        href="/account"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
-                      >
-                        <Settings className="w-3.5 h-3.5 text-[#FF529A]" />
-                        <span>Account Settings</span>
-                      </Link>
-
-                      <Link
-                        href="/pricing"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] rounded-xl transition-colors"
-                      >
-                        <CreditCard className="w-3.5 h-3.5 text-[#FF529A]" />
-                        <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
-                      </Link>
                     </motion.div>
                   )}
                 </AnimatePresence>
