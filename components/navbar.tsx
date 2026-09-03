@@ -266,7 +266,7 @@ export function Navbar() {
         </motion.div>
       </div>
 
-      {/* Mobile Ultra-Compact Glass Drawer */}
+      {/* Mobile Ultra-Compact Glass Drawer (Mobile & Tablet Only: md:hidden) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -276,77 +276,49 @@ export function Navbar() {
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="md:hidden max-w-6xl mx-auto mt-1.5 pointer-events-auto"
           >
-            <div className="bg-white/95 backdrop-blur-2xl rounded-2xl border border-[#FFC2DA] p-4 shadow-xl space-y-3">
-              {/* Studio Mobile CTA */}
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full btn-aiigen-primary text-xs font-extrabold py-3 flex items-center justify-center gap-2 shadow-md shadow-pink-500/25 rounded-xl"
-              >
-                <Zap className="w-4 h-4 fill-white" />
-                <span>Open Repurposing Studio →</span>
-              </Link>
-              <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#FF529A]">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Navigation Hub</span>
-                </div>
-                <span className="text-[9px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  ● Claude 3.5 Ready
-                </span>
-              </div>
-
+            <div className="bg-white/95 backdrop-blur-2xl rounded-2xl border border-[#FFC2DA] p-3.5 shadow-2xl space-y-2.5">
+              {/* Nav Links Grid */}
               <nav className="grid grid-cols-2 gap-1.5 text-xs font-bold text-[#0A0A0C]">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs"
+                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold"
                   >
                     {link.label}
                   </Link>
                 ))}
-              </nav>
 
-              <div className="pt-2 border-t border-[#E4E4E7] flex flex-col gap-1.5">
                 {user?.loggedIn ? (
-                  <>
-                    <Link
-                      href="/account"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="btn-aiigen-secondary py-2 text-center text-xs font-bold rounded-xl border-[#FFC2DA] flex items-center justify-center gap-1.5"
-                    >
-                      <User className="w-3.5 h-3.5 text-[#FF529A]" />
-                      <span>Account Settings</span>
-                      <PlanBadge plan={user.plan} planStatus={user.planStatus} />
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="py-2 text-center text-xs font-bold text-rose-600 bg-rose-50 rounded-xl border border-rose-200"
-                    >
-                      Sign Out
-                    </button>
-                  </>
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold flex items-center justify-center gap-1.5"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-[#FF529A]" />
+                    <span>Settings</span>
+                  </Link>
                 ) : (
                   <Link
                     href="/sign-in"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="btn-aiigen-secondary py-2.5 text-center text-xs font-bold rounded-xl border-[#FFC2DA]"
+                    className="p-2.5 rounded-xl bg-[#F8FAFC] hover:bg-pink-50 hover:text-[#FF529A] border border-[#E2E8F0] transition-colors text-center text-xs font-extrabold"
                   >
-                    Sign In / Create Free Account
+                    Sign In
                   </Link>
                 )}
+              </nav>
 
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="btn-aiigen-primary py-2.5 text-center text-xs font-extrabold rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/25"
-                >
-                  <Zap className="w-3.5 h-3.5 fill-white" />
-                  <span>Launch Studio App</span>
-                </Link>
-              </div>
+              {/* Single Primary Studio CTA Button */}
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full btn-aiigen-primary text-xs font-extrabold py-2.5 flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/25 rounded-xl"
+              >
+                <Zap className="w-3.5 h-3.5 fill-white" />
+                <span>Open Repurposing Studio →</span>
+              </Link>
             </div>
           </motion.div>
         )}
