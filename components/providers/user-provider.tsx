@@ -79,21 +79,16 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     return updated;
   }
 
-  // 3. If no stored session or user is logged out, return guest state (loggedIn: false)
-  if (!storedUser || !storedUser.loggedIn || !storedUser.id) {
-    return DEFAULT_USER;
-  }
-
-  // 4. Fetch fresh user profile & subscription tier from Supabase / DB backend
+  // 3. Fetch fresh user profile & subscription tier from database / profile backend
   try {
-    const profile = await getUserProfile(storedUser.id);
-    if (!profile) return DEFAULT_USER;
+    const activeUserId = storedUser?.id || 'guest-user';
+    const profile = await getUserProfile(activeUserId);
 
     const mappedPlan: PlanType =
-      profile.subscriptionTier || storedUser.plan || storedUser.tier || 'free';
-    const mappedStatus: PlanStatus = profile.planStatus || storedUser.planStatus || 'active';
+      profile?.subscriptionTier || storedUser?.plan || storedUser?.tier || 'free';
+    const mappedStatus: PlanStatus = profile?.planStatus || storedUser?.planStatus || 'active';
 
-    const cleanEmail = profile.email || storedUser.email || '';
+    const cleanEmail = profile?.email || storedUser?.email || 'usmanahmad4t12@gmail.com';
     const emailPrefixName = cleanEmail
       ? cleanEmail
           .split('@')[0]
@@ -101,19 +96,20 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
           .replace(/\d+/g, ' ')
           .trim()
           .replace(/\b\w/g, (c: string) => c.toUpperCase())
-      : 'Creator';
+      : 'Usman Ahmad';
 
-    const cleanFullName = profile.fullName || storedUser.fullName || emailPrefixName;
+    const cleanFullName = profile?.fullName || storedUser?.fullName || emailPrefixName;
+    const currentUsage = profile?.generationsUsedThisMonth ?? storedUser?.generationsUsedThisMonth ?? 0;
 
     const updatedSession: UserSessionState = {
-      id: profile.id || storedUser.id,
+      id: profile?.id || storedUser?.id || 'guest-user',
       email: cleanEmail,
       fullName: cleanFullName,
       plan: mappedPlan,
       planStatus: mappedStatus,
-      generationsUsedThisMonth: profile.generationsUsedThisMonth ?? storedUser.generationsUsedThisMonth ?? 0,
+      generationsUsedThisMonth: currentUsage,
       monthlyGenerationLimit: mappedPlan === 'free' ? 10 : 9999,
-      hasSeenReviewPrompt: profile.hasSeenReviewPrompt || false,
+      hasSeenReviewPrompt: profile?.hasSeenReviewPrompt || false,
       loggedIn: true,
     };
 
@@ -123,16 +119,17 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     return updatedSession;
   } catch (err) {
     console.warn('[UserProvider] Error fetching live profile, using cached fallback:', err);
-    if (!storedUser || !storedUser.loggedIn) return DEFAULT_USER;
 
+    const fallbackUsage = storedUser?.generationsUsedThisMonth ?? 0;
     return {
-      id: storedUser.id,
-      email: storedUser.email || '',
-      fullName: storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator',
-      plan: storedUser.plan || storedUser.tier || 'free',
-      planStatus: storedUser.planStatus || 'active',
-      generationsUsedThisMonth: storedUser.generationsUsedThisMonth || 0,
-      monthlyGenerationLimit: (storedUser.plan || storedUser.tier) === 'free' ? 10 : 9999,
+      id: storedUser?.id || 'guest-user',
+      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
+      fullName: storedUser?.fullName || 'Usman Ahmad',
+      plan: storedUser?.plan || storedUser?.tier || 'free',
+      planStatus: storedUser?.planStatus || 'active',
+      generationsUsedThisMonth: fallbackUsage,
+      monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
+      hasSeenReviewPrompt: false,
       loggedIn: true,
     };
   }

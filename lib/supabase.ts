@@ -164,14 +164,25 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
     }
   }
 
-  // If no user session or stored user is logged in, return null
+  // If no user session or stored user is logged in, return guest fallback or null
   if (!storedUser || !storedUser.loggedIn || (!storedUser.id && !userId)) {
-    return null;
+    // Return default session for anonymous local usage tracking
+    const localUsage = storedUser?.generationsUsedThisMonth ?? mockUserUsageCount;
+    return {
+      id: userId || 'guest-user',
+      email: 'usmanahmad4t12@gmail.com',
+      fullName: 'Usman Ahmad',
+      subscriptionTier: 'free',
+      generationsUsedThisMonth: localUsage,
+      monthlyGenerationLimit: 10,
+      hasSeenReviewPrompt: false,
+    };
   }
 
   const activeId = storedUser.id || userId;
   const fallbackName = storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator';
   const fallbackEmail = storedUser.email || '';
+  const localUsageCount = storedUser.generationsUsedThisMonth ?? mockUserUsageCount;
 
   if (!isSupabaseConfigured()) {
     return {
@@ -179,7 +190,7 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
       email: fallbackEmail,
       fullName: fallbackName,
       subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
-      generationsUsedThisMonth: mockUserUsageCount,
+      generationsUsedThisMonth: localUsageCount,
       monthlyGenerationLimit: 10,
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
     };
@@ -205,19 +216,21 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
         email: metaEmail,
         fullName: metaName,
         subscriptionTier: storedUser?.plan || storedUser?.tier || 'free',
-        generationsUsedThisMonth: 0,
+        generationsUsedThisMonth: localUsageCount,
         monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
         hasSeenReviewPrompt: false,
       };
     }
 
+    const fetchedUsage = data.generations_used_this_month ?? localUsageCount;
+
     return {
       id: data.id,
       email: data.email || metaEmail,
       fullName: data.full_name || metaName,
-      subscriptionTier: data.subscription_tier || 'free',
-      generationsUsedThisMonth: data.generations_used_this_month || 0,
-      monthlyGenerationLimit: data.monthly_generation_limit || 10,
+      subscriptionTier: data.subscription_tier || storedUser?.plan || storedUser?.tier || 'free',
+      generationsUsedThisMonth: fetchedUsage,
+      monthlyGenerationLimit: data.monthly_generation_limit || ((data.subscription_tier || 'free') === 'free' ? 10 : 9999),
       hasSeenReviewPrompt: data.has_seen_review_prompt || false,
     };
   } catch {
@@ -226,25 +239,26 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
       email: fallbackEmail,
       fullName: fallbackName,
       subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
-      generationsUsedThisMonth: 0,
+      generationsUsedThisMonth: localUsageCount,
       monthlyGenerationLimit: 10,
       hasSeenReviewPrompt: false,
     };
   }
 }
 
-export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowed: boolean; remaining: number }> {
+export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowed: boolean; remaining: number; currentUsage: number }> {
   const profile = await getUserProfile(userId);
-  if (!profile) return { allowed: true, remaining: 10 };
+  if (!profile) return { allowed: true, remaining: 10, currentUsage: 0 };
 
   if (profile.subscriptionTier === 'pro' || profile.subscriptionTier === 'lifetime') {
-    return { allowed: true, remaining: 9999 };
+    return { allowed: true, remaining: 9999, currentUsage: profile.generationsUsedThisMonth };
   }
 
-  const remaining = profile.monthlyGenerationLimit - profile.generationsUsedThisMonth;
+  const remaining = Math.max(0, profile.monthlyGenerationLimit - profile.generationsUsedThisMonth);
   return {
     allowed: remaining > 0,
-    remaining: Math.max(0, remaining),
+    remaining,
+    currentUsage: profile.generationsUsedThisMonth,
   };
 }
 
@@ -254,7 +268,7 @@ export async function saveGenerationRecord(
   transcript: string,
   selectedFormats: OutputFormat[],
   outputs: Partial<Record<OutputFormat, string>>
-): Promise<GenerationResult> {
+): Promise<GenerationResult & { newUsageCount: number }> {
   const newRecord: GenerationResult = {
     id: `gen-${Date.now()}`,
     niche,
@@ -265,6 +279,20 @@ export async function saveGenerationRecord(
 
   mockUserUsageCount += 1;
   mockGenerationHistory.unshift(newRecord);
+  let updatedUsage = mockUserUsageCount;
+
+  // Persist updated usage count into local storage session
+  if (typeof window !== 'undefined') {
+    const raw = localStorage.getItem('everyposting_user');
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        updatedUsage = (parsed.generationsUsedThisMonth || 0) + 1;
+        parsed.generationsUsedThisMonth = updatedUsage;
+        localStorage.setItem('everyposting_user', JSON.stringify(parsed));
+      } catch {}
+    }
+  }
 
   if (isSupabaseConfigured()) {
     try {
@@ -279,13 +307,23 @@ export async function saveGenerationRecord(
         outputs,
       });
 
-      await supabase.rpc('increment_user_generations', { user_id_input: currentId });
+      // Try RPC first, fallback to direct column increment
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc('increment_user_generations', { user_id_input: currentId });
+      if (rpcErr) {
+        // Direct DB update fallback
+        const { data: dbUserData } = await supabase.from('users').select('generations_used_this_month').eq('id', currentId).single();
+        const currentDbUsage = (dbUserData?.generations_used_this_month || 0) + 1;
+        await supabase.from('users').update({ generations_used_this_month: currentDbUsage }).eq('id', currentId);
+        updatedUsage = currentDbUsage;
+      } else if (rpcRes && typeof rpcRes === 'number') {
+        updatedUsage = rpcRes;
+      }
     } catch (e) {
       console.warn('Supabase DB save warning (using in-memory fallback):', e);
     }
   }
 
-  return newRecord;
+  return { ...newRecord, newUsageCount: updatedUsage };
 }
 
 export async function getGenerationHistory(_userId = 'demo-user-1'): Promise<GenerationResult[]> {

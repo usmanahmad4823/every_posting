@@ -64,11 +64,13 @@ export async function POST(req: Request) {
 
     // 3. Save generation record & update usage count
     const savedRecord = await saveGenerationRecord(userId, niche, transcript, selectedFormats, outputs);
+    const newCount = savedRecord.newUsageCount;
 
     return NextResponse.json({
       success: true,
       result: savedRecord,
-      remainingUsage: customApiKey ? 9999 : 7,
+      generationsUsedThisMonth: newCount,
+      remainingUsage: customApiKey ? 9999 : Math.max(0, 10 - newCount),
     });
   } catch (error: any) {
     console.error('API /api/generate error:', error);

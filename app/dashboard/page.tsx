@@ -68,6 +68,7 @@ export default function DashboardPage() {
   const [showKeyText, setShowKeyText] = useState<boolean>(false);
   const [showMilestoneModal, setShowMilestoneModal] = useState<boolean>(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const triggerToast = (msg: string) => {
@@ -173,6 +174,16 @@ export default function DashboardPage() {
       return;
     }
 
+    // 10-Generation Limit Check for Free Tier Users
+    const isFreeTier = user.plan === 'free';
+    const isLimitReached = isFreeTier && user.generationsUsedThisMonth >= 10 && !customApiKey;
+
+    if (isLimitReached) {
+      setErrorMessage('Monthly limit reached (10/10 Used). Upgrade to Pro or plug in your custom Anthropic API key for unlimited generations!');
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setInputError(false);
     setErrorMessage(null);
     setIsGenerating(true);
@@ -191,12 +202,16 @@ export default function DashboardPage() {
           selectedFormats,
           tone: selectedTone,
           customApiKey: customApiKey || undefined,
+          userId: user.id || 'guest-user',
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
+        if (data.limitReached) {
+          setShowUpgradeModal(true);
+        }
         throw new Error(data.error || 'Failed to generate content');
       }
 
@@ -204,7 +219,8 @@ export default function DashboardPage() {
       setCurrentGenerationId(data.result.id);
       setActiveResultTab(selectedFormats[0]);
 
-      const newUsage = usageCount + 1;
+      // Update local state and invalidate cache so usage counter persists
+      const newUsage = data.generationsUsedThisMonth ?? (usageCount + 1);
       updateUserLocally({ generationsUsedThisMonth: newUsage });
       await invalidateUser();
 
@@ -398,6 +414,75 @@ export default function DashboardPage() {
                   >
                     Save Key
                   </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Monthly Limit Reached Upgrade Modal */}
+        <AnimatePresence>
+          {showUpgradeModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-[#0A0A0C]/60 backdrop-blur-sm flex items-center justify-center p-4"
+            >
+              <motion.div
+                initial={{ scale: 0.95, y: 10 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 10 }}
+                className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-[#FFC2DA] shadow-2xl relative space-y-4"
+              >
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="absolute top-4 right-4 text-[#71717A] hover:text-[#0A0A0C]"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                <div className="w-12 h-12 rounded-2xl bg-pink-50 border border-pink-200 flex items-center justify-center text-[#FF529A]">
+                  <Zap className="w-6 h-6 fill-[#FF529A]" />
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-extrabold text-[#0A0A0C]">Monthly Free Limit Reached!</h3>
+                  <p className="text-xs text-[#52525B] leading-relaxed mt-1">
+                    You have used all <strong>10 / 10 free generations</strong> for this month. Upgrade to EveryPosting Pro for unlimited content generations or plug in your personal Anthropic Claude API key!
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-[#0A0A0C]">
+                    <span>Monthly Free Tier Usage</span>
+                    <span className="text-rose-600 font-extrabold">10 / 10 Used</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="w-full h-full bg-rose-500 rounded-full" />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setShowUpgradeModal(false);
+                      setShowKeyModal(true);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] hover:bg-slate-100 text-[#0A0A0C] border border-[#E2E8F0] text-xs font-extrabold flex items-center gap-1.5 transition-colors"
+                  >
+                    <Key className="w-3.5 h-3.5 text-[#FF529A]" />
+                    <span>Plug API Key</span>
+                  </button>
+
+                  <Link
+                    href="/pricing"
+                    onClick={() => setShowUpgradeModal(false)}
+                    className="btn-aiigen-primary text-xs font-extrabold px-5 py-2.5 flex items-center gap-1.5 shadow-lg shadow-pink-500/25"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-white" />
+                    <span>Upgrade to Pro →</span>
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>
