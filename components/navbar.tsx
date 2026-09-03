@@ -267,10 +267,10 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden pointer-events-auto"
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-40 md:hidden pointer-events-auto"
             />
 
-            {/* 2. Top-Down Premium Typography Drawer */}
+            {/* 2. Top-Down Glassmorphic Mirror Typography Drawer */}
             <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -278,9 +278,11 @@ export function Navbar() {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="fixed top-3 left-3 right-3 z-50 md:hidden pointer-events-auto max-w-full"
             >
-              <div className="bg-white/98 backdrop-blur-2xl rounded-[32px] border border-[#FFC2DA] p-6 shadow-2xl space-y-6 relative overflow-hidden">
+              <div className="bg-white/80 backdrop-blur-3xl saturate-150 rounded-[32px] border border-white/90 p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] ring-1 ring-white/60 space-y-6 relative overflow-hidden">
+                {/* Diagonal Glass Mirror Sheen Highlight */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/20 to-transparent pointer-events-none" />
                 {/* Subtle Ambient Pink Backdrop Blur */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#FF529A]/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#FF529A]/15 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Header Row: Logo on Left, Close (X) Button on Far RIGHT */}
                 <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-4">
