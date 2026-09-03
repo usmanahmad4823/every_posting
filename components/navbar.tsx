@@ -257,124 +257,127 @@ export function Navbar() {
         </motion.div>
       </div>
 
-      {/* Mobile & Tablet Premium Glass Floating Drawer (md:hidden) */}
+      {/* Mobile & Tablet Full Backdrop & Typography Drawer (md:hidden) */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden max-w-6xl mx-auto mt-2 pointer-events-auto"
-          >
-            <div className="bg-white/95 backdrop-blur-2xl rounded-3xl border border-[#FFC2DA] p-4 shadow-2xl space-y-3 relative overflow-hidden">
-              {/* Subtle Ambient Pink Backdrop Glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF529A]/10 rounded-full blur-2xl pointer-events-none" />
+          <>
+            {/* 1. Backdrop Overlay (Click Outside to Auto-Close) */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden pointer-events-auto"
+            />
 
-              {/* Top Header Pill */}
-              <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]/80">
-                <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#FF529A] tracking-wider uppercase">
-                  <Sparkles className="w-3.5 h-3.5 text-[#FF529A]" />
-                  <span>Navigation Hub</span>
+            {/* 2. Top-Down Premium Typography Drawer */}
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed top-3 left-3 right-3 z-50 md:hidden pointer-events-auto max-w-full"
+            >
+              <div className="bg-white/98 backdrop-blur-2xl rounded-[32px] border border-[#FFC2DA] p-6 shadow-2xl space-y-6 relative overflow-hidden">
+                {/* Subtle Ambient Pink Backdrop Blur */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#FF529A]/10 rounded-full blur-3xl pointer-events-none" />
+
+                {/* Header Row: Logo on Left, Close (X) Button on Far RIGHT */}
+                <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-4">
+                  <Link
+                    href="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="font-extrabold text-xl tracking-tight text-[#0A0A0C]"
+                  >
+                    Every<span className="text-[#FF529A]">Posting</span>
+                  </Link>
+
+                  {/* Right Side Close (X) Circle Button */}
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-10 h-10 rounded-full bg-[#F4F4F5] border border-[#E4E4E7] flex items-center justify-center text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] hover:border-pink-200 transition-all shadow-xs"
+                    aria-label="Close menu"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 uppercase tracking-wider">
-                  ● Claude 3.5 Active
-                </span>
+
+                {/* Clean Typography Menu List (NO ICONS with menu text) */}
+                <nav className="flex flex-col space-y-4 pt-2">
+                  <Link
+                    href="/#niches"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                  >
+                    Niches
+                  </Link>
+
+                  <Link
+                    href="/#how-it-works"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                  >
+                    How it works
+                  </Link>
+
+                  <Link
+                    href="/pricing"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                  >
+                    Pricing
+                  </Link>
+
+                  <Link
+                    href="/#testimonials"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                  >
+                    Testimonials
+                  </Link>
+
+                  <Link
+                    href="/#faq"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                  >
+                    FAQ
+                  </Link>
+
+                  {user?.loggedIn ? (
+                    <Link
+                      href="/account"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                    >
+                      Settings
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/sign-in"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                    >
+                      Sign In
+                    </Link>
+                  )}
+                </nav>
+
+                {/* Primary Studio CTA Button */}
+                <div className="pt-4 border-t border-[#E4E4E7]">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full btn-aiigen-primary text-sm font-extrabold py-3.5 flex items-center justify-center gap-2 shadow-xl shadow-pink-500/25 rounded-2xl"
+                  >
+                    <Zap className="w-4 h-4 fill-white" />
+                    <span>Open Studio App →</span>
+                  </Link>
+                </div>
               </div>
-
-              {/* Premium Vector Grid Links */}
-              <nav className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/#niches"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-50 border border-pink-100 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
-                    <Sliders className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Niches</span>
-                </Link>
-
-                <Link
-                  href="/#how-it-works"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shrink-0 group-hover:scale-105 transition-transform">
-                    <Zap className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">How It Works</span>
-                </Link>
-
-                <Link
-                  href="/pricing"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-50 border border-pink-100 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
-                    <CreditCard className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Pricing</span>
-                </Link>
-
-                <Link
-                  href="/#testimonials"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shrink-0 group-hover:scale-105 transition-transform">
-                    <Star className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Reviews</span>
-                </Link>
-
-                <Link
-                  href="/#faq"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
-                    <HelpCircle className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">FAQ</span>
-                </Link>
-
-                {user?.loggedIn ? (
-                  <Link
-                    href="/account"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                  >
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-100 border border-pink-200 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
-                      <Settings className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Settings</span>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/sign-in"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
-                  >
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 group-hover:scale-105 transition-transform">
-                      <User className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Sign In</span>
-                  </Link>
-                )}
-              </nav>
-
-              {/* Primary Glowing Studio CTA Button */}
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full btn-aiigen-primary text-xs font-extrabold py-3 flex items-center justify-center gap-2 shadow-lg shadow-pink-500/25 rounded-2xl transition-transform hover:scale-[1.01]"
-              >
-                <Zap className="w-4 h-4 fill-white" />
-                <span>Open Repurposing Studio →</span>
-              </Link>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>
