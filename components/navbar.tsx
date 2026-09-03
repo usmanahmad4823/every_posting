@@ -261,16 +261,16 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* 1. Backdrop Overlay (Click Outside to Auto-Close) */}
+            {/* 1. Backdrop Overlay (Click Outside to Auto-Close - Light Glass Blur so Hero Page is Visible) */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-40 md:hidden pointer-events-auto"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden pointer-events-auto"
             />
 
-            {/* 2. Top-Down Glassmorphic Mirror Typography Drawer */}
+            {/* 2. Top-Down 100% Transparent Glassmorphic Mirror Typography Drawer */}
             <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -278,14 +278,14 @@ export function Navbar() {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="fixed top-3 left-3 right-3 z-50 md:hidden pointer-events-auto max-w-full"
             >
-              <div className="bg-white/80 backdrop-blur-3xl saturate-150 rounded-[32px] border border-white/90 p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] ring-1 ring-white/60 space-y-6 relative overflow-hidden">
+              <div className="bg-white/40 backdrop-blur-2xl saturate-180 rounded-[32px] border border-white/70 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-white/50 space-y-6 relative overflow-hidden">
                 {/* Diagonal Glass Mirror Sheen Highlight */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-white/10 to-transparent pointer-events-none" />
                 {/* Subtle Ambient Pink Backdrop Blur */}
-                <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#FF529A]/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#FF529A]/20 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Header Row: Logo on Left, Close (X) Button on Far RIGHT */}
-                <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-4">
+                <div className="flex items-center justify-between border-b border-white/40 pb-4 relative z-10">
                   <Link
                     href="/"
                     onClick={() => setMobileMenuOpen(false)}
@@ -298,7 +298,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-10 h-10 rounded-full bg-[#F4F4F5] border border-[#E4E4E7] flex items-center justify-center text-[#0A0A0C] hover:bg-pink-50 hover:text-[#FF529A] hover:border-pink-200 transition-all shadow-xs"
+                    className="w-10 h-10 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-[#0A0A0C] hover:bg-white/80 hover:text-[#FF529A] transition-all shadow-xs backdrop-blur-md"
                     aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
