@@ -95,117 +95,127 @@ export default function AccountPage() {
         </div>
 
         <div className="space-y-6">
-          {/* Card 1: User Profile & Subscription Tier */}
-          <div className="aiigen-card p-5 sm:p-8 bg-white border border-[#E4E4E7] shadow-lg">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-[#E4E4E7]">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF529A] to-purple-600 flex items-center justify-center text-white font-extrabold text-xl shadow-md shrink-0">
-                  <User className="w-6 h-6 text-white" />
+          {/* Card 1: Sleek User Profile & Membership Status */}
+          <div className="aiigen-card p-4 sm:p-6 bg-white border border-[#E4E4E7] shadow-lg rounded-3xl space-y-5">
+            {/* User Details */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-[#FF529A] to-purple-600 flex items-center justify-center text-white font-extrabold text-lg shadow-xs shrink-0">
+                  <User className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   {isEditingName ? (
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         value={nameInput}
                         onChange={(e) => setNameInput(e.target.value)}
-                        className="bg-[#F8FAFC] border border-[#FF529A] rounded-lg px-2.5 py-1 text-sm font-bold text-[#0A0A0C] focus:outline-none"
+                        className="bg-[#F8FAFC] border border-[#FF529A] rounded-lg px-2.5 py-1 text-xs font-bold text-[#0A0A0C] focus:outline-none"
                       />
                       <button
+                        type="button"
                         onClick={handleSaveName}
                         disabled={isSavingName}
-                        className="p-1.5 rounded-lg bg-[#FF529A] text-white hover:bg-pink-600 transition-colors"
+                        className="p-1 rounded-lg bg-[#FF529A] text-white hover:bg-pink-600 transition-colors"
                       >
-                        <Check className="w-4 h-4" />
+                        <Check className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-[#0A0A0C]">
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-base sm:text-lg font-extrabold text-[#0A0A0C] truncate">
                         {user.fullName || 'Creator User'}
                       </h3>
                       <button
+                        type="button"
                         onClick={() => setIsEditingName(true)}
-                        className="text-[#71717A] hover:text-[#FF529A] transition-colors p-1"
+                        className="text-[#71717A] hover:text-[#FF529A] transition-colors p-0.5"
                         title="Edit Full Name"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   )}
-                  <p className="text-xs text-[#71717A] font-medium">{user.email || 'usmanahmad4t12@gmail.com'}</p>
+                  <p className="text-xs text-[#71717A] font-medium truncate">{user.email || 'usmanahmad4t12@gmail.com'}</p>
                 </div>
               </div>
 
-              <div className="flex items-center sm:justify-end">
+              <div className="flex items-center justify-between sm:justify-end gap-3">
                 <PlanBadge plan={user.plan} planStatus={user.planStatus} />
+                {user.plan === 'free' && (
+                  <Link
+                    href="/pricing"
+                    className="btn-aiigen-primary text-xs font-bold px-3.5 py-1.5 rounded-full inline-flex items-center gap-1 shadow-xs"
+                  >
+                    <CreditCard className="w-3.5 h-3.5" />
+                    <span>Upgrade</span>
+                  </Link>
+                )}
               </div>
             </div>
 
-            {/* Usage Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <span className="text-xs font-bold uppercase text-[#71717A]">Monthly Generations</span>
-                <div className="text-2xl font-extrabold text-[#0A0A0C] mt-1">
-                  {user.generationsUsedThisMonth} / {user.plan === 'free' ? '10' : '∞'}
-                </div>
-                <p className="text-xs text-[#71717A] mt-1 font-medium">Resets on the 1st of every month</p>
+            {/* Usage Status Bar */}
+            <div className="bg-[#F8FAFC] p-3.5 rounded-2xl border border-[#E2E8F0] space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-extrabold text-[#0A0A0C]">Monthly Generation Usage</span>
+                <span className="font-bold text-[#FF529A]">
+                  {user.generationsUsedThisMonth} / {user.plan === 'free' ? '10' : '∞'} Used
+                </span>
               </div>
-
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <span className="text-xs font-bold uppercase text-[#71717A]">Plan Status</span>
-                <div className="text-xl font-extrabold text-[#0A0A0C] mt-1 flex items-center gap-2">
-                  <PlanBadge plan={user.plan} planStatus={user.planStatus} />
-                </div>
-                <p className="text-xs text-[#71717A] mt-1 font-medium">Full access to Podcaster, YouTuber & Coach engines</p>
+              <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-[#FF529A] to-purple-600 transition-all duration-300 rounded-full"
+                  style={{
+                    width: `${user.plan !== 'free' ? 100 : Math.min(100, (user.generationsUsedThisMonth / 10) * 100)}%`,
+                  }}
+                />
               </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#E4E4E7]">
-              <div>
-                <p className="text-xs text-[#71717A] font-medium">Want to upgrade or manage billing?</p>
+              <div className="flex items-center justify-between text-[10px] text-[#71717A] font-medium">
+                <span>Resets on the 1st of every month</span>
+                <span>{user.plan === 'free' ? `${Math.max(0, 10 - user.generationsUsedThisMonth)} remaining` : 'Unlimited Plan'}</span>
               </div>
-              <Link
-                href="/pricing"
-                className="btn-aiigen-primary text-xs font-bold px-5 py-2.5 inline-flex items-center gap-2 shadow-md shadow-pink-500/20"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>{user.plan === 'free' ? 'Upgrade Plan' : 'Manage Subscription'}</span>
-              </Link>
             </div>
           </div>
 
           {/* Card 2: Custom Anthropic API Key Settings */}
-          <div className="aiigen-card p-5 sm:p-8 bg-white border border-[#E4E4E7] shadow-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Key className="w-5 h-5 text-[#FF529A]" />
-              <h3 className="text-lg font-bold text-[#0A0A0C]">Anthropic Claude API Key</h3>
+          <div className="aiigen-card p-4 sm:p-6 bg-white border border-[#E4E4E7] shadow-lg rounded-3xl">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4 text-[#FF529A]" />
+                <h3 className="text-sm font-extrabold text-[#0A0A0C]">Anthropic Claude API Key</h3>
+              </div>
+              {customKey && (
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  Custom Key Active
+                </span>
+              )}
             </div>
-            <p className="text-xs text-[#52525B] leading-relaxed mb-4">
-              Enter your custom Anthropic Claude API key (`sk-ant-...`) to process unlimited content generations directly through your own Anthropic account.
+            <p className="text-xs text-[#71717A] font-medium mb-3">
+              Plug your custom key (`sk-ant-...`) to unlock unlimited generations via your Anthropic account.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <div className="flex flex-col sm:flex-row gap-2.5 items-center">
               <div className="relative flex-1 w-full">
                 <input
                   type={showKeyText ? 'text' : 'password'}
                   value={customKey}
                   onChange={(e) => setCustomKey(e.target.value)}
                   placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 pr-10 text-xs text-[#0A0A0C] font-mono focus:outline-none focus:border-[#FF529A]"
+                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-2.5 pr-9 text-xs text-[#0A0A0C] font-mono focus:outline-none focus:border-[#FF529A]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowKeyText(!showKeyText)}
-                  className="absolute right-3 top-3 text-[#71717A] hover:text-[#0A0A0C]"
+                  className="absolute right-2.5 top-2.5 text-[#71717A] hover:text-[#0A0A0C]"
                   title={showKeyText ? 'Hide API key' : 'Show API key'}
                 >
-                  {showKeyText ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showKeyText ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
               <button
+                type="button"
                 onClick={handleSaveKey}
-                className="w-full sm:w-auto btn-aiigen-primary text-xs font-bold px-5 py-3 shadow-md shadow-pink-500/25 shrink-0"
+                className="w-full sm:w-auto btn-aiigen-primary text-xs font-bold px-4 py-2.5 shadow-xs shrink-0 rounded-xl"
               >
                 {keySaved ? 'Saved!' : 'Save Key'}
               </button>
@@ -213,22 +223,22 @@ export default function AccountPage() {
           </div>
 
           {/* Card 3: Danger Zone & Actions */}
-          <div className="aiigen-card p-5 sm:p-6 bg-white border border-[#E4E4E7] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleClearHistory}
-                className="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold border border-rose-200 flex items-center gap-2 transition-colors"
-              >
-                <Trash2 className="w-4 h-4 text-rose-600" />
-                <span>{clearedMessage ? 'History Cleared!' : 'Clear Generation History'}</span>
-              </button>
-            </div>
+          <div className="aiigen-card p-4 sm:p-5 bg-white border border-[#E4E4E7] rounded-3xl flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={handleClearHistory}
+              className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold border border-rose-200 flex items-center gap-1.5 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+              <span>{clearedMessage ? 'History Cleared!' : 'Clear History'}</span>
+            </button>
 
             <button
+              type="button"
               onClick={handleSignOut}
-              className="px-4 py-2.5 rounded-xl bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#0A0A0C] text-xs font-bold border border-[#E4E4E7] flex items-center gap-2 transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#0A0A0C] text-xs font-bold border border-[#E4E4E7] flex items-center gap-1.5 transition-colors"
             >
-              <LogOut className="w-4 h-4 text-[#71717A]" />
+              <LogOut className="w-3.5 h-3.5 text-[#71717A]" />
               <span>Sign Out</span>
             </button>
           </div>
