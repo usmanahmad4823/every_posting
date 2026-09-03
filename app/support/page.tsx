@@ -7,13 +7,33 @@ import FooterSection from '@/components/landing/footer';
 
 export default function SupportPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && message) {
+    if (!email || !message) return;
+
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, message, subject: 'Support Ticket Request', type: 'support' }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to submit support ticket.');
+
       setSubmitted(true);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -80,12 +100,28 @@ export default function SupportPage() {
                 />
               </div>
 
+              {errorMessage && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                  {errorMessage}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="btn-aiigen-primary w-full py-3.5 text-xs font-extrabold rounded-xl flex items-center justify-center gap-2 shadow-md"
+                disabled={isSubmitting}
+                className="btn-aiigen-primary w-full py-3.5 text-xs font-extrabold rounded-xl flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
               >
-                <Send className="w-4 h-4" />
-                <span>Submit Support Ticket</span>
+                {isSubmitting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Submitting Ticket...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Submit Support Ticket</span>
+                  </>
+                )}
               </button>
             </form>
           )}
