@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, LogOut, Settings, CreditCard, ChevronDown } from 'lucide-react';
+import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, LogOut, Settings, CreditCard, ChevronDown, Sliders, Star, HelpCircle } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSparkleBurst } from '@/components/ui/sparkle-burst';
@@ -282,70 +282,84 @@ export function Navbar() {
                 </span>
               </div>
 
-              {/* Premium Grid Links */}
-              <nav className="grid grid-cols-2 gap-2 text-xs font-bold text-[#0A0A0C]">
+              {/* Premium Vector Grid Links */}
+              <nav className="grid grid-cols-2 gap-2">
                 <Link
                   href="/#niches"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                 >
-                  <span className="text-xs">🎙️</span>
-                  <span className="font-extrabold">Niches</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-50 border border-pink-100 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
+                    <Sliders className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Niches</span>
                 </Link>
 
                 <Link
                   href="/#how-it-works"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                 >
-                  <span className="text-xs">⚡</span>
-                  <span className="font-extrabold">How It Works</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shrink-0 group-hover:scale-105 transition-transform">
+                    <Zap className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">How It Works</span>
                 </Link>
 
                 <Link
                   href="/pricing"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                 >
-                  <span className="text-xs">💎</span>
-                  <span className="font-extrabold">Pricing</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-50 border border-pink-100 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
+                    <CreditCard className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Pricing</span>
                 </Link>
 
                 <Link
                   href="/#testimonials"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                 >
-                  <span className="text-xs">⭐</span>
-                  <span className="font-extrabold">Reviews</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 shrink-0 group-hover:scale-105 transition-transform">
+                    <Star className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Reviews</span>
                 </Link>
 
                 <Link
                   href="/#faq"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                 >
-                  <span className="text-xs">❓</span>
-                  <span className="font-extrabold">FAQ</span>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">FAQ</span>
                 </Link>
 
                 {user?.loggedIn ? (
                   <Link
                     href="/account"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                    className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                   >
-                    <Settings className="w-3.5 h-3.5 text-[#FF529A]" />
-                    <span className="font-extrabold">Settings</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-100 border border-pink-200 flex items-center justify-center text-[#FF529A] shrink-0 group-hover:scale-105 transition-transform">
+                      <Settings className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Settings</span>
                   </Link>
                 ) : (
                   <Link
                     href="/sign-in"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/80 hover:text-[#FF529A] border border-[#E2E8F0] hover:border-pink-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-2xs group"
+                    className="p-2.5 sm:p-3 rounded-2xl bg-[#F8FAFC] hover:bg-pink-50/60 border border-[#E2E8F0] hover:border-[#FFC2DA] transition-all flex items-center gap-2.5 group"
                   >
-                    <User className="w-3.5 h-3.5 text-[#FF529A]" />
-                    <span className="font-extrabold">Sign In</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 group-hover:scale-105 transition-transform">
+                      <User className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-xs font-extrabold text-[#0A0A0C] group-hover:text-[#FF529A] transition-colors">Sign In</span>
                   </Link>
                 )}
               </nav>
