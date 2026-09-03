@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS public.users (
   email TEXT UNIQUE NOT NULL,
   full_name TEXT,
   avatar_url TEXT,
-  subscription_tier TEXT NOT NULL DEFAULT 'free' CHECK (subscription_tier IN ('free', 'pro', 'lifetime')),
+  subscription_tier TEXT NOT NULL DEFAULT 'free' CHECK (subscription_tier IN ('free', 'pro_monthly', 'pro_yearly', 'pro', 'annual')),
   generations_used_this_month INT NOT NULL DEFAULT 0,
-  monthly_generation_limit INT NOT NULL DEFAULT 10,
+  monthly_generation_limit INT NOT NULL DEFAULT 3,
   has_seen_review_prompt BOOLEAN DEFAULT FALSE,
   stripe_customer_id TEXT UNIQUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -36,13 +36,29 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
   stripe_customer_id TEXT NOT NULL,
   stripe_subscription_id TEXT UNIQUE,
   stripe_price_id TEXT,
-  status TEXT NOT NULL CHECK (status IN ('active', 'trailing', 'past_due', 'canceled', 'unpaid', 'one_time_lifetime')),
+  status TEXT NOT NULL CHECK (status IN ('active', 'trailing', 'past_due', 'canceled', 'unpaid', 'incomplete')),
   current_period_start TIMESTAMP WITH TIME ZONE,
   current_period_end TIMESTAMP WITH TIME ZONE,
   cancel_at_period_end BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- 4. ATOMIC GENERATION INCREMENT FUNCTION (Prevents Race Conditions)
+CREATE OR REPLACE FUNCTION public.increment_user_generations_atomic(user_id_input UUID)
+RETURNS INT AS $$
+DECLARE
+  new_count INT;
+BEGIN
+  UPDATE public.users
+  SET generations_used_this_month = generations_used_this_month + 1,
+      updated_at = NOW()
+  WHERE id = user_id_input
+  RETURNING generations_used_this_month INTO new_count;
+  
+  RETURN new_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 4. FEEDBACK TABLE
 CREATE TABLE IF NOT EXISTS public.feedback (

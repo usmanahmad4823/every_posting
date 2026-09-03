@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus, HelpCircle } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 export function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
@@ -10,65 +10,63 @@ export function FAQSection() {
   const faqs = [
     {
       q: 'Do I need audio files or can I paste plain text transcripts?',
-      a: 'You can paste plain text transcripts, raw video scripts, or text exported from any recording app (.txt / .srt files). No manual audio uploading required.',
+      a: 'You can paste plain text transcripts, raw video scripts, or text exported from any recording app (.txt / .srt files). We focus 100% on turning raw text into viral social posts.',
     },
     {
       q: 'How does EveryPosting handle niche-specific tone differences?',
-      a: 'We use tailored AI prompts for Podcasters, YouTubers, and Coaches. Outputs automatically adapt to your target audience with native niche terminology.',
+      a: 'We use custom system prompt architectures for Podcasters, YouTubers, and Coaches. Podcaster outputs reference "episodes" and "listeners", YouTube outputs prioritize hooks and retweets, while Coach outputs focus on authority and client lead generation.',
     },
     {
       q: 'What AI model powers the content generation?',
-      a: 'EveryPosting is powered by Anthropic Claude 3.5 Sonnet, known for human-grade copywriting nuance and natural readability without robotic AI buzzwords.',
+      a: 'EveryPosting uses Anthropic Claude 3.5 Sonnet, recognized as one of the best AI models for copywriting, structural nuance, and human-like writing tone.',
     },
     {
-      q: 'How does the Free Tier & 10-generation limit work?',
-      a: 'Free users get 10 free generations every month. Upgrade to Pro for unlimited generations, or plug in your custom Anthropic API key in Settings for direct usage.',
+      q: 'What is the difference between Pro Monthly and Pro Yearly?',
+      a: 'Pro Monthly gives you 100 generations per month for $19/mo. Pro Yearly provides 1,200 generations per year for $190/yr, giving you approximately 2 months free (saving $38/year).',
     },
     {
-      q: 'Can I cancel or upgrade my subscription anytime?',
-      a: 'Yes! You can upgrade, downgrade, or cancel your Pro subscription anytime with 1 click directly in your Account Settings.',
+      q: 'Can I cancel my Pro subscription at any time?',
+      a: 'Yes! You can manage or cancel your subscription anytime with 1 click directly in your Account Settings page via Stripe.',
     },
   ];
 
   return (
-    <section id="faq" className="py-20 sm:py-28 relative z-10 bg-white border-t border-[#E4E4E7]">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-pink-50 text-[#FF529A] border border-pink-200 mb-3">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>Support & FAQ</span>
+    <section id="faq" className="py-24 relative z-10 bg-white border-t border-[#E4E4E7]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <div className="aiigen-pill mb-3 border-[#FFC2DA]">
+            <span className="w-2 h-2 rounded-full bg-[#FF529A]" />
+            <span className="text-[#0A0A0C]">Support & FAQ</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0C] tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-aiigen-title tracking-tightest mt-2">
             Frequently Asked Questions
           </h2>
-          <p className="mt-3 text-[#52525B] text-sm sm:text-base font-medium">
-            Everything you need to know about EveryPosting and our AI repurposing workflow.
+          <p className="mt-3 text-[#52525B] text-base font-medium">
+            Everything you need to know about EveryPosting and our AI repurposed workflow.
           </p>
         </div>
 
-        {/* Unified Ultra-Minimal Divided Accordion */}
-        <div className="bg-[#F8FAFC]/80 rounded-[32px] border border-[#E4E4E7] p-5 sm:p-8 shadow-xs divide-y divide-[#E4E4E7]">
+        {/* FAQ Accordion List */}
+        <div className="space-y-4">
           {faqs.map((faq, index) => {
             const isOpen = openIdx === index;
             return (
-              <div key={faq.q} className="py-4 sm:py-5 first:pt-0 last:pb-0 group">
+              <div
+                key={faq.q}
+                className="aiigen-card border border-[#E4E4E7] overflow-hidden transition-colors hover:border-[#FF529A]"
+              >
                 <button
-                  type="button"
                   onClick={() => setOpenIdx(isOpen ? null : index)}
-                  className="w-full text-left flex items-center justify-between gap-4 py-1 focus:outline-none"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4"
                 >
-                  <span className="font-extrabold text-[#0A0A0C] text-sm sm:text-base group-hover:text-[#FF529A] transition-colors leading-snug">
+                  <span className="font-bold text-[#0A0A0C] text-base sm:text-lg">
                     {faq.q}
                   </span>
-                  <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border transition-all flex items-center justify-center shrink-0 ${
-                      isOpen
-                        ? 'bg-[#FF529A] border-[#FF529A] text-white shadow-xs'
-                        : 'bg-white border-[#E2E8F0] text-[#71717A] group-hover:border-[#FF529A] group-hover:text-[#FF529A]'
+                  <ChevronDown
+                    className={`w-5 h-5 text-[#FF529A] shrink-0 transition-transform duration-300 ${
+                      isOpen ? 'rotate-180' : ''
                     }`}
-                  >
-                    {isOpen ? <Minus className="w-3.5 h-3.5 stroke-[2.5]" /> : <Plus className="w-3.5 h-3.5 stroke-[2.5]" />}
-                  </div>
+                  />
                 </button>
 
                 <AnimatePresence>
@@ -77,10 +75,9 @@ export function FAQSection() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="overflow-hidden"
+                      transition={{ duration: 0.2 }}
                     >
-                      <div className="pt-3 pb-1 text-[#52525B] text-xs sm:text-sm leading-relaxed font-medium">
+                      <div className="px-6 pb-6 pt-0 text-[#52525B] text-sm leading-relaxed border-t border-[#E4E4E7] mt-1 font-medium">
                         {faq.a}
                       </div>
                     </motion.div>

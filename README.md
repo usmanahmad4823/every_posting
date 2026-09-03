@@ -11,7 +11,7 @@
 - **Animations**: Framer Motion (Scroll-reveal, aura gradient borders, micro-interactions)
 - **AI Engine**: Anthropic Claude 3.5 Sonnet (`@anthropic-ai/sdk`)
 - **Database**: Supabase Postgres (Users, Generations, Usage limits)
-- **Payments**: Stripe Checkout & Webhooks (Pro Monthly Subscriptions & Lifetime Deals)
+- **Payments**: Stripe Checkout & Webhooks (Pro Monthly $19/mo & Pro Yearly $190/yr)
 
 ---
 
@@ -66,10 +66,10 @@ vercel
 
 ## 💳 Payment Setup (Stripe)
 
-1. Go to [dashboard.stripe.com](https://dashboard.stripe.com) and create two products:
-   - **Pro Monthly**: Recurring $29/month
-   - **Lifetime Deal**: One-time $199
-2. Set up a Webhook endpoint pointing to `https://your-domain.vercel.app/api/stripe/webhook` with event `checkout.session.completed`.
+1. Go to [dashboard.stripe.com](https://dashboard.stripe.com) and create two products/prices:
+   - **Pro Monthly**: Recurring $19/month (Set env var `NEXT_PUBLIC_STRIPE_PRO_PRICE_ID`)
+   - **Pro Yearly**: Recurring $190/year (Set env var `NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID`)
+2. Set up a Webhook endpoint pointing to `https://your-domain.vercel.app/api/stripe/webhook` with events `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.
 
 ---
 

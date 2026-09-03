@@ -40,7 +40,8 @@ export async function POST(req: Request) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
-      const planType = (session.metadata?.planType as 'pro' | 'lifetime') || 'pro';
+      const rawPlan = session.metadata?.planType || 'pro_monthly';
+      const planType = rawPlan === 'lifetime' || rawPlan === 'pro_yearly' ? 'pro_yearly' : 'pro_monthly';
       const userId = session.metadata?.userId;
       const customerEmail = session.customer_email || session.customer_details?.email;
       const stripeCustomerId = (session.customer as string) || null;
@@ -50,12 +51,14 @@ export async function POST(req: Request) {
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
+          const newLimit = planType === 'pro_yearly' ? 1200 : 100;
           // 1. Update user profile tier in Supabase users table
           if (userId) {
             await supabase
               .from('users')
               .update({
                 subscription_tier: planType,
+                monthly_generation_limit: newLimit,
                 stripe_customer_id: stripeCustomerId,
               })
               .eq('id', userId);
@@ -64,6 +67,7 @@ export async function POST(req: Request) {
               .from('users')
               .update({
                 subscription_tier: planType,
+                monthly_generation_limit: newLimit,
                 stripe_customer_id: stripeCustomerId,
               })
               .eq('email', customerEmail);
@@ -96,18 +100,34 @@ export async function POST(req: Request) {
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
-          // Update user subscription tier based on status
-          const updatedTier = status === 'active' ? 'pro' : 'free';
+          // If subscription is active, maintain plan; if canceled/past_due/unpaid, revert to free with 3 limit
+          const isPaidActive = status === 'active' || status === 'trialing';
+          const updatedTier = isPaidActive ? undefined : 'free';
+          const updatedLimit = isPaidActive ? undefined : 3;
 
-          await supabase
-            .from('users')
-            .update({ subscription_tier: updatedTier })
-            .eq('stripe_customer_id', customerId);
+          if (!isPaidActive) {
+            await supabase
+              .from('users')
+              .update({
+                subscription_tier: 'free',
+                monthly_generation_limit: 3,
+              })
+              .eq('stripe_customer_id', customerId);
+          }
 
-          // Update subscription record
+          // Update subscription record with billing period timestamps
           await supabase
             .from('subscriptions')
-            .update({ status })
+            .update({
+              status,
+              current_period_start: (subscription as any).current_period_start
+                ? new Date((subscription as any).current_period_start * 1000).toISOString()
+                : new Date().toISOString(),
+              current_period_end: (subscription as any).current_period_end
+                ? new Date((subscription as any).current_period_end * 1000).toISOString()
+                : new Date().toISOString(),
+              cancel_at_period_end: subscription.cancel_at_period_end,
+            })
             .eq('stripe_subscription_id', subscription.id);
         } catch (dbErr) {
           console.error('[Stripe Webhook Subscription Update Warning]:', dbErr);

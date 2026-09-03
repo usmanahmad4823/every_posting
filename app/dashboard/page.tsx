@@ -174,12 +174,12 @@ export default function DashboardPage() {
       return;
     }
 
-    // 10-Generation Limit Check for Free Tier Users
-    const isFreeTier = user.plan === 'free';
-    const isLimitReached = isFreeTier && user.generationsUsedThisMonth >= 10 && !customApiKey;
+    // Generation Limit Check for Free Tier Users
+    const limit = user.monthlyGenerationLimit || 3;
+    const isLimitReached = user.plan === 'free' && user.generationsUsedThisMonth >= limit && !customApiKey;
 
     if (isLimitReached) {
-      setErrorMessage('Monthly limit reached (10/10 Used). Upgrade to Pro or plug in your custom Anthropic API key for unlimited generations!');
+      setErrorMessage(`Generation limit reached (${user.generationsUsedThisMonth}/${limit} Used). Upgrade to Pro or enter your custom Anthropic API key to continue.`);
       setShowUpgradeModal(true);
       return;
     }
@@ -447,16 +447,16 @@ export default function DashboardPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-extrabold text-[#0A0A0C]">Monthly Free Limit Reached!</h3>
+                  <h3 className="text-xl font-extrabold text-[#0A0A0C]">Generation Limit Reached!</h3>
                   <p className="text-xs text-[#52525B] leading-relaxed mt-1">
-                    You have used all <strong>10 / 10 free generations</strong> for this month. Upgrade to EveryPosting Pro for unlimited content generations or plug in your personal Anthropic Claude API key!
+                    You have used <strong>{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 3} generations</strong>. Upgrade to EveryPosting Pro to continue generating or plug in your personal Anthropic Claude API key!
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-[#0A0A0C]">
-                    <span>Monthly Free Tier Usage</span>
-                    <span className="text-rose-600 font-extrabold">10 / 10 Used</span>
+                    <span>Quota Usage</span>
+                    <span className="text-rose-600 font-extrabold">{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 3} Used</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
                     <div className="w-full h-full bg-rose-500 rounded-full" />

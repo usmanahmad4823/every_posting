@@ -32,12 +32,11 @@ export interface GenerationResult {
 
 export type PlanType =
   | 'free'
-  | 'private_ltd'
-  | 'appsumo_ltd'
-  | 'monthly'
-  | 'annual'
+  | 'pro_monthly'
+  | 'pro_yearly'
   | 'pro'
-  | 'lifetime';
+  | 'monthly'
+  | 'annual';
 
 export type PlanStatus = 'active' | 'canceled' | 'past_due';
 

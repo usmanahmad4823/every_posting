@@ -19,7 +19,7 @@ export function getStripe(): Stripe {
 export const stripe = getStripe();
 
 export interface CreateCheckoutParams {
-  planType: 'pro' | 'lifetime';
+  planType: 'pro_monthly' | 'pro_yearly' | 'pro' | 'lifetime';
   userId?: string;
   userEmail?: string;
   originUrl?: string;
@@ -55,21 +55,20 @@ export async function createStripeCheckoutSession({
     process.env.NEXT_PUBLIC_APP_URL ||
     'https://every-posting.vercel.app';
 
-  // Secure server-side Price ID Mapping (prevents client-side price manipulation)
+  // Secure server-side Price ID Mapping (preserves existing env var key names)
   let priceId: string | undefined;
-  let mode: 'subscription' | 'payment';
+  const mode: 'subscription' | 'payment' = 'subscription'; // Both Pro Monthly and Pro Yearly are subscription billing
+  const normalizedPlan = planType === 'pro' ? 'pro_monthly' : planType === 'lifetime' ? 'pro_yearly' : planType;
 
-  if (planType === 'pro') {
+  if (normalizedPlan === 'pro_monthly') {
     priceId =
       process.env.STRIPE_PRO_PRICE_ID ||
       process.env.STRIPE_PRO_MONTHLY_PRICE_ID ||
       process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID;
-    mode = 'subscription';
-  } else if (planType === 'lifetime') {
+  } else if (normalizedPlan === 'pro_yearly') {
     priceId =
       process.env.STRIPE_LIFETIME_PRICE_ID ||
       process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID;
-    mode = 'payment';
   } else {
     throw new Error(`Invalid plan type requested: ${planType}`);
   }

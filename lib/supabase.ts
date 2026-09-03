@@ -153,6 +153,8 @@ export async function signOutUser(): Promise<void> {
   }
 }
 
+import { getGenerationLimit, getPlanConfig } from './plans';
+
 export async function getUserProfile(userId?: string): Promise<UserProfile | null> {
   let storedUser: any = null;
   if (typeof window !== 'undefined') {
@@ -166,7 +168,6 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
 
   // If no user session or stored user is logged in, return guest fallback or null
   if (!storedUser || !storedUser.loggedIn || (!storedUser.id && !userId)) {
-    // Return default session for anonymous local usage tracking
     const localUsage = storedUser?.generationsUsedThisMonth ?? mockUserUsageCount;
     return {
       id: userId || 'guest-user',
@@ -174,7 +175,7 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
       fullName: 'Usman Ahmad',
       subscriptionTier: 'free',
       generationsUsedThisMonth: localUsage,
-      monthlyGenerationLimit: 10,
+      monthlyGenerationLimit: getGenerationLimit('free'),
       hasSeenReviewPrompt: false,
     };
   }
@@ -183,15 +184,16 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
   const fallbackName = storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator';
   const fallbackEmail = storedUser.email || '';
   const localUsageCount = storedUser.generationsUsedThisMonth ?? mockUserUsageCount;
+  const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
 
   if (!isSupabaseConfigured()) {
     return {
       id: activeId,
       email: fallbackEmail,
       fullName: fallbackName,
-      subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
+      subscriptionTier: currentPlan,
       generationsUsedThisMonth: localUsageCount,
-      monthlyGenerationLimit: 10,
+      monthlyGenerationLimit: getGenerationLimit(currentPlan),
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
     };
   }
@@ -215,22 +217,23 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
         id: currentId,
         email: metaEmail,
         fullName: metaName,
-        subscriptionTier: storedUser?.plan || storedUser?.tier || 'free',
+        subscriptionTier: currentPlan,
         generationsUsedThisMonth: localUsageCount,
-        monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
+        monthlyGenerationLimit: getGenerationLimit(currentPlan),
         hasSeenReviewPrompt: false,
       };
     }
 
     const fetchedUsage = data.generations_used_this_month ?? localUsageCount;
+    const tier = data.subscription_tier || currentPlan;
 
     return {
       id: data.id,
       email: data.email || metaEmail,
       fullName: data.full_name || metaName,
-      subscriptionTier: data.subscription_tier || storedUser?.plan || storedUser?.tier || 'free',
+      subscriptionTier: tier,
       generationsUsedThisMonth: fetchedUsage,
-      monthlyGenerationLimit: data.monthly_generation_limit || ((data.subscription_tier || 'free') === 'free' ? 10 : 9999),
+      monthlyGenerationLimit: data.monthly_generation_limit || getGenerationLimit(tier),
       hasSeenReviewPrompt: data.has_seen_review_prompt || false,
     };
   } catch {
@@ -238,27 +241,28 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
       id: activeId,
       email: fallbackEmail,
       fullName: fallbackName,
-      subscriptionTier: storedUser?.tier || storedUser?.plan || 'free',
+      subscriptionTier: currentPlan,
       generationsUsedThisMonth: localUsageCount,
-      monthlyGenerationLimit: 10,
+      monthlyGenerationLimit: getGenerationLimit(currentPlan),
       hasSeenReviewPrompt: false,
     };
   }
 }
 
-export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowed: boolean; remaining: number; currentUsage: number }> {
+export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowed: boolean; remaining: number; currentUsage: number; limit: number }> {
   const profile = await getUserProfile(userId);
-  if (!profile) return { allowed: true, remaining: 10, currentUsage: 0 };
-
-  if (profile.subscriptionTier === 'pro' || profile.subscriptionTier === 'lifetime') {
-    return { allowed: true, remaining: 9999, currentUsage: profile.generationsUsedThisMonth };
+  if (!profile) {
+    const defaultLimit = getGenerationLimit('free');
+    return { allowed: true, remaining: defaultLimit, currentUsage: 0, limit: defaultLimit };
   }
 
-  const remaining = Math.max(0, profile.monthlyGenerationLimit - profile.generationsUsedThisMonth);
+  const limit = profile.monthlyGenerationLimit || getGenerationLimit(profile.subscriptionTier);
+  const remaining = Math.max(0, limit - profile.generationsUsedThisMonth);
   return {
     allowed: remaining > 0,
     remaining,
     currentUsage: profile.generationsUsedThisMonth,
+    limit,
   };
 }
 

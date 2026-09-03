@@ -40,30 +40,22 @@ export function PlanBadge({
 
   // Active Plan Styles & Labels
   switch (plan) {
-    case 'private_ltd':
-    case 'appsumo_ltd':
-    case 'lifetime':
-      return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-amber-500 text-white shadow-xs uppercase tracking-wider ${className}`}>
-          <Crown className="w-3 h-3 fill-white shrink-0" />
-          <span>Lifetime</span>
-        </span>
-      );
-
+    case 'pro_yearly':
     case 'annual':
       return (
         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-purple-600 text-white shadow-xs uppercase tracking-wider ${className}`}>
-          <Zap className="w-3 h-3 fill-white shrink-0" />
-          <span>Pro (Annual)</span>
+          <Crown className="w-3 h-3 fill-white shrink-0" />
+          <span>Pro Yearly</span>
         </span>
       );
 
+    case 'pro_monthly':
     case 'monthly':
     case 'pro':
       return (
         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-[#FF529A] text-white shadow-xs uppercase tracking-wider ${className}`}>
           <Zap className="w-3 h-3 fill-white shrink-0" />
-          <span>Pro (Monthly)</span>
+          <span>Pro Monthly</span>
         </span>
       );
 

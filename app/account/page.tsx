@@ -157,22 +157,22 @@ export default function AccountPage() {
             {/* Usage Status Bar */}
             <div className="bg-[#F8FAFC] p-3.5 rounded-2xl border border-[#E2E8F0] space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-extrabold text-[#0A0A0C]">Monthly Generation Usage</span>
+                <span className="font-extrabold text-[#0A0A0C]">Generation Quota Usage</span>
                 <span className="font-bold text-[#FF529A]">
-                  {user.generationsUsedThisMonth} / {user.plan === 'free' ? '10' : '∞'} Used
+                  {user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 3} Used
                 </span>
               </div>
               <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#FF529A] to-purple-600 transition-all duration-300 rounded-full"
                   style={{
-                    width: `${user.plan !== 'free' ? 100 : Math.min(100, (user.generationsUsedThisMonth / 10) * 100)}%`,
+                    width: `${Math.min(100, (user.generationsUsedThisMonth / (user.monthlyGenerationLimit || 3)) * 100)}%`,
                   }}
                 />
               </div>
               <div className="flex items-center justify-between text-[10px] text-[#71717A] font-medium">
-                <span>Resets on the 1st of every month</span>
-                <span>{user.plan === 'free' ? `${Math.max(0, 10 - user.generationsUsedThisMonth)} remaining` : 'Unlimited Plan'}</span>
+                <span>Billing Period Quota</span>
+                <span>{Math.max(0, (user.monthlyGenerationLimit || 3) - user.generationsUsedThisMonth)} generations remaining</span>
               </div>
             </div>
           </div>

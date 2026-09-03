@@ -5,15 +5,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
     const { planType, userEmail, userId } = body as {
-      planType: 'pro' | 'lifetime';
+      planType: 'pro_monthly' | 'pro_yearly' | 'pro' | 'lifetime';
       userEmail?: string;
       userId?: string;
     };
 
     // Server-side validation of planType parameter
-    if (!planType || !['pro', 'lifetime'].includes(planType)) {
+    const validPlans = ['pro_monthly', 'pro_yearly', 'pro', 'lifetime'];
+    if (!planType || !validPlans.includes(planType)) {
       return NextResponse.json(
-        { error: 'Valid plan type ("pro" or "lifetime") is required.' },
+        { error: 'Valid plan type ("pro_monthly" or "pro_yearly") is required.' },
         { status: 400 }
       );
     }

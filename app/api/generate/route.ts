@@ -24,34 +24,57 @@ export async function POST(req: Request) {
       userId?: string;
     };
 
+    // 1. Input Validation & Cost Protection
     if (!transcript || !transcript.trim()) {
-      return NextResponse.json({ error: 'Transcript text is required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'INVALID_TRANSCRIPT', message: 'Please enter a transcript before generating.' },
+        { status: 400 }
+      );
+    }
+
+    if (transcript.length > 50000) {
+      return NextResponse.json(
+        { error: 'TRANSCRIPT_TOO_LARGE', message: 'Transcript exceeds maximum limit of 50,000 characters.' },
+        { status: 400 }
+      );
     }
 
     if (!niche || !['podcaster', 'youtuber', 'coach'].includes(niche)) {
-      return NextResponse.json({ error: 'Valid niche selector is required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'INVALID_NICHE', message: 'Valid niche selector is required.' },
+        { status: 400 }
+      );
     }
 
     if (!selectedFormats || !Array.isArray(selectedFormats) || selectedFormats.length === 0) {
-      return NextResponse.json({ error: 'At least one output format must be selected.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'INVALID_FORMATS', message: 'At least one output format must be selected.' },
+        { status: 400 }
+      );
     }
 
-    // 1. Check free generation limit (skip check if custom API key is supplied)
+    // 2. Server-Side Generation Limit Check BEFORE Calling Anthropic AI
+    const effectiveUserId = userId || 'guest-user';
+    let userLimit = 3;
+
     if (!customApiKey) {
-      const limitCheck = await checkCanGenerate(userId);
+      const limitCheck = await checkCanGenerate(effectiveUserId);
+      userLimit = limitCheck.limit || 3;
       if (!limitCheck.allowed) {
         return NextResponse.json(
           {
-            error:
-              'You have reached your 10 free generations limit for this month. Upgrade to Pro, Lifetime Deal, or enter your own Anthropic API Key in Settings for unlimited generations!',
+            error: 'GENERATION_LIMIT_REACHED',
+            message: "You've reached your generation limit. Upgrade to Pro to continue.",
             limitReached: true,
+            currentUsage: limitCheck.currentUsage,
+            limit: limitCheck.limit,
           },
           { status: 429 }
         );
       }
     }
 
-    // 2. Build system prompt & call Claude API
+    // 3. Invoke Anthropic Claude AI (Only reached if user has available quota or custom key)
     const requestPayload: GenerationRequest = {
       transcript,
       niche,
@@ -62,15 +85,16 @@ export async function POST(req: Request) {
     };
     const outputs = await generateContentWithClaude(requestPayload);
 
-    // 3. Save generation record & update usage count
-    const savedRecord = await saveGenerationRecord(userId, niche, transcript, selectedFormats, outputs);
+    // 4. Save Generation & Increment Usage Atomically ONLY After AI Success
+    const savedRecord = await saveGenerationRecord(effectiveUserId, niche, transcript, selectedFormats, outputs);
     const newCount = savedRecord.newUsageCount;
 
     return NextResponse.json({
       success: true,
       result: savedRecord,
       generationsUsedThisMonth: newCount,
-      remainingUsage: customApiKey ? 9999 : Math.max(0, 10 - newCount),
+      remainingUsage: customApiKey ? 9999 : Math.max(0, userLimit - newCount),
+      limit: userLimit,
     });
   } catch (error: any) {
     console.error('API /api/generate error:', error);
