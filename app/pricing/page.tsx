@@ -65,38 +65,38 @@ export default function PricingPage() {
   const userTier = user?.tier || 'free';
 
   return (
-    <div className="pt-20 sm:pt-32 pb-16 sm:pb-28 bg-[#08070C] min-h-screen relative overflow-hidden text-white">
-      {/* Background Pink & Purple Glowing Orbs */}
-      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[650px] h-[650px] bg-gradient-to-tr from-[#FF529A]/20 via-purple-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[550px] h-[550px] bg-gradient-to-bl from-pink-600/15 via-indigo-600/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none" />
+    <div className="pt-20 sm:pt-32 pb-16 sm:pb-28 bg-[#FFF5F9] min-h-screen relative overflow-hidden text-[#0A0A0C]">
+      {/* Background Soft Pink & Purple Glowing Orbs */}
+      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[650px] h-[650px] bg-gradient-to-tr from-[#FF529A]/15 via-pink-200/25 to-transparent rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[550px] h-[550px] bg-gradient-to-bl from-purple-300/15 via-pink-100/30 to-transparent rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#FF529A_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.06] pointer-events-none" />
 
-      {/* Massive Background Watermark Typography (Matches Reference Image) */}
-      <div className="absolute top-14 left-1/2 -translate-x-1/2 whitespace-nowrap text-7xl sm:text-[140px] lg:text-[180px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#FF529A]/15 to-transparent tracking-widest select-none pointer-events-none z-0 opacity-60">
+      {/* Massive Background Watermark Typography */}
+      <div className="absolute top-14 left-1/2 -translate-x-1/2 whitespace-nowrap text-7xl sm:text-[140px] lg:text-[180px] font-black uppercase text-[#FF529A]/[0.07] tracking-widest select-none pointer-events-none z-0">
         PRICING PLAN
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Title & Signed-In Status */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#FF529A]/30 text-pink-300 text-xs font-bold backdrop-blur-md mb-4 shadow-lg shadow-pink-500/10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#FFC2DA] text-[#FF529A] text-xs font-bold shadow-xs mb-4">
             <span className="w-2 h-2 rounded-full bg-[#FF529A] animate-ping" />
             <span>Transparent Creator Plans</span>
           </div>
 
-          <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-6xl font-black text-[#0A0A0C] tracking-tight leading-tight">
             Invest in Leverage. <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF529A] via-pink-400 to-purple-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF529A] via-pink-600 to-purple-600">
               Scale Your Audience.
             </span>
           </h1>
-          <p className="mt-4 text-slate-400 text-sm sm:text-xl font-medium leading-relaxed">
+          <p className="mt-4 text-[#52525B] text-sm sm:text-xl font-medium leading-relaxed">
             Turn every single audio recording or video script into 7 days of ready-to-post social media content.
           </p>
 
           {/* User Active Subscription Status Banner */}
           {user?.loggedIn && (
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#FF529A]/30 backdrop-blur-md text-xs font-bold text-white shadow-lg">
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#FFC2DA] shadow-sm text-xs font-bold text-[#0A0A0C]">
               <UserCheck className="w-4 h-4 text-[#FF529A]" />
               <span>Signed in as <strong>{user.email}</strong></span>
               <span className="px-2.5 py-0.5 rounded-full bg-[#FF529A] text-white text-[10px] uppercase font-extrabold ml-1">
@@ -107,15 +107,15 @@ export default function PricingPage() {
         </div>
 
         {errorMsg && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs sm:text-sm flex items-center justify-between gap-3 font-medium shadow-2xl backdrop-blur-md">
+          <div className="max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center justify-between gap-3 font-medium shadow-md">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
             {!user?.loggedIn && (
               <Link
                 href="/sign-in?redirect=/pricing"
-                className="px-3 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs rounded-lg border border-rose-400/40 transition-colors shrink-0"
+                className="px-3 py-1 bg-white hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-lg border border-rose-300 transition-colors shrink-0"
               >
                 Sign In Now →
               </Link>
@@ -123,104 +123,104 @@ export default function PricingPage() {
           </div>
         )}
 
-        {/* Pricing Cards Grid (Glassmorphism & Pink Theme) */}
+        {/* Pricing Cards Grid (Pink & White Theme) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
           {/* Card 1: Free Starter */}
-          <div className="rounded-3xl bg-[#12101A]/70 border border-white/10 hover:border-[#FF529A]/40 transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+          <div className="rounded-3xl bg-white/90 border border-[#FFC2DA] hover:border-[#FF529A]/60 transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-pink-50/50 to-transparent pointer-events-none" />
 
             <div>
               {/* Card Top Icon & Badge Row */}
               <div className="flex items-center justify-between mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-700 border border-white/10 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-100 to-white border border-[#FFC2DA] flex items-center justify-center text-[#FF529A] font-black text-xl shadow-sm">
                   S
                 </div>
-                <span className="px-3 py-1 rounded-full text-[11px] font-extrabold bg-white/5 text-slate-300 border border-white/10 backdrop-blur-md">
+                <span className="px-3 py-1 rounded-full text-[11px] font-extrabold bg-slate-100 text-[#52525B] border border-slate-200">
                   Starter Tier
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black text-white">Free Starter</h3>
-              <p className="text-slate-400 text-xs mt-1 font-medium">Perfect for testing with your first transcripts</p>
+              <h3 className="text-2xl font-black text-[#0A0A0C]">Free Starter</h3>
+              <p className="text-[#71717A] text-xs mt-1 font-medium">Perfect for testing with your first transcripts</p>
 
               <div className="my-6">
-                <span className="text-4xl sm:text-5xl font-black text-white">$0</span>
-                <span className="text-slate-400 text-sm font-medium"> / forever</span>
+                <span className="text-4xl sm:text-5xl font-black text-[#0A0A0C]">$0</span>
+                <span className="text-[#71717A] text-sm font-medium"> / forever</span>
               </div>
 
               {/* Action Button */}
               <Link
                 href="/dashboard"
-                className="w-full bg-white/10 hover:bg-white/20 text-white font-extrabold py-3.5 rounded-2xl text-center text-sm block border border-white/15 transition-all shadow-md active:scale-95 mb-6"
+                className="w-full bg-slate-50 hover:bg-pink-50 text-[#0A0A0C] font-extrabold py-3.5 rounded-2xl text-center text-sm block border border-[#FFC2DA] transition-all shadow-xs active:scale-95 mb-6"
               >
                 {userTier === 'free' ? 'Current Free Plan' : 'Go to Studio App'}
               </Link>
 
               {/* Key Meta Stats */}
-              <div className="space-y-2.5 text-xs text-slate-300 mb-6 pb-6 border-b border-white/10">
+              <div className="space-y-2.5 text-xs text-[#52525B] mb-6 pb-6 border-b border-[#E4E4E7]">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-slate-400 shrink-0" />
+                  <Users className="w-4 h-4 text-[#71717A] shrink-0" />
                   <span>3 AI generations / month</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <HardDrive className="w-4 h-4 text-slate-400 shrink-0" />
+                  <HardDrive className="w-4 h-4 text-[#71717A] shrink-0" />
                   <span>Basic generation history</span>
                 </div>
               </div>
 
-              <div className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400 mb-4">
+              <div className="text-[10px] font-extrabold tracking-wider uppercase text-[#71717A] mb-4">
                 INCLUDES FREE ↓
               </div>
 
-              <ul className="space-y-3 text-xs sm:text-sm text-slate-300 font-medium">
+              <ul className="space-y-3 text-xs sm:text-sm text-[#52525B] font-medium">
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>Access to all 3 creator niches</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>Twitter threads & LinkedIn posts</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>Instant 1-click clipboard copy</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Card 2: Pro Monthly (FEATURED PINKISH CARD FROM REFERENCE IMAGE) */}
-          <div className="rounded-3xl bg-[#160E22]/90 border-2 border-[#FF529A] transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-2xl shadow-[0_0_50px_rgba(255,82,154,0.25)] relative overflow-hidden group scale-[1.02]">
+          {/* Card 2: Pro Monthly (FEATURED PINK & WHITE GLASS CARD) */}
+          <div className="rounded-3xl bg-gradient-to-b from-white via-pink-50/70 to-white border-2 border-[#FF529A] transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-2xl shadow-[0_10px_40px_rgba(255,82,154,0.2)] relative overflow-hidden group scale-[1.02]">
             {/* Top Pinkish Radial Header Glow */}
-            <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#FF529A]/30 via-purple-600/15 to-transparent pointer-events-none" />
+            <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#FF529A]/15 to-transparent pointer-events-none" />
 
             <div>
               {/* Card Top Icon & Most Popular Badge Row */}
               <div className="flex items-center justify-between mb-6 relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF529A] to-purple-600 border border-white/20 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-pink-500/40">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF529A] to-purple-600 text-white font-black text-xl flex items-center justify-center shadow-lg shadow-pink-500/30">
                   M
                 </div>
-                <span className="px-3.5 py-1 rounded-full text-[11px] font-extrabold bg-[#FF529A]/20 text-pink-300 border border-[#FF529A]/40 backdrop-blur-md flex items-center gap-1.5 shadow-md">
+                <span className="px-3.5 py-1 rounded-full text-[11px] font-extrabold bg-pink-100 text-[#FF529A] border border-pink-300 backdrop-blur-md flex items-center gap-1.5 shadow-xs">
                   <Sparkles className="w-3.5 h-3.5 text-[#FF529A]" />
                   <span>✦ Most popular</span>
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black text-white relative z-10">Pro Monthly</h3>
-              <p className="text-pink-200/80 text-xs mt-1 font-medium relative z-10">
+              <h3 className="text-2xl font-black text-[#0A0A0C] relative z-10">Pro Monthly</h3>
+              <p className="text-[#52525B] text-xs mt-1 font-medium relative z-10">
                 Supercharged repurposing engine for creators & podcasters
               </p>
 
               <div className="my-6 relative z-10">
-                <span className="text-4xl sm:text-5xl font-black text-white">$19</span>
-                <span className="text-slate-300 text-sm font-medium"> / month</span>
+                <span className="text-4xl sm:text-5xl font-black text-[#0A0A0C]">$19</span>
+                <span className="text-[#71717A] text-sm font-medium"> / month</span>
               </div>
 
               {/* Action Button */}
               <button
                 onClick={() => handleCheckout('pro_monthly')}
                 disabled={loadingPlan === 'pro_monthly' || userTier === 'pro_monthly' || userTier === 'pro'}
-                className="w-full bg-gradient-to-r from-[#FF529A] via-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-2xl text-center text-sm flex items-center justify-center gap-2 border border-pink-400/30 transition-all shadow-xl shadow-pink-500/35 active:scale-95 mb-6 relative z-10 disabled:opacity-80 cursor-pointer"
+                className="w-full bg-gradient-to-r from-[#FF529A] via-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-2xl text-center text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-pink-500/30 active:scale-95 mb-6 relative z-10 disabled:opacity-80 cursor-pointer"
               >
                 {loadingPlan === 'pro_monthly' ? (
                   <span className="flex items-center gap-2">
@@ -238,10 +238,10 @@ export default function PricingPage() {
               </button>
 
               {/* Key Meta Stats */}
-              <div className="space-y-2.5 text-xs text-slate-200 mb-6 pb-6 border-b border-white/15 relative z-10">
+              <div className="space-y-2.5 text-xs text-[#52525B] mb-6 pb-6 border-b border-pink-200/80 relative z-10">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#FF529A] shrink-0" />
-                  <strong className="text-white">150 AI generations per month</strong>
+                  <strong className="text-[#0A0A0C]">150 AI generations per month</strong>
                 </div>
                 <div className="flex items-center gap-2">
                   <HardDrive className="w-4 h-4 text-[#FF529A] shrink-0" />
@@ -249,21 +249,21 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <div className="text-[10px] font-extrabold tracking-wider uppercase text-pink-300/80 mb-4 relative z-10">
+              <div className="text-[10px] font-extrabold tracking-wider uppercase text-[#FF529A] mb-4 relative z-10">
                 INCLUDES EVERYTHING PRO ↓
               </div>
 
-              <ul className="space-y-3 text-xs sm:text-sm text-slate-200 font-medium relative z-10">
+              <ul className="space-y-3 text-xs sm:text-sm text-[#52525B] font-medium relative z-10">
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-[#FF529A]/30 text-pink-300 flex items-center justify-center text-[10px] shrink-0 font-bold border border-[#FF529A]/40">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-pink-100 text-[#FF529A] flex items-center justify-center text-[10px] shrink-0 font-bold border border-pink-300">✓</div>
                   <span>All 4 Formats (Notes, Threads, Posts, Emails)</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-[#FF529A]/30 text-pink-300 flex items-center justify-center text-[10px] shrink-0 font-bold border border-[#FF529A]/40">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-pink-100 text-[#FF529A] flex items-center justify-center text-[10px] shrink-0 font-bold border border-pink-300">✓</div>
                   <span>Priority Claude 3.5 Sonnet processing</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-[#FF529A]/30 text-pink-300 flex items-center justify-center text-[10px] shrink-0 font-bold border border-[#FF529A]/40">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-pink-100 text-[#FF529A] flex items-center justify-center text-[10px] shrink-0 font-bold border border-pink-300">✓</div>
                   <span>Full Generation History database</span>
                 </li>
               </ul>
@@ -271,34 +271,34 @@ export default function PricingPage() {
           </div>
 
           {/* Card 3: Pro Yearly (BEST VALUE CARD) */}
-          <div className="rounded-3xl bg-[#12101A]/70 border border-white/10 hover:border-[#FF529A]/40 transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-2xl shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-purple-600/15 to-transparent pointer-events-none" />
+          <div className="rounded-3xl bg-white/90 border border-purple-200 hover:border-[#FF529A]/60 transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-purple-50 to-transparent pointer-events-none" />
 
             <div>
               {/* Card Top Icon & Badge Row */}
               <div className="flex items-center justify-between mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-700 to-indigo-600 border border-white/15 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-[#FF529A] text-white font-black text-xl flex items-center justify-center shadow-md">
                   Y
                 </div>
-                <span className="px-3 py-1 rounded-full text-[11px] font-extrabold bg-purple-500/20 text-purple-300 border border-purple-400/30 backdrop-blur-md">
+                <span className="px-3 py-1 rounded-full text-[11px] font-extrabold bg-purple-100 text-purple-700 border border-purple-300 backdrop-blur-md">
                   ⚡ 2 Months Free
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black text-white">Pro Yearly</h3>
-              <p className="text-slate-400 text-xs mt-1 font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
+              <h3 className="text-2xl font-black text-[#0A0A0C]">Pro Yearly</h3>
+              <p className="text-[#71717A] text-xs mt-1 font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
 
               <div className="my-6">
-                <span className="text-4xl sm:text-5xl font-black text-white">$190</span>
-                <span className="text-slate-400 text-sm font-medium"> / year</span>
-                <p className="text-[11px] text-pink-400 font-extrabold mt-1">Equivalent to $15.83/mo (Save $38/year)</p>
+                <span className="text-4xl sm:text-5xl font-black text-[#0A0A0C]">$190</span>
+                <span className="text-[#71717A] text-sm font-medium"> / year</span>
+                <p className="text-[11px] text-[#FF529A] font-extrabold mt-1">Equivalent to $15.83/mo (Save $38/year)</p>
               </div>
 
               {/* Action Button */}
               <button
                 onClick={() => handleCheckout('pro_yearly')}
                 disabled={loadingPlan === 'pro_yearly' || userTier === 'pro_yearly' || userTier === 'annual'}
-                className="w-full bg-white/10 hover:bg-white/20 text-white font-extrabold py-3.5 rounded-2xl text-center text-sm flex items-center justify-center gap-2 border border-white/15 transition-all shadow-md active:scale-95 mb-6 disabled:opacity-80 cursor-pointer"
+                className="w-full bg-[#0A0A0C] hover:bg-slate-800 text-white font-extrabold py-3.5 rounded-2xl text-center text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 mb-6 disabled:opacity-80 cursor-pointer"
               >
                 {loadingPlan === 'pro_yearly' ? (
                   <span className="flex items-center gap-2">
@@ -316,32 +316,32 @@ export default function PricingPage() {
               </button>
 
               {/* Key Meta Stats */}
-              <div className="space-y-2.5 text-xs text-slate-300 mb-6 pb-6 border-b border-white/10">
+              <div className="space-y-2.5 text-xs text-[#52525B] mb-6 pb-6 border-b border-[#E4E4E7]">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-purple-400 shrink-0" />
-                  <strong className="text-white">1,800 AI generations per year</strong>
+                  <Users className="w-4 h-4 text-purple-600 shrink-0" />
+                  <strong className="text-[#0A0A0C]">1,800 AI generations per year</strong>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-purple-400 shrink-0" />
+                  <Layers className="w-4 h-4 text-purple-600 shrink-0" />
                   <span>VIP Creator Email Support</span>
                 </div>
               </div>
 
-              <div className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400 mb-4">
+              <div className="text-[10px] font-extrabold tracking-wider uppercase text-[#71717A] mb-4">
                 INCLUDES ALL PRO FEATURES ↓
               </div>
 
-              <ul className="space-y-3 text-xs sm:text-sm text-slate-300 font-medium">
+              <ul className="space-y-3 text-xs sm:text-sm text-[#52525B] font-medium">
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>All current & future niche tools</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>Priority Claude 3.5 Sonnet processing</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <div className="w-4 h-4 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
+                  <div className="w-4 h-4 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] shrink-0 font-bold">✓</div>
                   <span>Unlimited Cloud History database</span>
                 </li>
               </ul>
