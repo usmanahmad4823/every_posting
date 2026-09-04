@@ -111,7 +111,7 @@ export function PricingSection() {
           </div>
         )}
 
-        {/* Pricing Cards Grid (1.2x Compact, Blurry Backgrounds, $29 Monthly, Unified Pink Buttons) */}
+        {/* Pricing Cards Grid (Icons Removed, Clean Right Badge Pills) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto">
           {/* Card 1: Free Starter */}
           <motion.div
@@ -124,11 +124,8 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-pink-50/60 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Top Icon & Badge Row */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-100 to-white border border-[#FFC2DA] flex items-center justify-center text-[#FF529A] font-black text-lg shadow-2xs">
-                  S
-                </div>
+              {/* Card Right Badge Row */}
+              <div className="flex items-center justify-end mb-3">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-[#52525B] border border-slate-200">
                   Starter Tier
                 </span>
@@ -183,7 +180,7 @@ export function PricingSection() {
             </div>
           </motion.div>
 
-          {/* Card 2: Pro Monthly ($29/mo - FEATURED PINK & WHITE GLASS CARD) */}
+          {/* Card 2: Pro Monthly ($29/mo) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -195,11 +192,8 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-[#FF529A]/15 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Top Icon & Most Popular Badge Row */}
-              <div className="flex items-center justify-between mb-4 relative z-10">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF529A] to-purple-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-pink-500/25">
-                  M
-                </div>
+              {/* Card Right Badge Row */}
+              <div className="flex items-center justify-end mb-3 relative z-10">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-pink-100 text-[#FF529A] border border-pink-300 backdrop-blur-md flex items-center gap-1 shadow-2xs">
                   <Sparkles className="w-3 h-3 text-[#FF529A]" />
                   <span>✦ Most popular</span>
@@ -270,7 +264,7 @@ export function PricingSection() {
             </div>
           </motion.div>
 
-          {/* Card 3: Pro Yearly (BEST VALUE CARD - SAME PINK BUTTON AS MONTHLY) */}
+          {/* Card 3: Pro Yearly */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -281,11 +275,8 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-50 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Top Icon & Badge Row */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-[#FF529A] text-white font-black text-lg flex items-center justify-center shadow-xs">
-                  Y
-                </div>
+              {/* Card Right Badge Row */}
+              <div className="flex items-center justify-end mb-3">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-700 border border-purple-300 backdrop-blur-md">
                   ⚡ 2 Months Free
                 </span>
@@ -300,7 +291,7 @@ export function PricingSection() {
                 <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $15.83/mo (Save $38/year)</p>
               </div>
 
-              {/* Action Button (EXACT SAME PINK GRADIENT AS MONTHLY BUTTON) */}
+              {/* Action Button */}
               <button
                 onClick={() => handleCheckout('pro_yearly')}
                 disabled={loadingPlan === 'pro_yearly' || userTier === 'pro_yearly' || userTier === 'annual'}
