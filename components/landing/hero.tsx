@@ -56,6 +56,14 @@ function ApplePodcastIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function SubstackIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="#FF6719" {...props}>
+      <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z" />
+    </svg>
+  );
+}
+
 export function HeroSection() {
   const [selectedNiche, setSelectedNiche] = useState<NicheType>('podcaster');
   const [copiedFormat, setCopiedFormat] = useState<string | null>(null);
@@ -268,7 +276,7 @@ export function HeroSection() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="absolute -bottom-6 -right-6 z-30 hidden lg:flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#FFC2DA] shadow-2xl"
+            className="absolute bottom-2 -right-4 z-30 hidden lg:flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#FFC2DA] shadow-xl"
           >
             <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
               <PlaySquare className="w-5 h-5" />
@@ -385,21 +393,36 @@ export function HeroSection() {
 
         {/* BOTTOM TRUSTED-BY CUSTOMER LOGO BAR */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-20 pt-8 border-t border-[#E4E4E7] text-center"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-pink-100/80 text-center relative z-20"
         >
-          <p className="text-xs uppercase tracking-widest text-[#71717A] font-bold mb-6">
+          <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-extrabold mb-3.5 sm:mb-5">
             Trusted by 25,000+ creators, podcasters, YouTubers & coaches worldwide
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-sm font-extrabold text-[#71717A]/80 tracking-wider">
-            <span className="hover:text-[#0A0A0C] transition-colors cursor-default">SPOTIFY PODCASTS</span>
-            <span className="hover:text-[#0A0A0C] transition-colors cursor-default">APPLE PODCASTS</span>
-            <span className="hover:text-[#0A0A0C] transition-colors cursor-default">YOUTUBE CREATORS</span>
-            <span className="hover:text-[#0A0A0C] transition-colors cursor-default">SUBSTACK READERS</span>
-            <span className="hover:text-[#0A0A0C] transition-colors cursor-default">LINKEDIN TOP VOICES</span>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto px-2">
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/90 backdrop-blur-md border border-pink-200/70 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#0A0A0C] group cursor-default">
+              <SpotifyIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span>Spotify Podcasts</span>
+            </div>
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/90 backdrop-blur-md border border-pink-200/70 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#0A0A0C] group cursor-default">
+              <ApplePodcastIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span>Apple Podcasts</span>
+            </div>
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/90 backdrop-blur-md border border-pink-200/70 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#0A0A0C] group cursor-default">
+              <YoutubeIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span>YouTube Creators</span>
+            </div>
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/90 backdrop-blur-md border border-pink-200/70 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#0A0A0C] group cursor-default">
+              <SubstackIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span>Substack Readers</span>
+            </div>
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/90 backdrop-blur-md border border-pink-200/70 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#0A0A0C] group cursor-default">
+              <LinkedinIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span>LinkedIn Top Voices</span>
+            </div>
           </div>
         </motion.div>
       </div>
