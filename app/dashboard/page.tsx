@@ -38,6 +38,7 @@ import { MilestoneReviewModal } from '@/components/feedback/milestone-review-mod
 import { AdvancedOutputPreview } from '@/components/studio/advanced-output-preview';
 import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
+import { CustomKeySettings } from '@/components/settings/custom-key-settings';
 
 export default function DashboardPage() {
   const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
@@ -412,50 +413,21 @@ export default function DashboardPage() {
                   <X className="w-5 h-5" />
                 </button>
 
-                <div className="flex items-center gap-2 mb-2">
-                  <Key className="w-5 h-5 text-[#FF529A]" />
-                  <h3 className="text-lg font-bold text-[#0A0A0C]">Custom Anthropic API Key</h3>
-                </div>
-                <p className="text-xs text-[#52525B] leading-relaxed mb-4">
-                  Bring your own Anthropic Claude API Key (`sk-ant-...`) for unlimited direct generations without using free platform credits.
-                </p>
-
-                <div className="relative mb-4">
-                  <input
-                    type={showKeyText ? 'text' : 'password'}
-                    value={customApiKey}
-                    onChange={(e) => setCustomApiKey(e.target.value)}
-                    placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
-                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 pr-10 text-xs text-[#0A0A0C] focus:outline-none focus:border-[#FF529A] font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowKeyText(!showKeyText)}
-                    className="absolute right-3 top-3 text-[#71717A] hover:text-[#0A0A0C]"
-                    title={showKeyText ? 'Hide API key' : 'Show API key'}
-                  >
-                    {showKeyText ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-end gap-3">
-                  <button
-                    onClick={() => {
-                      setCustomApiKey('');
-                      localStorage.removeItem('everyposting_custom_key');
-                      setShowKeyModal(false);
-                    }}
-                    className="px-3.5 py-2 text-xs font-semibold text-rose-600 hover:underline"
-                  >
-                    Clear Key
-                  </button>
-                  <button
-                    onClick={handleSaveApiKey}
-                    className="btn-aiigen-primary px-5 py-2.5 text-xs font-bold shadow-md shadow-pink-500/25"
-                  >
-                    Save Key
-                  </button>
-                </div>
+                <CustomKeySettings
+                  customApiKey={customApiKey}
+                  onSaveKey={(validatedKey) => {
+                    setCustomApiKey(validatedKey);
+                    localStorage.setItem('everyposting_custom_key', validatedKey);
+                    setShowKeyModal(false);
+                  }}
+                  onRemoveKey={() => {
+                    setCustomApiKey('');
+                    localStorage.removeItem('everyposting_custom_key');
+                    setShowKeyModal(false);
+                  }}
+                  onClose={() => setShowKeyModal(false)}
+                  isModal={true}
+                />
               </motion.div>
             </motion.div>
           )}

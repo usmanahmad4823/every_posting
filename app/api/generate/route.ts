@@ -132,9 +132,17 @@ export async function POST(req: Request) {
       if (reservedUsageCount !== undefined) {
         await rollbackUserGenerationAtomic(effectiveUserId);
       }
+      
+      const customKeyMsg = customApiKey && (aiError?.message?.includes('no longer valid') || aiError?.message?.includes('revalidate'))
+        ? 'Your Anthropic API key is no longer valid. Please update or revalidate your key.'
+        : null;
+
       return NextResponse.json(
-        { error: 'AI_API_FAILURE', message: 'Something went wrong while generating your content. Please try again.' },
-        { status: 500 }
+        {
+          error: customKeyMsg ? 'CUSTOM_KEY_INVALID' : 'AI_API_FAILURE',
+          message: customKeyMsg || aiError?.message || 'Something went wrong while generating your content. Please try again.',
+        },
+        { status: customKeyMsg ? 400 : 500 }
       );
     }
 

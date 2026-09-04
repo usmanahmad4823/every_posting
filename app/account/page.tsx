@@ -7,12 +7,10 @@ import { clearGenerationHistory, signOutUser, supabase, isSupabaseConfigured } f
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
+import { CustomKeySettings } from '@/components/settings/custom-key-settings';
 
 export default function AccountPage() {
   const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
-  const [customKey, setCustomKey] = useState<string>('');
-  const [showKeyText, setShowKeyText] = useState<boolean>(false);
-  const [keySaved, setKeySaved] = useState<boolean>(false);
   const [clearedMessage, setClearedMessage] = useState<boolean>(false);
 
   // Profile Edit State
@@ -30,19 +28,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     setNameInput(user.fullName);
-    const savedKey = localStorage.getItem('everyposting_custom_key');
-    if (savedKey) setCustomKey(savedKey);
   }, [user.fullName]);
-
-  const handleSaveKey = () => {
-    if (customKey.trim()) {
-      localStorage.setItem('everyposting_custom_key', customKey.trim());
-    } else {
-      localStorage.removeItem('everyposting_custom_key');
-    }
-    setKeySaved(true);
-    setTimeout(() => setKeySaved(false), 2000);
-  };
 
   const handleSaveName = async () => {
     if (!nameInput.trim()) return;
@@ -184,49 +170,7 @@ export default function AccountPage() {
           </div>
 
           {/* Card 2: Custom Anthropic API Key Settings */}
-          <div className="aiigen-card p-4 sm:p-6 bg-white border border-[#E4E4E7] shadow-lg rounded-3xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-[#FF529A]" />
-                <h3 className="text-sm font-extrabold text-[#0A0A0C]">Anthropic Claude API Key</h3>
-              </div>
-              {customKey && (
-                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  Custom Key Active
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-[#71717A] font-medium mb-3">
-              Plug your custom key (`sk-ant-...`) to unlock unlimited generations via your Anthropic account.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-2.5 items-center">
-              <div className="relative flex-1 w-full">
-                <input
-                  type={showKeyText ? 'text' : 'password'}
-                  value={customKey}
-                  onChange={(e) => setCustomKey(e.target.value)}
-                  placeholder="sk-ant-api03-xxxxxxxxxxxxxxxx"
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-2.5 pr-9 text-xs text-[#0A0A0C] font-mono focus:outline-none focus:border-[#FF529A]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKeyText(!showKeyText)}
-                  className="absolute right-2.5 top-2.5 text-[#71717A] hover:text-[#0A0A0C]"
-                  title={showKeyText ? 'Hide API key' : 'Show API key'}
-                >
-                  {showKeyText ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={handleSaveKey}
-                className="w-full sm:w-auto btn-aiigen-primary text-xs font-bold px-4 py-2.5 shadow-xs shrink-0 rounded-xl"
-              >
-                {keySaved ? 'Saved!' : 'Save Key'}
-              </button>
-            </div>
-          </div>
+          <CustomKeySettings />
 
           {/* Card 3: Danger Zone & Actions */}
           <div className="aiigen-card p-4 sm:p-5 bg-white border border-[#E4E4E7] rounded-3xl flex items-center justify-between gap-3">

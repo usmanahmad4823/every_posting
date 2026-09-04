@@ -1,6 +1,17 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { GenerationRequest, OutputFormat } from './types';
-import { buildSystemPrompt, NICHE_CONFIGS } from './prompts';
+import { GenerationRequest, OutputFormat } from '@/lib/types';
+import { NICHE_CONFIGS, buildSystemPrompt } from '@/lib/prompts';
+
+export function maskApiKey(key: string): string {
+  if (!key) return '';
+  const trimmed = key.trim();
+  if (trimmed.length <= 12) return 'sk-ant-****************';
+  const prefix = trimmed.slice(0, 7); // sk-ant-
+  const suffix = trimmed.slice(-4);
+  const starsCount = Math.min(24, Math.max(12, trimmed.length - 11));
+  const stars = '*'.repeat(starsCount);
+  return `${prefix}${stars}${suffix}`;
+}
 
 export async function generateContentWithClaude(
   request: GenerationRequest
@@ -46,7 +57,14 @@ export async function generateContentWithClaude(
 
     const parsedJson = JSON.parse(cleanedText);
     return parsedJson;
-  } catch (error) {
+  } catch (error: any) {
+    if (request.customApiKey) {
+      const status = error?.status || error?.statusCode;
+      const errMsg = (error?.message || '').toLowerCase();
+      if (status === 401 || error instanceof Anthropic.AuthenticationError || errMsg.includes('401') || errMsg.includes('auth') || errMsg.includes('api key')) {
+        throw new Error('Your Anthropic API key is no longer valid. Please update or revalidate your key.');
+      }
+    }
     console.warn('Anthropic API Call Warning / Fallback to Demo Mode Generator:', error);
     return generateMockResponse(request);
   }
