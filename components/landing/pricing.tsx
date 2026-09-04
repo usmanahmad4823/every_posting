@@ -124,15 +124,14 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-pink-50/60 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Right Badge Row */}
-              <div className="flex items-center justify-end mb-3">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-[#52525B] border border-slate-200">
+              {/* Card Title & Badge Row (Aligned Horizontally) */}
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <h3 className="text-xl font-black text-[#0A0A0C]">Free Starter</h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-[#52525B] border border-slate-200 shrink-0">
                   Starter Tier
                 </span>
               </div>
-
-              <h3 className="text-xl font-black text-[#0A0A0C]">Free Starter</h3>
-              <p className="text-[#71717A] text-[11px] mt-0.5 font-medium">Perfect for testing with your first transcripts</p>
+              <p className="text-[#71717A] text-[11px] font-medium">Perfect for testing with your first transcripts</p>
 
               <div className="my-4">
                 <span className="text-3xl sm:text-4xl font-black text-[#0A0A0C]">$0</span>
@@ -192,16 +191,15 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-[#FF529A]/15 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Right Badge Row */}
-              <div className="flex items-center justify-end mb-3 relative z-10">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-pink-100 text-[#FF529A] border border-pink-300 backdrop-blur-md flex items-center gap-1 shadow-2xs">
+              {/* Card Title & Badge Row (Aligned Horizontally) */}
+              <div className="flex items-center justify-between gap-2 mb-1 relative z-10">
+                <h3 className="text-xl font-black text-[#0A0A0C]">Pro Monthly</h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-pink-100 text-[#FF529A] border border-pink-300 backdrop-blur-md flex items-center gap-1 shadow-2xs shrink-0">
                   <Sparkles className="w-3 h-3 text-[#FF529A]" />
                   <span>✦ Most popular</span>
                 </span>
               </div>
-
-              <h3 className="text-xl font-black text-[#0A0A0C] relative z-10">Pro Monthly</h3>
-              <p className="text-[#52525B] text-[11px] mt-0.5 font-medium relative z-10">
+              <p className="text-[#52525B] text-[11px] font-medium relative z-10">
                 Supercharged repurposing engine for creators
               </p>
 
@@ -275,15 +273,14 @@ export function PricingSection() {
             <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-50 to-transparent pointer-events-none" />
 
             <div>
-              {/* Card Right Badge Row */}
-              <div className="flex items-center justify-end mb-3">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-700 border border-purple-300 backdrop-blur-md">
+              {/* Card Title & Badge Row (Aligned Horizontally) */}
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <h3 className="text-xl font-black text-[#0A0A0C]">Pro Yearly</h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-700 border border-purple-300 backdrop-blur-md shrink-0">
                   ⚡ 2 Months Free
                 </span>
               </div>
-
-              <h3 className="text-xl font-black text-[#0A0A0C]">Pro Yearly</h3>
-              <p className="text-[#71717A] text-[11px] mt-0.5 font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
+              <p className="text-[#71717A] text-[11px] font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
 
               <div className="my-4">
                 <span className="text-3xl sm:text-4xl font-black text-[#0A0A0C]">$190</span>
