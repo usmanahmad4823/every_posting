@@ -43,46 +43,44 @@ function YoutubeIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function ClosingCTABanner() {
   return (
-    <section className="py-12 sm:py-16 bg-[#F5F5F7] relative z-10 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-6 sm:py-8 bg-[#FFF5F9] relative z-10 overflow-hidden">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.97 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="aura-gradient-border"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="rounded-2xl bg-white/80 border border-[#FFC2DA] p-6 sm:p-8 text-center backdrop-blur-2xl shadow-lg hover:shadow-xl relative overflow-hidden flex flex-col items-center justify-center text-[#0A0A0C]"
         >
-          <div className="aura-gradient-border-dark py-20 sm:py-24 px-6 sm:px-12 text-center rounded-[24px] relative overflow-hidden flex flex-col items-center justify-center bg-[#FF529A] text-white">
-            {/* Ambient Background Glow inside Pink Banner */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-white/20 blur-[100px] pointer-events-none" />
+          {/* Subtle Ambient Soft Pink Glow */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-72 h-36 bg-[#FF529A]/10 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 border border-white/30 text-xs font-bold text-white mb-6 backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              <span>Ready to scale your content output?</span>
-            </div>
+          {/* Minimal Pill Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-pink-50 border border-[#FFC2DA] text-[10px] font-bold text-[#FF529A] mb-3 shadow-2xs">
+            <Sparkles className="w-3 h-3 text-[#FF529A]" />
+            <span>Ready to scale your content output?</span>
+          </div>
 
-            {/* Large Bold Headline */}
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tightest leading-[1.1] max-w-3xl">
-              Ready to transform your recordings into content?
-            </h2>
+          {/* Compact Headline */}
+          <h2 className="text-xl sm:text-3xl font-black text-[#0A0A0C] tracking-tight leading-tight max-w-xl">
+            Ready to transform your recordings into content?
+          </h2>
 
-            {/* Subheadline */}
-            <p className="mt-5 text-base sm:text-xl text-pink-100 max-w-2xl font-medium leading-relaxed">
-              Join 25,000+ creators, podcasters, YouTubers, and coaches turning every single recording into a full week of ready-to-post social content.
-            </p>
+          {/* Compact Subheadline */}
+          <p className="mt-2 text-xs sm:text-sm text-[#52525B] max-w-lg font-medium leading-relaxed">
+            Join 25,000+ creators, podcasters, YouTubers, and coaches turning every recording into ready-to-post social content.
+          </p>
 
-            {/* Centered Primary CTA Button */}
-            <div className="mt-9">
-              <Link
-                href="/dashboard"
-                className="bg-white hover:bg-slate-50 text-[#FF529A] font-extrabold text-sm sm:text-base px-9 py-4 rounded-xl inline-flex items-center gap-3 shadow-2xl shadow-pink-900/30 group transition-transform hover:scale-105"
-              >
-                <Zap className="w-4 h-4 fill-[#FF529A]" />
-                <span>Start for free</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#FF529A]" />
-              </Link>
-            </div>
+          {/* Compact Primary CTA Button */}
+          <div className="mt-5">
+            <Link
+              href="/dashboard"
+              className="bg-gradient-to-r from-[#FF529A] via-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl inline-flex items-center gap-2 shadow-md shadow-pink-500/20 active:scale-95 transition-all group"
+            >
+              <Zap className="w-3.5 h-3.5 fill-white" />
+              <span>Start for free</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-white" />
+            </Link>
           </div>
         </motion.div>
       </div>
