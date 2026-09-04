@@ -64,21 +64,16 @@ export function PricingSection() {
   const userTier = user?.tier || 'free';
 
   return (
-    <section id="pricing" className="py-20 sm:py-28 relative z-10 bg-[#FFF5F9] overflow-hidden text-[#0A0A0C]">
+    <section id="pricing" className="py-16 sm:py-20 relative z-10 bg-[#FFF5F9] overflow-hidden text-[#0A0A0C]">
       {/* Background Soft Pink & Purple Glowing Aura Orbs */}
       <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#FF529A]/15 via-pink-200/25 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-gradient-to-bl from-purple-300/15 via-pink-100/30 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#FF529A_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.06] pointer-events-none" />
 
-      {/* Massive Background Watermark Typography */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-6xl sm:text-[120px] lg:text-[150px] font-black uppercase text-[#FF529A]/[0.07] tracking-widest select-none pointer-events-none z-0">
-        PRICING PLAN
-      </div>
-
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Title Section */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#FFC2DA] text-[#FF529A] text-[11px] font-bold shadow-2xs mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#FFC2DA] text-[#FF529A] text-[11px] font-bold shadow-2xs mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF529A] animate-ping" />
             <span>Transparent Creator Pricing</span>
           </div>
@@ -89,7 +84,7 @@ export function PricingSection() {
               Scale Your Content.
             </span>
           </h2>
-          <p className="mt-3 text-[#52525B] text-xs sm:text-base font-medium leading-relaxed">
+          <p className="mt-2 text-[#52525B] text-xs sm:text-base font-medium leading-relaxed">
             Turn every single audio recording or video script into 7 days of ready-to-post social media content.
           </p>
         </div>
