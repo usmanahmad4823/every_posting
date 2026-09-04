@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
           const newLimit = planType === 'pro_yearly' ? 1800 : 150;
           // 1. Update user profile tier in Supabase users table
           if (userId) {
-            await supabase
+            await supabaseAdmin
               .from('users')
               .update({
                 subscription_tier: planType,
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
               })
               .eq('id', userId);
           } else if (customerEmail) {
-            await supabase
+            await supabaseAdmin
               .from('users')
               .update({
                 subscription_tier: planType,
@@ -73,9 +73,9 @@ export async function POST(req: Request) {
               .eq('email', customerEmail);
           }
 
-          // 2. Insert or update subscriptions record
+          // 2. Insert or update subscriptions record using service role client
           if (stripeSubscriptionId) {
-            await supabase.from('subscriptions').upsert({
+            await supabaseAdmin.from('subscriptions').upsert({
               stripe_subscription_id: stripeSubscriptionId,
               stripe_customer_id: stripeCustomerId,
               status: 'active',
@@ -100,11 +100,11 @@ export async function POST(req: Request) {
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
-          // If subscription is active or trialing, maintain plan; if canceled/past_due/unpaid, revert to free with 5 limit
+          // If subscription is active or trialing, maintain plan; if canceled/past_due/unpaid, revert to free with 3 limit
           const isPaidActive = status === 'active' || status === 'trialing';
 
           if (!isPaidActive) {
-            await supabase
+            await supabaseAdmin
               .from('users')
               .update({
                 subscription_tier: 'free',
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
           }
 
           // Update subscription record with billing period timestamps
-          await supabase
+          await supabaseAdmin
             .from('subscriptions')
             .update({
               status,

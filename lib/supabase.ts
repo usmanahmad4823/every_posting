@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { GenerationResult, NicheType, OutputFormat, UserProfile, FeedbackData } from './types';
+import { GenerationResult, NicheType, OutputFormat, UserProfile, FeedbackData, PlanType } from './types';
+import { getGenerationLimit, getPlanConfig } from './plans';
 
 const supabaseUrl =
   process.env.SUPABASE_URL ||
@@ -95,17 +96,19 @@ export async function signInUser(email: string, password: string): Promise<{ suc
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   if (!isSupabaseConfigured()) {
-    // Demo Mode Fallback: Preserve existing name if logged in previously
+    // Demo Mode Fallback: Preserve existing name & plan if logged in previously
     const existing = localStorage.getItem('everyposting_user');
     let existingName = formattedEmailName;
+    let existingTier = 'free';
     if (existing) {
       try {
         const parsed = JSON.parse(existing);
         if (parsed.fullName) existingName = parsed.fullName;
+        if (parsed.tier || parsed.plan) existingTier = parsed.tier || parsed.plan;
       } catch {}
     }
 
-    localStorage.setItem('everyposting_user', JSON.stringify({ fullName: existingName, email, loggedIn: true, tier: 'free' }));
+    localStorage.setItem('everyposting_user', JSON.stringify({ fullName: existingName, email, loggedIn: true, tier: existingTier, plan: existingTier }));
     return { success: true, user: { email, fullName: existingName } };
   }
 
@@ -116,23 +119,44 @@ export async function signInUser(email: string, password: string): Promise<{ suc
     const userId = data.user.id;
     const finalName = data.user?.user_metadata?.full_name || formattedEmailName;
 
-    // Ensure User Record Exists in Supabase `users` Table upon every login
+    // Ensure User Record Exists in Supabase `users` Table upon login WITHOUT overwriting existing subscription_tier!
     try {
-      await supabase.from('users').upsert({
-        id: userId,
-        email: data.user.email || email,
-        full_name: finalName,
-        subscription_tier: 'free',
-        generations_used_this_month: 0,
-        monthly_generation_limit: getGenerationLimit('free'),
-      }, { onConflict: 'id' });
+      const { data: existingDbUser } = await supabaseAdmin
+        .from('users')
+        .select('id, subscription_tier, monthly_generation_limit')
+        .eq('id', userId)
+        .single();
+
+      if (!existingDbUser) {
+        await supabaseAdmin.from('users').insert({
+          id: userId,
+          email: data.user.email || email,
+          full_name: finalName,
+          subscription_tier: 'free',
+          generations_used_this_month: 0,
+          monthly_generation_limit: getGenerationLimit('free'),
+        });
+      }
     } catch (dbErr) {
       console.warn('[Supabase Sign-In DB Sync Warning]:', dbErr);
     }
 
+    // Fetch actual database profile after login
+    const freshProfile = await getUserProfile(userId);
+    const resolvedTier = freshProfile?.subscriptionTier || 'free';
+
     localStorage.setItem(
       'everyposting_user',
-      JSON.stringify({ id: userId, fullName: finalName, email: data.user.email, loggedIn: true })
+      JSON.stringify({
+        id: userId,
+        fullName: freshProfile?.fullName || finalName,
+        email: data.user.email,
+        loggedIn: true,
+        tier: resolvedTier,
+        plan: resolvedTier,
+        generationsUsedThisMonth: freshProfile?.generationsUsedThisMonth || 0,
+        monthlyGenerationLimit: freshProfile?.monthlyGenerationLimit || getGenerationLimit(resolvedTier),
+      })
     );
 
     return { success: true, user: data.user };
@@ -153,8 +177,6 @@ export async function signOutUser(): Promise<void> {
   }
 }
 
-import { getGenerationLimit, getPlanConfig } from './plans';
-
 export async function getUserProfile(userId?: string): Promise<UserProfile | null> {
   let storedUser: any = null;
   if (typeof window !== 'undefined') {
@@ -166,33 +188,17 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
     }
   }
 
-  // If no user session or stored user is logged in, return guest fallback or null
-  if (!storedUser || !storedUser.loggedIn || (!storedUser.id && !userId)) {
-    const localUsage = storedUser?.generationsUsedThisMonth ?? mockUserUsageCount;
-    return {
-      id: userId || 'guest-user',
-      email: 'usmanahmad4t12@gmail.com',
-      fullName: 'Usman Ahmad',
-      subscriptionTier: 'free',
-      generationsUsedThisMonth: localUsage,
-      monthlyGenerationLimit: getGenerationLimit('free'),
-      hasSeenReviewPrompt: false,
-    };
-  }
-
-  const activeId = storedUser.id || userId;
-  const fallbackName = storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator';
-  const fallbackEmail = storedUser.email || '';
-  const localUsageCount = storedUser.generationsUsedThisMonth ?? mockUserUsageCount;
-  const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
+  const activeId = userId || storedUser?.id;
 
   if (!isSupabaseConfigured()) {
+    const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
+    const usage = storedUser?.generationsUsedThisMonth ?? mockUserUsageCount;
     return {
-      id: activeId,
-      email: fallbackEmail,
-      fullName: fallbackName,
+      id: activeId || 'guest-user',
+      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
+      fullName: storedUser?.fullName || 'Usman Ahmad',
       subscriptionTier: currentPlan,
-      generationsUsedThisMonth: localUsageCount,
+      generationsUsedThisMonth: usage,
       monthlyGenerationLimit: getGenerationLimit(currentPlan),
       hasSeenReviewPrompt: mockHasSeenReviewPrompt,
     };
@@ -201,55 +207,87 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
   try {
     const { data: sessionUser } = await supabase.auth.getUser();
     const currentId = sessionUser.user?.id || activeId;
-    if (!currentId) return null;
 
-    const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || fallbackName;
-    const metaEmail = sessionUser.user?.email || storedUser?.email || fallbackEmail;
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', currentId)
-      .single();
-
-    if (error || !data) {
+    if (!currentId || currentId === 'guest-user') {
+      const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
       return {
-        id: currentId,
-        email: metaEmail,
-        fullName: metaName,
+        id: 'guest-user',
+        email: storedUser?.email || '',
+        fullName: storedUser?.fullName || 'Creator',
         subscriptionTier: currentPlan,
-        generationsUsedThisMonth: localUsageCount,
+        generationsUsedThisMonth: storedUser?.generationsUsedThisMonth ?? 0,
         monthlyGenerationLimit: getGenerationLimit(currentPlan),
         hasSeenReviewPrompt: false,
       };
     }
 
-    const fetchedUsage = data.generations_used_this_month ?? localUsageCount;
-    const tier = data.subscription_tier || currentPlan;
-    const correctLimit = getGenerationLimit(tier);
+    const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || 'Creator';
+    const metaEmail = sessionUser.user?.email || storedUser?.email || '';
 
-    // Auto-correct outdated DB monthly_generation_limit if it doesn't match current tier limit
-    if (data.monthly_generation_limit !== correctLimit) {
-      supabase.from('users').update({ monthly_generation_limit: correctLimit }).eq('id', data.id).then(() => {});
+    // 1. Query public.users table with admin client (bypasses RLS issues)
+    const { data: userRow } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', currentId)
+      .single();
+
+    // 2. Query public.subscriptions table for an active/trialing subscription for this user
+    const { data: subRow } = await supabaseAdmin
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', currentId)
+      .in('status', ['active', 'trialing'])
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    let activeTier: PlanType = userRow?.subscription_tier || storedUser?.plan || storedUser?.tier || 'free';
+
+    // If active subscription exists in subscriptions table, verify tier against price IDs
+    if (subRow && (subRow.status === 'active' || subRow.status === 'trialing')) {
+      const priceId = subRow.stripe_price_id;
+      const yearlyPriceId = process.env.STRIPE_LIFETIME_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID;
+      const monthlyPriceId = process.env.STRIPE_PRO_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID;
+
+      if (priceId && yearlyPriceId && priceId === yearlyPriceId) {
+        activeTier = 'pro_yearly';
+      } else if (priceId && monthlyPriceId && priceId === monthlyPriceId) {
+        activeTier = 'pro_monthly';
+      } else if (userRow?.subscription_tier && userRow.subscription_tier !== 'free') {
+        activeTier = userRow.subscription_tier as PlanType;
+      }
+    }
+
+    const correctLimit = getGenerationLimit(activeTier);
+    const fetchedUsage = userRow?.generations_used_this_month ?? storedUser?.generationsUsedThisMonth ?? 0;
+
+    // Auto-reconcile users table in database if userRow subscription_tier is out of sync
+    if (userRow && (userRow.subscription_tier !== activeTier || userRow.monthly_generation_limit !== correctLimit)) {
+      await supabaseAdmin.from('users').update({
+        subscription_tier: activeTier,
+        monthly_generation_limit: correctLimit,
+      }).eq('id', currentId);
     }
 
     return {
-      id: data.id,
-      email: data.email || metaEmail,
-      fullName: data.full_name || metaName,
-      subscriptionTier: tier,
+      id: currentId,
+      email: userRow?.email || metaEmail,
+      fullName: userRow?.full_name || metaName,
+      subscriptionTier: activeTier,
       generationsUsedThisMonth: fetchedUsage,
       monthlyGenerationLimit: correctLimit,
-      hasSeenReviewPrompt: data.has_seen_review_prompt || false,
+      hasSeenReviewPrompt: userRow?.has_seen_review_prompt || false,
     };
-  } catch {
+  } catch (err) {
+    console.warn('[getUserProfile] Warning fetching profile from DB:', err);
+    const fallbackPlan = storedUser?.plan || storedUser?.tier || 'free';
     return {
-      id: activeId,
-      email: fallbackEmail,
-      fullName: fallbackName,
-      subscriptionTier: currentPlan,
-      generationsUsedThisMonth: localUsageCount,
-      monthlyGenerationLimit: getGenerationLimit(currentPlan),
+      id: activeId || 'guest-user',
+      email: storedUser?.email || '',
+      fullName: storedUser?.fullName || 'Creator',
+      subscriptionTier: fallbackPlan,
+      generationsUsedThisMonth: storedUser?.generationsUsedThisMonth ?? 0,
+      monthlyGenerationLimit: getGenerationLimit(fallbackPlan),
       hasSeenReviewPrompt: false,
     };
   }
