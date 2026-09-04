@@ -226,6 +226,12 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
 
     const fetchedUsage = data.generations_used_this_month ?? localUsageCount;
     const tier = data.subscription_tier || currentPlan;
+    const correctLimit = getGenerationLimit(tier);
+
+    // Auto-correct outdated DB monthly_generation_limit if it doesn't match current tier limit
+    if (data.monthly_generation_limit !== correctLimit) {
+      supabase.from('users').update({ monthly_generation_limit: correctLimit }).eq('id', data.id).then(() => {});
+    }
 
     return {
       id: data.id,
@@ -233,7 +239,7 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
       fullName: data.full_name || metaName,
       subscriptionTier: tier,
       generationsUsedThisMonth: fetchedUsage,
-      monthlyGenerationLimit: data.monthly_generation_limit || getGenerationLimit(tier),
+      monthlyGenerationLimit: correctLimit,
       hasSeenReviewPrompt: data.has_seen_review_prompt || false,
     };
   } catch {

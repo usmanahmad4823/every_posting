@@ -556,23 +556,20 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* 2. Usage Meter Box - Sleek & Ultra-Minimal */}
-            <div className="aiigen-card p-3 sm:p-4 bg-white border border-[#E4E4E7]">
+            {/* 2. Usage Meter Box - Sleek, Centered & Ultra-Responsive */}
+            <div className="aiigen-card p-3.5 sm:p-4 bg-white border border-[#E4E4E7] shadow-xs">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <span className="text-[11px] sm:text-xs font-extrabold text-[#0A0A0C]">
                     Generation Quota:
                   </span>
-                  <span className="text-[11px] sm:text-xs font-bold text-[#FF529A]">
-                    {customApiKey ? '0' : usageCount}/{customApiKey ? '∞' : (usageLimit || 3)}
-                  </span>
-                  <span className="text-[10px] text-[#71717A] hidden sm:inline">
-                    ({customApiKey ? 'Unlimited' : `${Math.max(0, (usageLimit || 3) - usageCount)} remaining`})
+                  <span className="text-[11px] sm:text-xs font-bold text-[#FF529A] font-mono">
+                    {customApiKey ? '0' : usageCount} / {customApiKey ? '∞' : usageLimit}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase bg-slate-100 text-[#71717A] px-2 py-0.5 rounded-full border border-slate-200">
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase bg-slate-100 text-[#71717A] px-2.5 py-0.5 rounded-full border border-slate-200">
                     {customApiKey ? 'Custom Key' : `${tier} plan`}
                   </span>
                   {tier === 'free' && !customApiKey && (
@@ -587,17 +584,29 @@ export default function DashboardPage() {
               </div>
 
               {/* Sleek Minimal Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden">
+              <div className="w-full h-2 rounded-full bg-[#E2E8F0] overflow-hidden my-1.5">
                 <div
                   className={`h-full transition-all duration-300 rounded-full ${
-                    !customApiKey && usageCount >= (usageLimit || 3)
+                    !customApiKey && usageCount >= usageLimit
                       ? 'bg-rose-500'
                       : 'bg-gradient-to-r from-[#FF529A] to-purple-600'
                   }`}
                   style={{
-                    width: `${customApiKey ? 100 : Math.min(100, (usageCount / (usageLimit || 3)) * 100)}%`,
+                    width: `${customApiKey ? 100 : Math.min(100, (usageCount / Math.max(1, usageLimit)) * 100)}%`,
                   }}
                 />
+              </div>
+
+              {/* Clean Sub-label for remaining count */}
+              <div className="flex items-center justify-between text-[10px] text-[#71717A] font-medium pt-0.5">
+                <span>
+                  {customApiKey
+                    ? 'Unlimited generations active'
+                    : `${Math.max(0, usageLimit - usageCount)} generations remaining`}
+                </span>
+                {!customApiKey && usageCount >= usageLimit && (
+                  <span className="text-rose-600 font-bold">Quota Reached</span>
+                )}
               </div>
             </div>
 

@@ -109,7 +109,7 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
       plan: mappedPlan,
       planStatus: mappedStatus,
       generationsUsedThisMonth: currentUsage,
-      monthlyGenerationLimit: profile?.monthlyGenerationLimit || getGenerationLimit(mappedPlan),
+      monthlyGenerationLimit: getGenerationLimit(mappedPlan),
       hasSeenReviewPrompt: profile?.hasSeenReviewPrompt || false,
       loggedIn: true,
     };
