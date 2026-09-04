@@ -31,9 +31,9 @@ export function FAQSection() {
   ];
 
   return (
-    <section id="faq" className="py-24 relative z-10 bg-white border-t border-[#E4E4E7]">
+    <section id="faq" className="py-8 sm:py-10 relative z-10 bg-white border-t border-pink-100/60">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="aiigen-pill mb-3 border-[#FFC2DA]">
             <span className="w-2 h-2 rounded-full bg-[#FF529A]" />
             <span className="text-[#0A0A0C]">Support & FAQ</span>

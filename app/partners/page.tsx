@@ -9,9 +9,9 @@ export const metadata = {
 
 export default function PartnersPage() {
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-28 pb-16">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-24 sm:pt-28 pb-8 sm:pb-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-4">
             <Award className="w-3.5 h-3.5 text-[#FF529A]" />
             <span>Affiliate & Agency Ecosystem</span>

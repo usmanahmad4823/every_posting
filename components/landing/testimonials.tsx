@@ -141,11 +141,11 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section id="testimonials" className="py-24 bg-[#F5F5F7] relative z-10 border-t border-[#E4E4E7] overflow-hidden">
+    <section id="testimonials" className="py-8 sm:py-10 bg-[#F5F5F7] relative z-10 border-t border-pink-100/60 overflow-hidden">
       <SparkleContainer />
 
       {/* HAPPY CREATOR INFINITE TICKER MARQUEE BANNER */}
-      <div className="bg-[#FF529A] text-white py-3 font-bold text-xs sm:text-sm tracking-wide overflow-hidden whitespace-nowrap mb-16 shadow-inner">
+      <div className="bg-[#FF529A] text-white py-2 font-bold text-xs tracking-wide overflow-hidden whitespace-nowrap mb-6 sm:mb-8 shadow-inner">
         <div className="inline-block animate-marquee">
           <span className="mx-6">🎉 &quot;EveryPosting saved me 15 hours last week!&quot;</span>
           <span className="mx-6">⭐ &quot;The Claude 3.5 Sonnet hooks are unreal!&quot;</span>
@@ -164,7 +164,7 @@ export function TestimonialsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* HEADER SECTION WITH HAPPINESS INDEX */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <div className="aiigen-pill mb-3 border-[#FFC2DA] bg-white inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             <span className="text-[#0A0A0C] font-semibold whitespace-nowrap">99.4% Creator Happiness Score</span>

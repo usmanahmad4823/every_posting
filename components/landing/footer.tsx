@@ -43,44 +43,42 @@ function YoutubeIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function ClosingCTABanner() {
   return (
-    <section className="py-6 sm:py-8 bg-[#FFF5F9] relative z-10 overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+    <section className="py-8 sm:py-10 bg-[#F5F5F7] relative z-10 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="rounded-2xl bg-white/80 border border-[#FFC2DA] p-6 sm:p-8 text-center backdrop-blur-2xl shadow-lg hover:shadow-xl relative overflow-hidden flex flex-col items-center justify-center text-[#0A0A0C]"
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="aura-gradient-border"
         >
-          {/* Subtle Ambient Soft Pink Glow */}
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-72 h-36 bg-[#FF529A]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="aura-gradient-border-dark py-10 sm:py-12 px-6 sm:px-12 text-center rounded-[24px] relative overflow-hidden flex flex-col items-center justify-center bg-[#FF529A] text-white">
+            {/* Ambient Background Glow inside Pink Banner */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-white/20 blur-[100px] pointer-events-none" />
 
-          {/* Minimal Pill Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-pink-50 border border-[#FFC2DA] text-[10px] font-bold text-[#FF529A] mb-3 shadow-2xs">
-            <Sparkles className="w-3 h-3 text-[#FF529A]" />
-            <span>Ready to scale your content output?</span>
-          </div>
+            {/* Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 border border-white/30 text-xs font-bold text-white mb-6 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              <span>Join 25,000+ Smart Creators</span>
+            </div>
 
-          {/* Compact Headline */}
-          <h2 className="text-xl sm:text-3xl font-black text-[#0A0A0C] tracking-tight leading-tight max-w-xl">
-            Ready to transform your recordings into content?
-          </h2>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4 text-white">
+              Ready to automate your social content?
+            </h2>
+            <p className="text-white/90 text-sm sm:text-base max-w-2xl mb-8 font-medium">
+              Start repurposing your audio transcripts and video scripts today. Unlimited leverage, zero writing burnout.
+            </p>
 
-          {/* Compact Subheadline */}
-          <p className="mt-2 text-xs sm:text-sm text-[#52525B] max-w-lg font-medium leading-relaxed">
-            Join 25,000+ creators, podcasters, YouTubers, and coaches turning every recording into ready-to-post social content.
-          </p>
-
-          {/* Compact Primary CTA Button */}
-          <div className="mt-5">
-            <Link
-              href="/dashboard"
-              className="bg-gradient-to-r from-[#FF529A] via-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl inline-flex items-center gap-2 shadow-md shadow-pink-500/20 active:scale-95 transition-all group"
-            >
-              <Zap className="w-3.5 h-3.5 fill-white" />
-              <span>Start for free</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-white" />
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <Link
+                href="/dashboard"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white text-[#FF529A] font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl hover:bg-pink-50 active:scale-95 transition-all group"
+              >
+                <Zap className="w-4 h-4 fill-[#FF529A]" />
+                <span>Start for free</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#FF529A]" />
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -90,9 +88,9 @@ export function ClosingCTABanner() {
 
 export function Footer() {
   return (
-    <footer className="bg-[#F5F5F7] border-t border-[#E4E4E7] relative z-10 pt-16 pb-12 text-[#71717A] text-sm overflow-hidden">
+    <footer className="bg-[#F5F5F7] border-t border-[#E4E4E7] relative z-10 pt-10 pb-8 text-[#71717A] text-sm overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-16 border-b border-[#E4E4E7]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10 border-b border-[#E4E4E7]">
           {/* Left Column: Brand Info & Socials */}
           <div className="lg:col-span-5 pr-0 lg:pr-8">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">

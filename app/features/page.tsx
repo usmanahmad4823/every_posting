@@ -40,24 +40,24 @@ export default function FeaturesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-28 pb-16">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-24 sm:pt-28 pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Hero */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-4">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-3">
             <Sparkles className="w-3.5 h-3.5 text-[#FF529A]" />
             <span>Complete Platform Capabilities</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0C] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0A0A0C] tracking-tight">
             Built for High-Yield <span className="text-[#FF529A]">Content Repurposing</span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#71717A] leading-relaxed font-medium">
+          <p className="mt-2 text-xs sm:text-base text-[#71717A] leading-relaxed font-medium">
             Everything you need to turn 1 audio or video recording into 7 days of platform-native social content in seconds.
           </p>
         </div>
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           {featureList.map((item) => {
             const Icon = item.icon;
             return (

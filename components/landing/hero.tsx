@@ -69,7 +69,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden bg-[#F5F5F7] bg-aiigen-dots">
+    <section className="relative pt-24 sm:pt-28 pb-10 sm:pb-12 overflow-hidden bg-[#F5F5F7] bg-aiigen-dots">
       {/* 360-DEGREE CONCENTRIC ORBITAL RINGS IN BACKGROUND */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[900px] md:w-[1150px] h-[650px] sm:h-[900px] md:h-[1150px] rounded-full border border-pink-500/10 pointer-events-none z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] sm:w-[700px] md:w-[900px] h-[480px] sm:h-[700px] md:h-[900px] rounded-full border border-[#FF529A]/15 pointer-events-none z-0" />

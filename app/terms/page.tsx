@@ -9,9 +9,9 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-28 pb-16">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-24 sm:pt-28 pb-8 sm:pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <FileText className="w-10 h-10 text-[#FF529A] mx-auto mb-4" />
           <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0C] tracking-tight">
             Terms of Service

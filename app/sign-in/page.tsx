@@ -33,7 +33,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-20 bg-[#F5F5F7] flex items-center justify-center relative overflow-hidden bg-aiigen-dots">
+    <div className="min-h-screen pt-24 sm:pt-28 pb-12 bg-[#F5F5F7] flex items-center justify-center relative overflow-hidden bg-aiigen-dots">
       <div className="max-w-md w-full px-4 relative z-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">

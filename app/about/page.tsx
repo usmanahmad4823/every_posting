@@ -9,22 +9,22 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-28 pb-16">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-24 sm:pt-28 pb-8 sm:pb-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-4">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-3">
             <Sparkles className="w-3.5 h-3.5 text-[#FF529A]" />
             <span>Our Mission & Vision</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0C] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0A0A0C] tracking-tight">
             Empowering Creators to <span className="text-[#FF529A]">Publish Everywhere</span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#71717A] leading-relaxed font-medium">
+          <p className="mt-2 text-xs sm:text-base text-[#71717A] leading-relaxed font-medium">
             We believe creators should spend 90% of their time recording great content and 0% copying & pasting.
           </p>
         </div>
 
-        <div className="aiigen-card p-8 sm:p-12 bg-white border border-[#E4E4E7] rounded-3xl shadow-xl mb-16 space-y-6">
+        <div className="aiigen-card p-6 sm:p-8 bg-white border border-[#E4E4E7] rounded-3xl shadow-xl mb-8 sm:mb-10 space-y-4">
           <h2 className="text-2xl font-extrabold text-[#0A0A0C]">Why We Built EveryPosting</h2>
           <p className="text-sm text-[#71717A] leading-relaxed font-medium">
             Every week, podcasters record 60-minute episodes, YouTubers produce 20-minute video breakdowns, and coaches host hour-long live webinars. Yet 95% of that rich knowledge remains trapped inside raw recordings.

@@ -40,22 +40,22 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-28 pb-16">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#52525B] pt-24 sm:pt-28 pb-8 sm:pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-4">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-xs font-extrabold text-[#FF529A] mb-3">
             <Mail className="w-3.5 h-3.5 text-[#FF529A]" />
             <span>Get in Touch With Us</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0C] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0A0A0C] tracking-tight">
             Contact <span className="text-[#FF529A]">EveryPosting</span>
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-[#71717A] leading-relaxed font-medium">
+          <p className="mt-2 text-xs sm:text-sm text-[#71717A] leading-relaxed font-medium">
             Have a custom enterprise request, partnership proposal, or media inquiry? Drop us a line below.
           </p>
         </div>
 
-        <div className="aiigen-card p-8 sm:p-12 bg-white border border-[#E4E4E7] rounded-3xl shadow-xl mb-16">
+        <div className="aiigen-card p-6 sm:p-8 bg-white border border-[#E4E4E7] rounded-3xl shadow-xl mb-8 sm:mb-10">
           {submitted ? (
             <div className="text-center py-10">
               <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-200">

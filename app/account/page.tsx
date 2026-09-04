@@ -65,7 +65,7 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="pt-20 sm:pt-28 pb-12 sm:pb-16 min-h-screen bg-[#F5F5F7]">
+    <div className="pt-24 sm:pt-28 pb-8 sm:pb-12 min-h-screen bg-[#F5F5F7]">
       <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#E4E4E7]">
           <div>

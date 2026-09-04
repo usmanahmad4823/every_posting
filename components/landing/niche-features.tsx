@@ -25,23 +25,23 @@ export function NicheFeaturesSection() {
   };
 
   return (
-    <section id="niches" className="py-24 bg-[#F5F5F7] relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="aiigen-pill mb-3 border-[#FFC2DA]">
-            <span className="w-2 h-2 rounded-full bg-[#FF529A]" />
-            <span className="text-[#0A0A0C]">Tailored Creator AI Agents</span>
+    <section id="niches" className="py-8 sm:py-10 bg-[#F5F5F7] relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <div className="aiigen-pill mb-2 border-[#FFC2DA]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF529A]" />
+            <span className="text-[#0A0A0C] text-xs">Tailored Creator AI Agents</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-aiigen-title tracking-tightest mt-2">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-aiigen-title tracking-tight mt-1">
             Smart decisions in real time for your niche
           </h2>
-          <p className="mt-4 text-[#52525B] text-base sm:text-lg font-medium">
+          <p className="mt-2 text-[#52525B] text-xs sm:text-base font-medium">
             Empowered by advanced AI, EveryPosting analyzes transcripts and formats content tuned specifically for your audience.
           </p>
         </div>
 
         {/* Niche Tabs */}
-        <div className="flex justify-center mb-8 sm:mb-10 max-w-full px-2">
+        <div className="flex justify-center mb-4 sm:mb-5 max-w-full px-2">
           <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-white border border-[#FFC2DA] shadow-sm max-w-full">
             <button
               onClick={() => handleNicheChange('podcaster')}
