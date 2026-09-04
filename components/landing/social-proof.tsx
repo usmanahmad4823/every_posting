@@ -20,7 +20,7 @@ export function SocialProofSection() {
   ];
 
   return (
-    <section className="py-6 sm:py-8 border-y border-pink-100/60 bg-gradient-to-b from-[#FFF5F9]/60 via-white to-[#FFF5F9]/40 relative z-10 overflow-hidden">
+    <section className="py-6 sm:py-8 border-y border-pink-100 bg-white relative z-10 overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-center text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-extrabold mb-4 sm:mb-5">
           Trusted by 25,000+ founders, business owners & top creators
