@@ -266,12 +266,83 @@ export async function checkCanGenerate(userId = 'demo-user-1'): Promise<{ allowe
   };
 }
 
+export async function reserveUserGenerationAtomic(userId: string): Promise<{ success: boolean; newUsage?: number; limit?: number; reason?: string }> {
+  const profile = await getUserProfile(userId);
+  const limit = profile?.monthlyGenerationLimit || getGenerationLimit(profile?.subscriptionTier);
+  const currentUsage = profile?.generationsUsedThisMonth || 0;
+
+  if (currentUsage >= limit) {
+    return { success: false, reason: 'LIMIT_REACHED', newUsage: currentUsage, limit };
+  }
+
+  if (!isSupabaseConfigured()) {
+    if (mockUserUsageCount >= limit) {
+      return { success: false, reason: 'LIMIT_REACHED', newUsage: mockUserUsageCount, limit };
+    }
+    mockUserUsageCount += 1;
+    return { success: true, newUsage: mockUserUsageCount, limit };
+  }
+
+  try {
+    // Attempt atomic RPC reservation in Supabase
+    const { data: rpcRes, error: rpcErr } = await supabaseAdmin.rpc('reserve_user_generation_atomic', { user_id_input: userId });
+
+    if (!rpcErr && typeof rpcRes === 'number' && rpcRes >= 0) {
+      return { success: true, newUsage: rpcRes, limit };
+    }
+
+    if (!rpcErr && rpcRes === -1) {
+      return { success: false, reason: 'LIMIT_REACHED', newUsage: limit, limit };
+    }
+
+    // Direct atomic update fallback in Supabase if RPC is not present
+    const { data: updatedRows, error: updateErr } = await supabaseAdmin
+      .from('users')
+      .update({ generations_used_this_month: currentUsage + 1 })
+      .eq('id', userId)
+      .lt('generations_used_this_month', limit)
+      .select('generations_used_this_month');
+
+    if (updateErr || !updatedRows || updatedRows.length === 0) {
+      return { success: false, reason: 'LIMIT_REACHED', newUsage: currentUsage, limit };
+    }
+
+    return { success: true, newUsage: updatedRows[0].generations_used_this_month, limit };
+  } catch (err) {
+    console.warn('Reservation error fallback:', err);
+    if (currentUsage >= limit) {
+      return { success: false, reason: 'LIMIT_REACHED', newUsage: currentUsage, limit };
+    }
+    return { success: true, newUsage: currentUsage + 1, limit };
+  }
+}
+
+export async function rollbackUserGenerationAtomic(userId: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    mockUserUsageCount = Math.max(0, mockUserUsageCount - 1);
+    return;
+  }
+
+  try {
+    const { error: rpcErr } = await supabaseAdmin.rpc('rollback_user_generation_atomic', { user_id_input: userId });
+    if (rpcErr) {
+      const { data: user } = await supabaseAdmin.from('users').select('generations_used_this_month').eq('id', userId).single();
+      if (user) {
+        await supabaseAdmin.from('users').update({ generations_used_this_month: Math.max(0, user.generations_used_this_month - 1) }).eq('id', userId);
+      }
+    }
+  } catch (err) {
+    console.warn('Rollback error:', err);
+  }
+}
+
 export async function saveGenerationRecord(
   userId = 'demo-user-1',
   niche: NicheType,
   transcript: string,
   selectedFormats: OutputFormat[],
-  outputs: Partial<Record<OutputFormat, string>>
+  outputs: Partial<Record<OutputFormat, string>>,
+  passedUsageCount?: number
 ): Promise<GenerationResult & { newUsageCount: number }> {
   const newRecord: GenerationResult = {
     id: `gen-${Date.now()}`,
@@ -281,53 +352,24 @@ export async function saveGenerationRecord(
     transcriptSnippet: transcript.slice(0, 100) + '...',
   };
 
-  mockUserUsageCount += 1;
+  const finalUsage = passedUsageCount ?? (mockUserUsageCount);
   mockGenerationHistory.unshift(newRecord);
-  let updatedUsage = mockUserUsageCount;
-
-  // Persist updated usage count into local storage session
-  if (typeof window !== 'undefined') {
-    const raw = localStorage.getItem('everyposting_user');
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw);
-        updatedUsage = (parsed.generationsUsedThisMonth || 0) + 1;
-        parsed.generationsUsedThisMonth = updatedUsage;
-        localStorage.setItem('everyposting_user', JSON.stringify(parsed));
-      } catch {}
-    }
-  }
 
   if (isSupabaseConfigured()) {
     try {
-      const { data: sessionUser } = await supabase.auth.getUser();
-      const currentId = sessionUser.user?.id || userId;
-
-      await supabase.from('generations').insert({
-        user_id: currentId,
+      await supabaseAdmin.from('generations').insert({
+        user_id: userId,
         niche,
         input_transcript: transcript,
         selected_formats: selectedFormats,
         outputs,
       });
-
-      // Try RPC first, fallback to direct column increment
-      const { data: rpcRes, error: rpcErr } = await supabase.rpc('increment_user_generations', { user_id_input: currentId });
-      if (rpcErr) {
-        // Direct DB update fallback
-        const { data: dbUserData } = await supabase.from('users').select('generations_used_this_month').eq('id', currentId).single();
-        const currentDbUsage = (dbUserData?.generations_used_this_month || 0) + 1;
-        await supabase.from('users').update({ generations_used_this_month: currentDbUsage }).eq('id', currentId);
-        updatedUsage = currentDbUsage;
-      } else if (rpcRes && typeof rpcRes === 'number') {
-        updatedUsage = rpcRes;
-      }
     } catch (e) {
       console.warn('Supabase DB save warning (using in-memory fallback):', e);
     }
   }
 
-  return { ...newRecord, newUsageCount: updatedUsage };
+  return { ...newRecord, newUsageCount: finalUsage };
 }
 
 export async function getGenerationHistory(_userId = 'demo-user-1'): Promise<GenerationResult[]> {

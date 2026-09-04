@@ -127,7 +127,7 @@ export default function PricingPage() {
               <ul className="space-y-3 text-sm text-[#52525B] mb-8 font-medium">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <strong className="text-[#0A0A0C]">3 AI generations per month</strong>
+                  <strong className="text-[#0A0A0C]">5 AI generations per month</strong>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -169,7 +169,7 @@ export default function PricingPage() {
               <ul className="space-y-3 text-sm text-[#52525B] mb-8 font-medium">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#FF529A] shrink-0" />
-                  <strong className="text-[#0A0A0C]">100 AI generations per month</strong>
+                  <strong className="text-[#0A0A0C]">150 AI generations per month</strong>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#FF529A] shrink-0" />
@@ -233,7 +233,7 @@ export default function PricingPage() {
                 <ul className="space-y-3 text-sm text-white mb-8 font-medium">
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-white shrink-0" />
-                    <strong className="text-white">1,200 AI generations per year</strong>
+                    <strong className="text-white">1,800 AI generations per year</strong>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-white shrink-0" />

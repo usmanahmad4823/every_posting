@@ -19,7 +19,7 @@ export function getStripe(): Stripe {
 export const stripe = getStripe();
 
 export interface CreateCheckoutParams {
-  planType: 'pro_monthly' | 'pro_yearly' | 'pro' | 'lifetime';
+  planType: 'pro_monthly' | 'pro_yearly' | 'pro';
   userId?: string;
   userEmail?: string;
   originUrl?: string;
@@ -58,7 +58,7 @@ export async function createStripeCheckoutSession({
   // Secure server-side Price ID Mapping (preserves existing env var key names)
   let priceId: string | undefined;
   const mode: 'subscription' | 'payment' = 'subscription'; // Both Pro Monthly and Pro Yearly are subscription billing
-  const normalizedPlan = planType === 'pro' ? 'pro_monthly' : planType === 'lifetime' ? 'pro_yearly' : planType;
+  const normalizedPlan = planType === 'pro' ? 'pro_monthly' : planType;
 
   if (normalizedPlan === 'pro_monthly') {
     priceId =
@@ -75,7 +75,7 @@ export async function createStripeCheckoutSession({
 
   if (!priceId || priceId.includes('YOUR_') || priceId.includes('price_xxx')) {
     throw new Error(
-      `Stripe Price ID for plan "${planType}" is not configured. Please set STRIPE_PRO_PRICE_ID or STRIPE_LIFETIME_PRICE_ID in Vercel Project Settings.`
+      `Stripe Price ID for plan "${planType}" is not configured. Please set STRIPE_PRO_PRICE_ID or NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID (representing Pro Yearly) in environment variables.`
     );
   }
 

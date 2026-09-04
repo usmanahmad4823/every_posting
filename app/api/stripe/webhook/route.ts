@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
-          const newLimit = planType === 'pro_yearly' ? 1200 : 100;
+          const newLimit = planType === 'pro_yearly' ? 1800 : 150;
           // 1. Update user profile tier in Supabase users table
           if (userId) {
             await supabase
@@ -100,17 +100,15 @@ export async function POST(req: Request) {
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
-          // If subscription is active, maintain plan; if canceled/past_due/unpaid, revert to free with 3 limit
+          // If subscription is active or trialing, maintain plan; if canceled/past_due/unpaid, revert to free with 5 limit
           const isPaidActive = status === 'active' || status === 'trialing';
-          const updatedTier = isPaidActive ? undefined : 'free';
-          const updatedLimit = isPaidActive ? undefined : 3;
 
           if (!isPaidActive) {
             await supabase
               .from('users')
               .update({
                 subscription_tier: 'free',
-                monthly_generation_limit: 3,
+                monthly_generation_limit: 5,
               })
               .eq('stripe_customer_id', customerId);
           }

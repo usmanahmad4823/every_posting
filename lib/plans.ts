@@ -14,12 +14,12 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
   free: {
     id: 'free',
     name: 'Free Plan',
-    generationLimit: 3,
+    generationLimit: 5,
     interval: 'month',
     price: 0,
     stripePriceEnvKey: '',
     features: [
-      '3 AI Generations per month',
+      '5 AI Generations per month',
       'Access to Podcaster, YouTube & Coach niches',
       'All 4 output formats (Show Notes, Threads, Posts, Emails)',
       'Basic AI processing',
@@ -28,12 +28,12 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
   pro_monthly: {
     id: 'pro_monthly',
     name: 'Pro Monthly',
-    generationLimit: 100,
+    generationLimit: 150,
     interval: 'month',
     price: 19,
     stripePriceEnvKey: 'NEXT_PUBLIC_STRIPE_PRO_PRICE_ID',
     features: [
-      '100 AI Generations per month',
+      '150 AI Generations per month',
       'Priority Claude 3.5 AI Engine speed',
       'All 3 creator niches & 4 output formats',
       'Brand Voice & Custom Tone customization',
@@ -43,12 +43,12 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
   pro_yearly: {
     id: 'pro_yearly',
     name: 'Pro Yearly',
-    generationLimit: 1200,
+    generationLimit: 1800,
     interval: 'year',
     price: 190,
     stripePriceEnvKey: 'NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID', // Preserved env var key name
     features: [
-      '1,200 AI Generations per year (Save ~20% / 2 Months Free!)',
+      '1,800 AI Generations per year (Save ~20% / 2 Months Free!)',
       'Priority Claude 3.5 AI Engine speed',
       'All 3 creator niches & 4 output formats',
       'Brand Voice & Custom Tone customization',
@@ -62,7 +62,7 @@ PLAN_CONFIGS['pro'] = PLAN_CONFIGS['pro_monthly'];
 PLAN_CONFIGS['monthly'] = PLAN_CONFIGS['pro_monthly'];
 PLAN_CONFIGS['pro_annual'] = PLAN_CONFIGS['pro_yearly'];
 PLAN_CONFIGS['annual'] = PLAN_CONFIGS['pro_yearly'];
-PLAN_CONFIGS['lifetime'] = PLAN_CONFIGS['pro_yearly']; // Legacy mapping fallback
+PLAN_CONFIGS['lifetime'] = PLAN_CONFIGS['pro_yearly'];
 
 export function getPlanConfig(planType?: string): PlanConfig {
   if (!planType) return PLAN_CONFIGS.free;

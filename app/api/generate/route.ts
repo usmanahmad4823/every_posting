@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server';
 import { generateContentWithClaude } from '@/lib/anthropic';
-import { checkCanGenerate, saveGenerationRecord } from '@/lib/supabase';
+import {
+  isSupabaseConfigured,
+  supabase,
+  reserveUserGenerationAtomic,
+  rollbackUserGenerationAtomic,
+  saveGenerationRecord,
+  getUserProfile,
+} from '@/lib/supabase';
 import { GenerationRequest, OutputFormat, NicheType, ToneStyle } from '@/lib/types';
+import { getGenerationLimit } from '@/lib/plans';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const {
       transcript,
       niche,
@@ -13,7 +21,7 @@ export async function POST(req: Request) {
       tone = 'energetic',
       brandVoice,
       customApiKey,
-      userId = 'demo-user-1',
+      userId: bodyUserId,
     } = body as {
       transcript: string;
       niche: NicheType;
@@ -24,7 +32,37 @@ export async function POST(req: Request) {
       userId?: string;
     };
 
-    // 1. Input Validation & Cost Protection
+    // 1. Authenticate the User
+    let authenticatedUserId: string | undefined;
+
+    // Check Bearer Token in Authorization header
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      if (isSupabaseConfigured()) {
+        const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+        if (!userErr && userData.user) {
+          authenticatedUserId = userData.user.id;
+        }
+      }
+    }
+
+    // Fallback check session or provided userId if valid
+    if (!authenticatedUserId && bodyUserId && bodyUserId !== 'guest-user' && bodyUserId !== 'demo-user-1') {
+      authenticatedUserId = bodyUserId;
+    }
+
+    // If Supabase is configured and no authenticated user was identified, reject request
+    if (isSupabaseConfigured() && !authenticatedUserId && !customApiKey) {
+      return NextResponse.json(
+        { error: 'UNAUTHENTICATED', message: 'Please log in to generate content.' },
+        { status: 401 }
+      );
+    }
+
+    const effectiveUserId = authenticatedUserId || bodyUserId || 'demo-user-1';
+
+    // 2. Input Validation & Cost Protection
     if (!transcript || !transcript.trim()) {
       return NextResponse.json(
         { error: 'INVALID_TRANSCRIPT', message: 'Please enter a transcript before generating.' },
@@ -53,53 +91,76 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Server-Side Generation Limit Check BEFORE Calling Anthropic AI
-    const effectiveUserId = userId || 'guest-user';
-    let userLimit = 3;
+    // 3. Atomic Server-Side Generation Limit Check & Quota Reservation BEFORE calling AI API
+    let reservedUsageCount: number | undefined;
+    let userLimit = 5;
 
     if (!customApiKey) {
-      const limitCheck = await checkCanGenerate(effectiveUserId);
-      userLimit = limitCheck.limit || 3;
-      if (!limitCheck.allowed) {
+      const reservation = await reserveUserGenerationAtomic(effectiveUserId);
+      userLimit = reservation.limit || 5;
+
+      if (!reservation.success) {
         return NextResponse.json(
           {
             error: 'GENERATION_LIMIT_REACHED',
             message: "You've reached your generation limit. Upgrade to Pro to continue.",
             limitReached: true,
-            currentUsage: limitCheck.currentUsage,
-            limit: limitCheck.limit,
+            currentUsage: reservation.newUsage || userLimit,
+            limit: userLimit,
           },
           { status: 429 }
         );
       }
+      reservedUsageCount = reservation.newUsage;
     }
 
-    // 3. Invoke Anthropic Claude AI (Only reached if user has available quota or custom key)
-    const requestPayload: GenerationRequest = {
-      transcript,
-      niche,
-      selectedFormats,
-      tone,
-      brandVoice,
-      customApiKey,
-    };
-    const outputs = await generateContentWithClaude(requestPayload);
+    // 4. Invoke Anthropic Claude AI (Only reached if quota reserved or custom key present)
+    let outputs: Record<string, string>;
+    try {
+      const requestPayload: GenerationRequest = {
+        transcript,
+        niche,
+        selectedFormats,
+        tone,
+        brandVoice,
+        customApiKey,
+      };
+      outputs = await generateContentWithClaude(requestPayload);
+    } catch (aiError: any) {
+      console.error('Anthropic API Call Failed:', aiError);
+      // Rollback reserved quota so user is not penalized for AI errors
+      if (reservedUsageCount !== undefined) {
+        await rollbackUserGenerationAtomic(effectiveUserId);
+      }
+      return NextResponse.json(
+        { error: 'AI_API_FAILURE', message: 'Something went wrong while generating your content. Please try again.' },
+        { status: 500 }
+      );
+    }
 
-    // 4. Save Generation & Increment Usage Atomically ONLY After AI Success
-    const savedRecord = await saveGenerationRecord(effectiveUserId, niche, transcript, selectedFormats, outputs);
-    const newCount = savedRecord.newUsageCount;
+    // 5. Save Generation Record after successful AI completion
+    const savedRecord = await saveGenerationRecord(
+      effectiveUserId,
+      niche,
+      transcript,
+      selectedFormats,
+      outputs,
+      reservedUsageCount
+    );
+
+    const finalUsageCount = reservedUsageCount ?? savedRecord.newUsageCount;
 
     return NextResponse.json({
       success: true,
       result: savedRecord,
-      generationsUsedThisMonth: newCount,
-      remainingUsage: customApiKey ? 9999 : Math.max(0, userLimit - newCount),
+      generationsUsedThisMonth: finalUsageCount,
+      remainingUsage: customApiKey ? 9999 : Math.max(0, userLimit - finalUsageCount),
       limit: userLimit,
     });
   } catch (error: any) {
     console.error('API /api/generate error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to generate repurposed content.' },
+      { error: 'SERVER_ERROR', message: error.message || 'Something went wrong while generating your content. Please try again.' },
       { status: 500 }
     );
   }
