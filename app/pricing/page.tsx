@@ -276,9 +276,9 @@ export default function PricingPage() {
               <p className="text-[#71717A] text-[11px] font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
 
               <div className="my-2.5">
-                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$190</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$290</span>
                 <span className="text-[#71717A] text-xs font-medium"> / year</span>
-                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $15.83/mo (Save $38/year)</p>
+                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $24.16/mo (Save $58/year)</p>
               </div>
 
               {/* Action Button */}
@@ -297,7 +297,7 @@ export default function PricingPage() {
                 ) : (
                   <>
                     <ShieldCheck className="w-3.5 h-3.5 text-white" />
-                    <span>Choose Pro Yearly ($190/yr)</span>
+                    <span>Choose Pro Yearly ($290/yr)</span>
                   </>
                 )}
               </button>

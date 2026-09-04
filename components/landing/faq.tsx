@@ -22,7 +22,7 @@ export function FAQSection() {
     },
     {
       q: 'What is the difference between Pro Monthly and Pro Yearly?',
-      a: 'Pro Monthly gives you 100 generations per month for $19/mo. Pro Yearly provides 1,200 generations per year for $190/yr, giving you approximately 2 months free (saving $38/year).',
+      a: 'Pro Monthly gives you 150 generations per month for $29/mo. Pro Yearly provides 1,800 generations per year for $290/yr, giving you approximately 2 months free (saving $58/year).',
     },
     {
       q: 'Can I cancel my Pro subscription at any time?',
