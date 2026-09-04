@@ -20,45 +20,48 @@ export function SocialProofSection() {
   ];
 
   return (
-    <section className="py-12 border-y border-[#E4E4E7] bg-white relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-xs uppercase tracking-widest text-[#71717A] font-bold mb-8">
+    <section className="py-6 sm:py-8 border-y border-pink-100/60 bg-gradient-to-b from-[#FFF5F9]/60 via-white to-[#FFF5F9]/40 relative z-10 overflow-hidden">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p className="text-center text-[10px] sm:text-xs uppercase tracking-widest text-[#71717A] font-extrabold mb-4 sm:mb-5">
           Trusted by 25,000+ founders, business owners & top creators
         </p>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+        {/* Stats Grid - Minimal & Compact */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3.5 mb-5 max-w-4xl mx-auto">
           {stats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="aiigen-card p-5 text-center bg-white border border-[#E4E4E7] hover:border-[#FF529A]"
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="p-3 text-center bg-white/80 backdrop-blur-xl rounded-xl border border-pink-200/80 shadow-2xs hover:border-[#FF529A]/50 hover:shadow-xs transition-all duration-300 group"
               >
-                <div className="inline-flex icon-box-black bg-[#FF529A] mb-2 p-2 rounded-xl">
-                  <Icon className="w-5 h-5 text-white" />
+                <div className="inline-flex p-1.5 rounded-lg bg-pink-50 text-[#FF529A] mb-1.5 border border-pink-200/60 group-hover:scale-105 transition-transform">
+                  <Icon className="w-3.5 h-3.5" />
                 </div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
+                <div className="text-base sm:text-lg lg:text-xl font-black text-[#0A0A0C] tracking-tight leading-none">
                   {stat.value}
                 </div>
-                <div className="text-xs text-[#71717A] font-semibold mt-1">{stat.label}</div>
+                <div className="text-[10px] sm:text-[11px] text-[#71717A] font-medium mt-1">
+                  {stat.label}
+                </div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Niches Ticker / Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        {/* Niches Badges */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
           {niches.map((item) => (
             <span
               key={item}
-              className="px-4 py-1.5 rounded-full text-xs font-semibold bg-[#FFF0F6] text-[#FF529A] border border-[#FFC2DA]"
+              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-white/90 text-[#FF529A] border border-pink-200/80 shadow-2xs hover:border-pink-300 transition-colors"
             >
-              ✓ {item}
+              <span className="text-[#FF529A] text-[9px]">✓</span>
+              <span>{item}</span>
             </span>
           ))}
         </div>
