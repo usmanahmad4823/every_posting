@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Key, Eye, EyeOff, CheckCircle2, AlertCircle, X, ShieldAlert, Loader2, Trash2 } from 'lucide-react';
 import { maskApiKey } from '@/lib/anthropic';
 import { supabase } from '@/lib/supabase';
+import { getSecureCustomKey, setSecureCustomKey, removeSecureCustomKey } from '@/lib/key-storage';
 
 type ValidationStatus = 'IDLE' | 'VALIDATING' | 'VALID' | 'INVALID' | 'ERROR';
 
@@ -29,7 +30,7 @@ export const CustomKeySettings: React.FC<CustomKeySettingsProps> = ({
   const [validatedKey, setValidatedKey] = useState<string | null>(null);
 
   useEffect(() => {
-    const activeKey = customApiKey !== undefined ? customApiKey : (typeof window !== 'undefined' ? localStorage.getItem('everyposting_custom_key') || '' : '');
+    const activeKey = customApiKey !== undefined ? customApiKey : getSecureCustomKey();
     if (activeKey) {
       setInputKey(activeKey);
       if (activeKey.startsWith('sk-ant-')) {
@@ -95,9 +96,9 @@ export const CustomKeySettings: React.FC<CustomKeySettingsProps> = ({
       if (onSaveKey) {
         onSaveKey(targetKey);
       } else {
-        localStorage.setItem('everyposting_custom_key', targetKey);
+        setSecureCustomKey(targetKey);
         setStatus('VALID');
-        setStatusMessage('✓ API key saved successfully');
+        setStatusMessage('✓ API key saved securely');
       }
       if (onClose) onClose();
     }
@@ -111,7 +112,7 @@ export const CustomKeySettings: React.FC<CustomKeySettingsProps> = ({
     if (onRemoveKey) {
       onRemoveKey();
     } else {
-      localStorage.removeItem('everyposting_custom_key');
+      removeSecureCustomKey();
     }
     if (onClose) onClose();
   };

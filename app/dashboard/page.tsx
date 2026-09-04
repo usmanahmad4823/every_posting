@@ -38,6 +38,7 @@ import { MilestoneReviewModal } from '@/components/feedback/milestone-review-mod
 import { AdvancedOutputPreview } from '@/components/studio/advanced-output-preview';
 import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
+import { getSecureCustomKey, setSecureCustomKey, removeSecureCustomKey } from '@/lib/key-storage';
 import { CustomKeySettings } from '@/components/settings/custom-key-settings';
 
 export default function DashboardPage() {
@@ -131,7 +132,7 @@ export default function DashboardPage() {
         setPaymentSuccessMsg(`🎉 You're now on the ${(successPlan || 'PRO').toUpperCase()} plan! Welcome aboard!`);
       }
 
-      const savedKey = localStorage.getItem('everyposting_custom_key');
+      const savedKey = getSecureCustomKey();
       if (savedKey) setCustomApiKey(savedKey);
 
       const pastGenerations = await getGenerationHistory();
@@ -151,7 +152,7 @@ export default function DashboardPage() {
   };
 
   const handleSaveApiKey = () => {
-    localStorage.setItem('everyposting_custom_key', customApiKey);
+    setSecureCustomKey(customApiKey);
     setShowKeyModal(false);
   };
 
@@ -417,12 +418,12 @@ export default function DashboardPage() {
                   customApiKey={customApiKey}
                   onSaveKey={(validatedKey) => {
                     setCustomApiKey(validatedKey);
-                    localStorage.setItem('everyposting_custom_key', validatedKey);
+                    setSecureCustomKey(validatedKey);
                     setShowKeyModal(false);
                   }}
                   onRemoveKey={() => {
                     setCustomApiKey('');
-                    localStorage.removeItem('everyposting_custom_key');
+                    removeSecureCustomKey();
                     setShowKeyModal(false);
                   }}
                   onClose={() => setShowKeyModal(false)}

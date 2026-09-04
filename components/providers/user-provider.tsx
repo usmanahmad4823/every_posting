@@ -144,6 +144,40 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
     queryFn: fetchCurrentUser,
   });
 
+  // CROSS-TAB & WINDOW FOCUS SYNC LISTENERS FOR INSTANT MULTI-TAB QUOTA SYNC
+  useEffect(() => {
+    const handleFocus = () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'everyposting_user') {
+        queryClient.invalidateQueries({ queryKey: ['user'] });
+      }
+    };
+
+    let channel: BroadcastChannel | null = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      channel = new BroadcastChannel('everyposting_user_sync');
+      channel.onmessage = (event) => {
+        if (event.data?.type === 'USER_QUOTA_UPDATED') {
+          queryClient.invalidateQueries({ queryKey: ['user'] });
+        }
+      };
+    }
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorage);
+      if (channel) {
+        channel.close();
+      }
+    };
+  }, [queryClient]);
+
   // SUPABASE AUTH STATE LISTENER (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, INITIAL_SESSION)
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
@@ -224,6 +258,18 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
       };
 
       localStorage.setItem('everyposting_user', JSON.stringify(updated));
+
+      // Notify other open tabs via BroadcastChannel
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        try {
+          const bc = new BroadcastChannel('everyposting_user_sync');
+          bc.postMessage({ type: 'USER_QUOTA_UPDATED' });
+          bc.close();
+        } catch {
+          // Ignore broadcast channel errors
+        }
+      }
+
       return updated;
     });
   };

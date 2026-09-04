@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, LogOut, Settings, CreditCard, ChevronDown, Sliders, Star, HelpCircle } from 'lucide-react';
+import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, Settings, CreditCard, ChevronDown, Sliders, Star, HelpCircle } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSparkleBurst } from '@/components/ui/sparkle-burst';
@@ -216,15 +216,6 @@ export function Navbar() {
                         <CreditCard className="w-3.5 h-3.5 text-[#FF529A]" />
                         <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
                       </Link>
-
-                      <button
-                        type="button"
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-extrabold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-slate-100 cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
-                        <span>Sign Out</span>
-                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -279,28 +270,25 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* 1. Backdrop Overlay (Click Outside to Auto-Close - Subtle 2px Glass Blur so Hero Page is Crisp) */}
+            {/* 1. High-Performance Backdrop Overlay (Instant 60fps opening without lag) */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.12 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/15 backdrop-blur-[2px] z-40 md:hidden pointer-events-auto"
+              className="fixed inset-0 bg-black/30 z-40 md:hidden pointer-events-auto transform-gpu"
             />
 
-            {/* 2. Top-Down Crisp Transparent Glassmorphic Mirror Drawer */}
+            {/* 2. Top-Down Ultra-Fast Crisp Glassmorphic Drawer */}
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.96 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-3 left-3 right-3 z-50 md:hidden pointer-events-auto max-w-full"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="fixed top-3 left-3 right-3 z-50 md:hidden pointer-events-auto max-w-full transform-gpu will-change-transform"
             >
-              <div className="bg-white/45 backdrop-blur-md saturate-150 rounded-[32px] border border-white/75 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/60 space-y-6 relative overflow-hidden">
-                {/* Diagonal Glass Mirror Sheen Highlight */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/15 to-transparent pointer-events-none" />
-                {/* Subtle Ambient Pink Backdrop Blur */}
-                <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#FF529A]/15 rounded-full blur-2xl pointer-events-none" />
+              <div className="bg-white/98 rounded-3xl border border-[#FFC2DA] p-6 shadow-2xl space-y-5 relative overflow-hidden">
 
                 {/* Header Row: Logo on Left, Close (X) Button on Far RIGHT */}
                 <div className="flex items-center justify-between border-b border-white/40 pb-4 relative z-10">
@@ -381,17 +369,6 @@ export function Navbar() {
                       >
                         Account Settings
                       </Link>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          handleSignOut();
-                        }}
-                        className="text-2xl sm:text-3xl font-extrabold text-rose-600 hover:text-rose-700 transition-colors tracking-tight text-left flex items-center gap-2 cursor-pointer"
-                      >
-                        <LogOut className="w-6 h-6 text-rose-500" />
-                        <span>Sign Out</span>
-                      </button>
                     </>
                   ) : (
                     <>

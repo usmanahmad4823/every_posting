@@ -9,6 +9,9 @@ export async function GET(req: Request) {
     let authUserEmail: string | null = null;
     let authUserMetadataName: string | null = null;
 
+    const url = new URL(req.url);
+    const queryUserId = url.searchParams.get('userId');
+
     // Extract Bearer Token from Authorization Header
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
     if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -23,17 +26,23 @@ export async function GET(req: Request) {
       }
     }
 
-    // Fallback: check query parameter if userId is provided
-    if (!userId) {
-      const url = new URL(req.url);
-      const queryUserId = url.searchParams.get('userId');
-      if (queryUserId && queryUserId !== 'guest-user' && queryUserId !== 'demo-user-1') {
-        userId = queryUserId;
-      }
+    // Require valid authentication if Supabase is configured
+    if (isSupabaseConfigured() && !userId) {
+      return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
     }
 
-    if (!userId || !isSupabaseConfigured()) {
-      return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
+    // Authorization Check: prevent IDOR by verifying target queryUserId matches authenticated userId
+    if (queryUserId && userId && queryUserId !== userId) {
+      return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
+    }
+
+    // Handle Demo/Guest Mode fallback when Supabase is unconfigured
+    if (!userId && !isSupabaseConfigured()) {
+      if (queryUserId === 'guest-user' || queryUserId === 'demo-user-1') {
+        userId = queryUserId;
+      } else {
+        return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
+      }
     }
 
     // 1. Fetch user row from public.users table using service role client
