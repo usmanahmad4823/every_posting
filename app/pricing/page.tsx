@@ -70,6 +70,11 @@ export default function PricingPage() {
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-purple-300/15 via-pink-100/30 to-transparent rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#FF529A_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.06] pointer-events-none" />
 
+      {/* Massive Background Watermark Typography */}
+      <div className="absolute top-2 sm:top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-6xl sm:text-[120px] lg:text-[140px] font-black uppercase text-[#FF529A]/[0.07] tracking-widest select-none pointer-events-none z-0">
+        PRICING PLAN
+      </div>
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Title & Signed-In Status */}
         <div className="text-center max-w-2xl mx-auto mb-3 sm:mb-4">
