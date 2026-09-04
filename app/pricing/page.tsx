@@ -64,14 +64,14 @@ export default function PricingPage() {
   const userTier = user?.tier || 'free';
 
   return (
-    <div className="pt-4 sm:pt-6 pb-8 sm:pb-10 bg-[#FFF5F9] min-h-screen relative overflow-hidden text-[#0A0A0C]">
+    <div className="pt-24 sm:pt-28 pb-8 sm:pb-10 bg-[#FFF5F9] min-h-screen relative overflow-hidden text-[#0A0A0C]">
       {/* Background Soft Pink & Purple Glowing Orbs */}
       <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF529A]/15 via-pink-200/25 to-transparent rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-purple-300/15 via-pink-100/30 to-transparent rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#FF529A_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.06] pointer-events-none" />
 
       {/* Massive Background Watermark Typography */}
-      <div className="absolute top-2 sm:top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-6xl sm:text-[120px] lg:text-[140px] font-black uppercase text-[#FF529A]/[0.07] tracking-widest select-none pointer-events-none z-0">
+      <div className="absolute top-16 sm:top-20 left-1/2 -translate-x-1/2 whitespace-nowrap text-6xl sm:text-[120px] lg:text-[140px] font-black uppercase text-[#FF529A]/[0.07] tracking-widest select-none pointer-events-none z-0">
         PRICING PLAN
       </div>
 
