@@ -42,18 +42,36 @@ export async function POST(req: Request) {
       const session = event.data.object as Stripe.Checkout.Session;
       const rawPlan = session.metadata?.planType || 'pro_monthly';
       const planType = rawPlan === 'lifetime' || rawPlan === 'pro_yearly' ? 'pro_yearly' : 'pro_monthly';
-      const userId = session.metadata?.userId;
+      const metadataUserId = session.metadata?.userId;
       const customerEmail = session.customer_email || session.customer_details?.email;
       const stripeCustomerId = (session.customer as string) || null;
       const stripeSubscriptionId = (session.subscription as string) || null;
 
-      console.log(`[Stripe Webhook] Checkout completed for ${customerEmail} (UserId: ${userId}, Plan: ${planType})`);
+      const monthlyPriceId = process.env.STRIPE_PRO_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || '';
+      const yearlyPriceId = process.env.STRIPE_LIFETIME_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID || '';
+      const priceId = (session.line_items?.data[0]?.price?.id) || (planType === 'pro_yearly' ? yearlyPriceId : monthlyPriceId);
+
+      console.log(`[Stripe Webhook] Checkout completed for ${customerEmail} (UserId: ${metadataUserId}, Plan: ${planType})`);
 
       if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo-everyposting')) {
         try {
           const newLimit = planType === 'pro_yearly' ? 1800 : 150;
+          let targetUserId = metadataUserId;
+
+          if (!targetUserId && customerEmail) {
+            const { data: foundUser } = await supabaseAdmin
+              .from('users')
+              .select('id')
+              .eq('email', customerEmail)
+              .maybeSingle();
+
+            if (foundUser) {
+              targetUserId = foundUser.id;
+            }
+          }
+
           // 1. Update user profile tier in Supabase users table
-          if (userId) {
+          if (targetUserId) {
             await supabaseAdmin
               .from('users')
               .update({
@@ -61,7 +79,7 @@ export async function POST(req: Request) {
                 monthly_generation_limit: newLimit,
                 stripe_customer_id: stripeCustomerId,
               })
-              .eq('id', userId);
+              .eq('id', targetUserId);
           } else if (customerEmail) {
             await supabaseAdmin
               .from('users')
@@ -79,9 +97,9 @@ export async function POST(req: Request) {
               stripe_subscription_id: stripeSubscriptionId,
               stripe_customer_id: stripeCustomerId,
               status: 'active',
-              stripe_price_id: session.line_items?.data[0]?.price?.id || null,
-              user_id: userId || null,
-            });
+              stripe_price_id: priceId,
+              user_id: targetUserId || null,
+            }, { onConflict: 'stripe_subscription_id' });
           }
         } catch (dbErr) {
           console.error('[Stripe Webhook Database Update Warning]:', dbErr);
