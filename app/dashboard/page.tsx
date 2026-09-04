@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
-import { getGenerationHistory, supabase } from '@/lib/supabase';
+import { getGenerationHistory } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { FeedbackPrompt } from '@/components/feedback/feedback-prompt';
 import { MilestoneReviewModal } from '@/components/feedback/milestone-review-modal';
@@ -102,32 +102,32 @@ export default function DashboardPage() {
       const successPlan = urlParams.get('plan') as any;
       const sessionId = urlParams.get('session_id');
 
-      if (isPaymentSuccess && successPlan) {
-        // 1. Verify & reconcile session directly with Supabase DB
+      if (isPaymentSuccess) {
         if (sessionId) {
           try {
-            const { data: authSession } = await supabase.auth.getSession();
-            const token = authSession.session?.access_token;
-
-            await fetch('/api/stripe/verify-session', {
+            const verifyRes = await fetch('/api/stripe/verify-session', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-              },
-              body: JSON.stringify({ sessionId, planType: successPlan }),
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ sessionId, userId: user.id }),
             });
-          } catch (verifyErr) {
-            console.warn('[Dashboard Session Verification Warning]:', verifyErr);
+            const verifyData = await verifyRes.json();
+            if (verifyData.success && verifyData.planType) {
+              updateUserLocally({
+                plan: verifyData.planType,
+                planStatus: 'active',
+                monthlyGenerationLimit: verifyData.monthlyGenerationLimit,
+              });
+            }
+          } catch (err) {
+            console.warn('[Dashboard] Verify session API call warning:', err);
           }
+        } else if (successPlan) {
+          updateUserLocally({ plan: successPlan, planStatus: 'active' });
         }
 
-        // 2. Optimistically update local user state instantly
-        updateUserLocally({ plan: successPlan, planStatus: 'active' });
-        // 3. Invalidate TanStack query to fetch server source of truth
+        // Invalidate TanStack query to fetch server source of truth
         await invalidateUser();
-
-        setPaymentSuccessMsg(`🎉 You're now on the ${successPlan.toUpperCase().replace('_', ' ')} plan! Welcome aboard!`);
+        setPaymentSuccessMsg(`🎉 You're now on the ${(successPlan || 'PRO').toUpperCase()} plan! Welcome aboard!`);
       }
 
       const savedKey = localStorage.getItem('everyposting_custom_key');

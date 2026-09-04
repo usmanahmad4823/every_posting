@@ -203,73 +203,91 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
     };
   }
 
+  // 1. Client-Side (Browser): Fetch server-verified user profile from /api/user/profile API route
+  if (typeof window !== 'undefined') {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      const activeId = userId || sessionData.session?.user?.id || storedUser?.id;
+
+      if (!activeId || activeId === 'guest-user') return null;
+
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`/api/user/profile?userId=${encodeURIComponent(activeId)}`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.id) {
+          return {
+            id: data.id,
+            email: data.email,
+            fullName: data.fullName,
+            subscriptionTier: data.subscriptionTier || 'free',
+            generationsUsedThisMonth: data.generationsUsedThisMonth ?? 0,
+            monthlyGenerationLimit: data.monthlyGenerationLimit || getGenerationLimit(data.subscriptionTier || 'free'),
+            hasSeenReviewPrompt: data.hasSeenReviewPrompt || false,
+          };
+        }
+      }
+    } catch (clientErr) {
+      console.warn('[getUserProfile] Client API fetch warning:', clientErr);
+    }
+  }
+
+  // 2. Server-Side Direct Database Fallback: Query using service role client (supabaseAdmin)
   try {
     const { data: sessionUser } = await supabase.auth.getUser();
     const currentId = userId || sessionUser.user?.id;
 
-    if (!currentId) {
-      return null;
-    }
+    if (!currentId) return null;
 
-    const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || 'Creator';
-    const metaEmail = sessionUser.user?.email || storedUser?.email || '';
-
-    // 1. Query public.users table with admin client (bypasses RLS issues)
-    const { data: userRow } = await supabaseAdmin
-      .from('users')
-      .select('*')
-      .eq('id', currentId)
-      .single();
-
-    // 2. Query public.subscriptions table for an active/trialing subscription for this user
-    const { data: subRow } = await supabaseAdmin
+    const { data: userRow } = await supabaseAdmin.from('users').select('*').eq('id', currentId).maybeSingle();
+    const { data: subRows } = await supabaseAdmin
       .from('subscriptions')
       .select('*')
       .eq('user_id', currentId)
       .in('status', ['active', 'trialing'])
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .order('created_at', { ascending: false });
 
-    let activeTier: PlanType = userRow?.subscription_tier || storedUser?.plan || storedUser?.tier || 'free';
+    const subRow = subRows?.[0] || null;
 
-    // If active subscription exists in subscriptions table, verify tier against price IDs
+    let activeTier: PlanType = 'free';
+
+    if (userRow?.subscription_tier && userRow.subscription_tier !== 'free') {
+      activeTier = userRow.subscription_tier as PlanType;
+    }
+
     if (subRow && (subRow.status === 'active' || subRow.status === 'trialing')) {
-      const priceId = subRow.stripe_price_id;
+      const priceId = subRow.stripe_price_id || '';
       const yearlyPriceId = process.env.STRIPE_LIFETIME_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID;
       const monthlyPriceId = process.env.STRIPE_PRO_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID;
 
-      if (priceId && yearlyPriceId && priceId === yearlyPriceId) {
+      if (yearlyPriceId && priceId === yearlyPriceId) {
         activeTier = 'pro_yearly';
-      } else if (priceId && monthlyPriceId && priceId === monthlyPriceId) {
+      } else if (monthlyPriceId && priceId === monthlyPriceId) {
         activeTier = 'pro_monthly';
-      } else if (userRow?.subscription_tier && userRow.subscription_tier !== 'free') {
-        activeTier = userRow.subscription_tier as PlanType;
+      } else if (priceId.toLowerCase().includes('yearly') || priceId.toLowerCase().includes('annual') || priceId.toLowerCase().includes('lifetime')) {
+        activeTier = 'pro_yearly';
+      } else if (priceId.toLowerCase().includes('monthly') || priceId.toLowerCase().includes('pro')) {
+        activeTier = 'pro_monthly';
+      } else if (!userRow?.subscription_tier || userRow.subscription_tier === 'free') {
+        activeTier = 'pro_monthly';
       }
     }
 
     const correctLimit = getGenerationLimit(activeTier);
-    const fetchedUsage = userRow?.generations_used_this_month ?? storedUser?.generationsUsedThisMonth ?? 0;
-
-    // Auto-reconcile users table in database if userRow subscription_tier is out of sync
-    if (userRow && (userRow.subscription_tier !== activeTier || userRow.monthly_generation_limit !== correctLimit)) {
-      await supabaseAdmin.from('users').update({
-        subscription_tier: activeTier,
-        monthly_generation_limit: correctLimit,
-      }).eq('id', currentId);
-    }
-
     return {
       id: currentId,
-      email: userRow?.email || metaEmail,
-      fullName: userRow?.full_name || metaName,
+      email: userRow?.email || sessionUser.user?.email || '',
+      fullName: userRow?.full_name || sessionUser.user?.user_metadata?.full_name || 'Creator',
       subscriptionTier: activeTier,
-      generationsUsedThisMonth: fetchedUsage,
+      generationsUsedThisMonth: userRow?.generations_used_this_month ?? 0,
       monthlyGenerationLimit: correctLimit,
       hasSeenReviewPrompt: userRow?.has_seen_review_prompt || false,
     };
   } catch (err) {
-    console.warn('[getUserProfile] Warning fetching profile from DB:', err);
+    console.warn('[getUserProfile] Direct DB lookup warning:', err);
     if (!userId && !storedUser?.loggedIn) return null;
     const fallbackPlan = storedUser?.plan || storedUser?.tier || 'free';
     return {
