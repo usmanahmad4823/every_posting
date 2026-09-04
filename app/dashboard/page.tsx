@@ -32,6 +32,7 @@ import {
 import { NICHE_CONFIGS } from '@/lib/prompts';
 import { NicheType, OutputFormat, GenerationResult, ToneStyle } from '@/lib/types';
 import { getGenerationHistory } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 import { FeedbackPrompt } from '@/components/feedback/feedback-prompt';
 import { MilestoneReviewModal } from '@/components/feedback/milestone-review-modal';
 import { AdvancedOutputPreview } from '@/components/studio/advanced-output-preview';
@@ -39,7 +40,14 @@ import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
 
 export default function DashboardPage() {
-  const { user, invalidateUser, updateUserLocally } = useUser();
+  const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !user.loggedIn) {
+      router.push('/sign-in');
+    }
+  }, [isLoading, user.loggedIn, router]);
 
   const usageCount = user.generationsUsedThisMonth;
   const usageLimit = user.monthlyGenerationLimit;

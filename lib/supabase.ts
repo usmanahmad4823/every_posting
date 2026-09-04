@@ -188,15 +188,14 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
     }
   }
 
-  const activeId = userId || storedUser?.id;
-
   if (!isSupabaseConfigured()) {
+    if (!storedUser || !storedUser.loggedIn) return null;
     const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
     const usage = storedUser?.generationsUsedThisMonth ?? mockUserUsageCount;
     return {
-      id: activeId || 'guest-user',
-      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
-      fullName: storedUser?.fullName || 'Usman Ahmad',
+      id: storedUser?.id || 'demo-user-1',
+      email: storedUser?.email || 'demo@everyposting.com',
+      fullName: storedUser?.fullName || 'Demo User',
       subscriptionTier: currentPlan,
       generationsUsedThisMonth: usage,
       monthlyGenerationLimit: getGenerationLimit(currentPlan),
@@ -206,19 +205,10 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
 
   try {
     const { data: sessionUser } = await supabase.auth.getUser();
-    const currentId = sessionUser.user?.id || activeId;
+    const currentId = userId || sessionUser.user?.id;
 
-    if (!currentId || currentId === 'guest-user') {
-      const currentPlan = storedUser?.tier || storedUser?.plan || 'free';
-      return {
-        id: 'guest-user',
-        email: storedUser?.email || '',
-        fullName: storedUser?.fullName || 'Creator',
-        subscriptionTier: currentPlan,
-        generationsUsedThisMonth: storedUser?.generationsUsedThisMonth ?? 0,
-        monthlyGenerationLimit: getGenerationLimit(currentPlan),
-        hasSeenReviewPrompt: false,
-      };
+    if (!currentId) {
+      return null;
     }
 
     const metaName = sessionUser.user?.user_metadata?.full_name || storedUser?.fullName || 'Creator';
@@ -280,9 +270,10 @@ export async function getUserProfile(userId?: string): Promise<UserProfile | nul
     };
   } catch (err) {
     console.warn('[getUserProfile] Warning fetching profile from DB:', err);
+    if (!userId && !storedUser?.loggedIn) return null;
     const fallbackPlan = storedUser?.plan || storedUser?.tier || 'free';
     return {
-      id: activeId || 'guest-user',
+      id: userId || storedUser?.id || 'unauthenticated-user',
       email: storedUser?.email || '',
       fullName: storedUser?.fullName || 'Creator',
       subscriptionTier: fallbackPlan,

@@ -9,7 +9,7 @@ import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
 
 export default function AccountPage() {
-  const { user, invalidateUser, updateUserLocally } = useUser();
+  const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
   const [customKey, setCustomKey] = useState<string>('');
   const [showKeyText, setShowKeyText] = useState<boolean>(false);
   const [keySaved, setKeySaved] = useState<boolean>(false);
@@ -21,6 +21,12 @@ export default function AccountPage() {
   const [isSavingName, setIsSavingName] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !user.loggedIn) {
+      router.push('/sign-in');
+    }
+  }, [isLoading, user.loggedIn, router]);
 
   useEffect(() => {
     setNameInput(user.fullName);

@@ -52,44 +52,53 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
   // 1. Check for payment success URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const isPaymentSuccess = urlParams.get('payment_success') === 'true';
-  const successPlan = (urlParams.get('plan') as PlanType) || 'pro';
+  const successPlan = (urlParams.get('plan') as PlanType) || 'pro_monthly';
 
-  // 2. Read stored session from localStorage
-  const storedUserRaw = localStorage.getItem('everyposting_user');
-  let storedUser: any = null;
-  if (storedUserRaw) {
+  // 2. Demo Mode (when Supabase is not configured)
+  if (!isSupabaseConfigured()) {
+    const storedUserRaw = localStorage.getItem('everyposting_user');
+    if (!storedUserRaw) return DEFAULT_USER;
     try {
-      storedUser = JSON.parse(storedUserRaw);
-    } catch {}
+      const stored = JSON.parse(storedUserRaw);
+      if (!stored || !stored.loggedIn) return DEFAULT_USER;
+
+      const plan = isPaymentSuccess ? successPlan : (stored.plan || stored.tier || 'free');
+      const updated: UserSessionState = {
+        id: stored.id || 'demo-user-1',
+        email: stored.email || 'demo@everyposting.com',
+        fullName: stored.fullName || 'Demo User',
+        plan,
+        planStatus: stored.planStatus || 'active',
+        generationsUsedThisMonth: stored.generationsUsedThisMonth || 0,
+        monthlyGenerationLimit: getGenerationLimit(plan),
+        hasSeenReviewPrompt: false,
+        loggedIn: true,
+      };
+      localStorage.setItem('everyposting_user', JSON.stringify(updated));
+      return updated;
+    } catch {
+      return DEFAULT_USER;
+    }
   }
 
-  // Handle post-checkout payment reconciliation
-  if (isPaymentSuccess && storedUser && storedUser.loggedIn) {
-    const updated: UserSessionState = {
-      id: storedUser.id,
-      email: storedUser.email,
-      fullName: storedUser.fullName || storedUser.email?.split('@')[0] || 'Creator',
-      plan: successPlan,
-      planStatus: 'active',
-      generationsUsedThisMonth: storedUser.generationsUsedThisMonth || 0,
-      monthlyGenerationLimit: getGenerationLimit(successPlan),
-      hasSeenReviewPrompt: false,
-      loggedIn: true,
-    };
-    localStorage.setItem('everyposting_user', JSON.stringify(updated));
-    return updated;
-  }
-
-  // 3. Fetch fresh user profile & subscription tier from database / profile backend
+  // 3. Real Supabase Auth Mode: Check Active Session
   try {
-    const activeUserId = storedUser?.id || 'guest-user';
-    const profile = await getUserProfile(activeUserId);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !session.user) {
+      // Unauthenticated state: clear any stale user data
+      localStorage.removeItem('everyposting_user');
+      return DEFAULT_USER;
+    }
 
-    const mappedPlan: PlanType =
-      profile?.subscriptionTier || storedUser?.plan || storedUser?.tier || 'free';
-    const mappedStatus: PlanStatus = profile?.planStatus || storedUser?.planStatus || 'active';
+    const authUser = session.user;
+    const profile = await getUserProfile(authUser.id);
 
-    const cleanEmail = profile?.email || storedUser?.email || 'usmanahmad4t12@gmail.com';
+    const mappedPlan: PlanType = isPaymentSuccess
+      ? successPlan
+      : (profile?.subscriptionTier || 'free');
+    const mappedStatus: PlanStatus = profile?.planStatus || 'active';
+    const cleanEmail = authUser.email || profile?.email || '';
+
     const emailPrefixName = cleanEmail
       ? cleanEmail
           .split('@')[0]
@@ -97,13 +106,17 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
           .replace(/\d+/g, ' ')
           .trim()
           .replace(/\b\w/g, (c: string) => c.toUpperCase())
-      : 'Usman Ahmad';
+      : 'Creator';
 
-    const cleanFullName = profile?.fullName || storedUser?.fullName || emailPrefixName;
-    const currentUsage = profile?.generationsUsedThisMonth ?? storedUser?.generationsUsedThisMonth ?? 0;
+    const cleanFullName =
+      profile?.fullName ||
+      authUser.user_metadata?.full_name ||
+      emailPrefixName;
+
+    const currentUsage = profile?.generationsUsedThisMonth ?? 0;
 
     const updatedSession: UserSessionState = {
-      id: profile?.id || storedUser?.id || 'guest-user',
+      id: authUser.id,
       email: cleanEmail,
       fullName: cleanFullName,
       plan: mappedPlan,
@@ -114,26 +127,12 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
       loggedIn: true,
     };
 
-    // Keep localStorage synced with latest fetched profile
     localStorage.setItem('everyposting_user', JSON.stringify(updatedSession));
-
     return updatedSession;
   } catch (err) {
-    console.warn('[UserProvider] Error fetching live profile, using cached fallback:', err);
-
-    const fallbackUsage = storedUser?.generationsUsedThisMonth ?? 0;
-    const fallbackPlan = storedUser?.plan || storedUser?.tier || 'free';
-    return {
-      id: storedUser?.id || 'guest-user',
-      email: storedUser?.email || 'usmanahmad4t12@gmail.com',
-      fullName: storedUser?.fullName || 'Usman Ahmad',
-      plan: fallbackPlan,
-      planStatus: storedUser?.planStatus || 'active',
-      generationsUsedThisMonth: fallbackUsage,
-      monthlyGenerationLimit: getGenerationLimit(fallbackPlan),
-      hasSeenReviewPrompt: false,
-      loggedIn: true,
-    };
+    console.warn('[UserProvider] Error checking auth session:', err);
+    localStorage.removeItem('everyposting_user');
+    return DEFAULT_USER;
   }
 }
 
@@ -145,11 +144,31 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
     queryFn: fetchCurrentUser,
   });
 
-  // SUPABASE REALTIME LISTENERS FOR INSTANT POSTGRES SYNC
+  // SUPABASE AUTH STATE LISTENER (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, INITIAL_SESSION)
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    const { data: { subscription: authListener } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT' || !session) {
+          localStorage.removeItem('everyposting_user');
+          queryClient.setQueryData(['user'], DEFAULT_USER);
+          queryClient.invalidateQueries({ queryKey: ['user'] });
+        } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+          queryClient.invalidateQueries({ queryKey: ['user'] });
+        }
+      }
+    );
+
+    return () => {
+      authListener.unsubscribe();
+    };
+  }, [queryClient]);
+
+  // SUPABASE REALTIME DB LISTENERS FOR AUTHENTICATED USER
   useEffect(() => {
     if (!user.loggedIn || !user.id || !isSupabaseConfigured()) return;
 
-    // Subscribe to Postgres UPDATE events on users table for current user row
     const userChannel = supabase
       .channel(`realtime-user-${user.id}`)
       .on(
@@ -166,7 +185,6 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
       )
       .subscribe();
 
-    // Subscribe to Postgres UPDATE events on subscriptions table for current user row
     const subChannel = supabase
       .channel(`realtime-sub-${user.id}`)
       .on(
@@ -183,7 +201,6 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
       )
       .subscribe();
 
-    // Cleanup realtime listeners on unmount
     return () => {
       supabase.removeChannel(userChannel);
       supabase.removeChannel(subChannel);
@@ -196,31 +213,13 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
 
   const updateUserLocally = (partial: Partial<UserSessionState>) => {
     queryClient.setQueryData(['user'], (old: UserSessionState | undefined) => {
-      const storedUserRaw = localStorage.getItem('everyposting_user');
-      let storedUser: any = {};
-      if (storedUserRaw) {
-        try {
-          storedUser = JSON.parse(storedUserRaw);
-        } catch {}
-      }
+      if (!old || !old.loggedIn) return DEFAULT_USER;
 
-      const basePlan = partial.plan || old?.plan || storedUser.plan || storedUser.tier || 'free';
-      const base = old && old.loggedIn ? old : {
-        id: storedUser.id || 'user-1',
-        email: storedUser.email || 'usmanahmad4t12@gmail.com',
-        fullName: storedUser.fullName || 'Usman Ahmad',
-        plan: basePlan,
-        planStatus: storedUser.planStatus || 'active',
-        generationsUsedThisMonth: 0,
-        monthlyGenerationLimit: getGenerationLimit(basePlan),
-        hasSeenReviewPrompt: false,
-        loggedIn: true,
-      };
-
+      const basePlan = partial.plan || old.plan || 'free';
       const updated: UserSessionState = {
-        ...base,
+        ...old,
         ...partial,
-        monthlyGenerationLimit: partial.monthlyGenerationLimit || getGenerationLimit(partial.plan || base.plan),
+        monthlyGenerationLimit: partial.monthlyGenerationLimit || getGenerationLimit(basePlan),
         loggedIn: true,
       };
 

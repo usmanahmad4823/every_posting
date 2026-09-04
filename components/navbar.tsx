@@ -25,7 +25,7 @@ export function Navbar() {
   const [activeHover, setActiveHover] = useState<string | null>(null);
 
   // Global Reactive User & Subscription State
-  const { user, invalidateUser } = useUser();
+  const { user, isLoading, invalidateUser } = useUser();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -51,10 +51,17 @@ export function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Auto-close profile dropdown when user logs out
+  useEffect(() => {
+    if (!user?.loggedIn) {
+      setProfileDropdownOpen(false);
+    }
+  }, [user?.loggedIn]);
+
   const handleSignOut = async () => {
+    setProfileDropdownOpen(false);
     await signOutUser();
     await invalidateUser();
-    setProfileDropdownOpen(false);
     router.push('/sign-in');
   };
 
@@ -140,7 +147,9 @@ export function Navbar() {
             </div>
 
             {/* DYNAMIC AUTH NAVBAR STATE */}
-            {user?.loggedIn ? (
+            {isLoading ? (
+              <div className="w-16 h-8 rounded-full bg-slate-100/80 animate-pulse border border-slate-200/50" />
+            ) : user?.loggedIn ? (
               /* User Authenticated Profile Pill & Dropdown Menu */
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -207,6 +216,15 @@ export function Navbar() {
                         <CreditCard className="w-3.5 h-3.5 text-[#FF529A]" />
                         <span>{userTier === 'free' ? 'Upgrade to Pro' : 'Manage Subscription'}</span>
                       </Link>
+
+                      <button
+                        type="button"
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-extrabold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors mt-1 border-t border-slate-100 cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                        <span>Sign Out</span>
+                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -216,14 +234,14 @@ export function Navbar() {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   href="/sign-in"
-                  className="text-xs font-bold text-[#0A0A0C] hover:text-[#FF529A] px-2 sm:px-3 py-1.5 transition-colors flex items-center gap-1"
+                  className="text-xs font-bold text-[#0A0A0C] hover:text-[#FF529A] px-2.5 sm:px-3.5 py-1.5 transition-colors flex items-center gap-1"
                 >
                   <User className="w-3.5 h-3.5 text-[#FF529A]" />
                   <span>Sign In</span>
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="btn-aiigen-primary text-xs font-extrabold px-3 sm:px-4 py-1.5 sm:py-2 flex items-center gap-1 rounded-full shadow-xs shrink-0"
+                  className="btn-aiigen-primary text-xs font-extrabold px-3.5 sm:px-4 py-1.5 sm:py-2 flex items-center gap-1.5 rounded-full shadow-xs shrink-0"
                 >
                   <span>Sign Up</span>
                   <ArrowRight className="w-3 h-3" />
@@ -348,21 +366,51 @@ export function Navbar() {
                   </Link>
 
                   {user?.loggedIn ? (
-                    <Link
-                      href="/account"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
-                    >
-                      Settings
-                    </Link>
+                    <>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                      >
+                        Studio Dashboard
+                      </Link>
+                      <Link
+                        href="/account"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                      >
+                        Account Settings
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleSignOut();
+                        }}
+                        className="text-2xl sm:text-3xl font-extrabold text-rose-600 hover:text-rose-700 transition-colors tracking-tight text-left flex items-center gap-2 cursor-pointer"
+                      >
+                        <LogOut className="w-6 h-6 text-rose-500" />
+                        <span>Sign Out</span>
+                      </button>
+                    </>
                   ) : (
-                    <Link
-                      href="/sign-in"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
-                    >
-                      Sign In
-                    </Link>
+                    <>
+                      <Link
+                        href="/sign-in"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/sign-up"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-2xl sm:text-3xl font-extrabold text-[#FF529A] hover:text-purple-600 transition-colors tracking-tight text-left flex items-center gap-2"
+                      >
+                        <span>Sign Up</span>
+                        <ArrowRight className="w-6 h-6" />
+                      </Link>
+                    </>
                   )}
                 </nav>
 
