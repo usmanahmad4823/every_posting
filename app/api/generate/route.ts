@@ -93,11 +93,11 @@ export async function POST(req: Request) {
 
     // 3. Atomic Server-Side Generation Limit Check & Quota Reservation BEFORE calling AI API
     let reservedUsageCount: number | undefined;
-    let userLimit = 5;
+    let userLimit = 3;
 
     if (!customApiKey) {
       const reservation = await reserveUserGenerationAtomic(effectiveUserId);
-      userLimit = reservation.limit || 5;
+      userLimit = reservation.limit || 3;
 
       if (!reservation.success) {
         return NextResponse.json(

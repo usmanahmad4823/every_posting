@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   avatar_url TEXT,
   subscription_tier TEXT NOT NULL DEFAULT 'free' CHECK (subscription_tier IN ('free', 'pro_monthly', 'pro_yearly', 'pro', 'annual')),
   generations_used_this_month INT NOT NULL DEFAULT 0,
-  monthly_generation_limit INT NOT NULL DEFAULT 5,
+  monthly_generation_limit INT NOT NULL DEFAULT 3,
   has_seen_review_prompt BOOLEAN DEFAULT FALSE,
   stripe_customer_id TEXT UNIQUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

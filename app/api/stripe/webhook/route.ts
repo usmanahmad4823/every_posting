@@ -108,7 +108,7 @@ export async function POST(req: Request) {
               .from('users')
               .update({
                 subscription_tier: 'free',
-                monthly_generation_limit: 5,
+                monthly_generation_limit: 3,
               })
               .eq('stripe_customer_id', customerId);
           }

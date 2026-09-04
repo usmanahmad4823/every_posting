@@ -71,7 +71,7 @@ export async function signUpUser(fullName: string, email: string, password: stri
           full_name: cleanName,
           subscription_tier: 'free',
           generations_used_this_month: 0,
-          monthly_generation_limit: 10,
+          monthly_generation_limit: getGenerationLimit('free'),
           has_seen_review_prompt: false,
         });
       } catch (dbErr) {
@@ -124,7 +124,7 @@ export async function signInUser(email: string, password: string): Promise<{ suc
         full_name: finalName,
         subscription_tier: 'free',
         generations_used_this_month: 0,
-        monthly_generation_limit: 10,
+        monthly_generation_limit: getGenerationLimit('free'),
       }, { onConflict: 'id' });
     } catch (dbErr) {
       console.warn('[Supabase Sign-In DB Sync Warning]:', dbErr);

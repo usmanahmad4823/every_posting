@@ -14,12 +14,12 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
   free: {
     id: 'free',
     name: 'Free Plan',
-    generationLimit: 5,
+    generationLimit: 3,
     interval: 'month',
     price: 0,
     stripePriceEnvKey: '',
     features: [
-      '5 AI Generations per month',
+      '3 AI Generations per month',
       'Access to Podcaster, YouTube & Coach niches',
       'All 4 output formats (Show Notes, Threads, Posts, Emails)',
       'Basic AI processing',

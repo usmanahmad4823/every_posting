@@ -14,7 +14,7 @@ model User {
   fullName                  String?        @map("full_name")
   subscriptionTier          String         @default("free") @map("subscription_tier")
   generationsUsedThisMonth  Int            @default(0) @map("generations_used_this_month")
-  monthlyGenerationLimit    Int            @default(5) @map("monthly_generation_limit")
+  monthlyGenerationLimit    Int            @default(3) @map("monthly_generation_limit")
   hasSeenReviewPrompt       Boolean        @default(false) @map("has_seen_review_prompt")
   stripeCustomerId          String?        @map("stripe_customer_id")
   createdAt                 DateTime       @default(now()) @map("created_at")

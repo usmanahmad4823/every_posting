@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, useMemo } from '
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query';
 import { UserSessionState, PlanType, PlanStatus } from '@/lib/types';
 import { getUserProfile, supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { getGenerationLimit } from '@/lib/plans';
 
 // TanStack Query Client Singleton
 const queryClientSingleton = new QueryClient({
@@ -32,7 +33,7 @@ const DEFAULT_USER: UserSessionState = {
   plan: 'free',
   planStatus: 'active',
   generationsUsedThisMonth: 0,
-  monthlyGenerationLimit: 10,
+  monthlyGenerationLimit: getGenerationLimit('free'),
   hasSeenReviewPrompt: false,
   loggedIn: false,
 };
@@ -71,7 +72,7 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
       plan: successPlan,
       planStatus: 'active',
       generationsUsedThisMonth: storedUser.generationsUsedThisMonth || 0,
-      monthlyGenerationLimit: 9999,
+      monthlyGenerationLimit: getGenerationLimit(successPlan),
       hasSeenReviewPrompt: false,
       loggedIn: true,
     };
@@ -108,7 +109,7 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
       plan: mappedPlan,
       planStatus: mappedStatus,
       generationsUsedThisMonth: currentUsage,
-      monthlyGenerationLimit: mappedPlan === 'free' ? 10 : 9999,
+      monthlyGenerationLimit: profile?.monthlyGenerationLimit || getGenerationLimit(mappedPlan),
       hasSeenReviewPrompt: profile?.hasSeenReviewPrompt || false,
       loggedIn: true,
     };
@@ -121,14 +122,15 @@ async function fetchCurrentUser(): Promise<UserSessionState> {
     console.warn('[UserProvider] Error fetching live profile, using cached fallback:', err);
 
     const fallbackUsage = storedUser?.generationsUsedThisMonth ?? 0;
+    const fallbackPlan = storedUser?.plan || storedUser?.tier || 'free';
     return {
       id: storedUser?.id || 'guest-user',
       email: storedUser?.email || 'usmanahmad4t12@gmail.com',
       fullName: storedUser?.fullName || 'Usman Ahmad',
-      plan: storedUser?.plan || storedUser?.tier || 'free',
+      plan: fallbackPlan,
       planStatus: storedUser?.planStatus || 'active',
       generationsUsedThisMonth: fallbackUsage,
-      monthlyGenerationLimit: (storedUser?.plan || storedUser?.tier) === 'free' ? 10 : 9999,
+      monthlyGenerationLimit: getGenerationLimit(fallbackPlan),
       hasSeenReviewPrompt: false,
       loggedIn: true,
     };
@@ -202,14 +204,15 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
         } catch {}
       }
 
+      const basePlan = partial.plan || old?.plan || storedUser.plan || storedUser.tier || 'free';
       const base = old && old.loggedIn ? old : {
         id: storedUser.id || 'user-1',
         email: storedUser.email || 'usmanahmad4t12@gmail.com',
         fullName: storedUser.fullName || 'Usman Ahmad',
-        plan: storedUser.plan || storedUser.tier || 'free',
+        plan: basePlan,
         planStatus: storedUser.planStatus || 'active',
         generationsUsedThisMonth: 0,
-        monthlyGenerationLimit: 10,
+        monthlyGenerationLimit: getGenerationLimit(basePlan),
         hasSeenReviewPrompt: false,
         loggedIn: true,
       };
@@ -217,6 +220,7 @@ function UserContextProviderInner({ children }: { children: React.ReactNode }) {
       const updated: UserSessionState = {
         ...base,
         ...partial,
+        monthlyGenerationLimit: partial.monthlyGenerationLimit || getGenerationLimit(partial.plan || base.plan),
         loggedIn: true,
       };
 

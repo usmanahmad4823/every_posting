@@ -175,7 +175,7 @@ export default function DashboardPage() {
     }
 
     // Generation Limit Check
-    const limit = user.monthlyGenerationLimit || 5;
+    const limit = user.monthlyGenerationLimit || 3;
     const isLimitReached = user.generationsUsedThisMonth >= limit && !customApiKey;
 
     if (isLimitReached) {
@@ -462,14 +462,14 @@ export default function DashboardPage() {
                 <div>
                   <h3 className="text-xl font-extrabold text-[#0A0A0C]">Generation Limit Reached!</h3>
                   <p className="text-xs text-[#52525B] leading-relaxed mt-1">
-                    You have used <strong>{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 5} generations</strong>. Upgrade to EveryPosting Pro to continue generating or plug in your personal Anthropic Claude API key!
+                    You have used <strong>{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 3} generations</strong>. Upgrade to EveryPosting Pro to continue generating or plug in your personal Anthropic Claude API key!
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-[#0A0A0C]">
                     <span>Quota Usage</span>
-                    <span className="text-rose-600 font-extrabold">{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 5} Used</span>
+                    <span className="text-rose-600 font-extrabold">{user.generationsUsedThisMonth} / {user.monthlyGenerationLimit || 3} Used</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
                     <div className="w-full h-full bg-rose-500 rounded-full" />
@@ -564,10 +564,10 @@ export default function DashboardPage() {
                     Generation Quota:
                   </span>
                   <span className="text-[11px] sm:text-xs font-bold text-[#FF529A]">
-                    {customApiKey ? '0' : usageCount}/{customApiKey ? '∞' : (usageLimit || 5)}
+                    {customApiKey ? '0' : usageCount}/{customApiKey ? '∞' : (usageLimit || 3)}
                   </span>
                   <span className="text-[10px] text-[#71717A] hidden sm:inline">
-                    ({customApiKey ? 'Unlimited' : `${Math.max(0, (usageLimit || 5) - usageCount)} remaining`})
+                    ({customApiKey ? 'Unlimited' : `${Math.max(0, (usageLimit || 3) - usageCount)} remaining`})
                   </span>
                 </div>
 
@@ -590,12 +590,12 @@ export default function DashboardPage() {
               <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden">
                 <div
                   className={`h-full transition-all duration-300 rounded-full ${
-                    !customApiKey && usageCount >= (usageLimit || 5)
+                    !customApiKey && usageCount >= (usageLimit || 3)
                       ? 'bg-rose-500'
                       : 'bg-gradient-to-r from-[#FF529A] to-purple-600'
                   }`}
                   style={{
-                    width: `${customApiKey ? 100 : Math.min(100, (usageCount / (usageLimit || 5)) * 100)}%`,
+                    width: `${customApiKey ? 100 : Math.min(100, (usageCount / (usageLimit || 3)) * 100)}%`,
                   }}
                 />
               </div>
