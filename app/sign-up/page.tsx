@@ -1,18 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signUpUser } from '@/lib/supabase';
+import { useUser } from '@/components/providers/user-provider';
+import { AuthLoadingScreen } from '@/components/ui/auth-loading';
 
 export default function SignUpPage() {
+  const { user, isLoading, invalidateUser } = useUser();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user?.loggedIn) {
+      router.replace('/dashboard');
+    }
+  }, [isLoading, user?.loggedIn, router]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,12 +31,17 @@ export default function SignUpPage() {
     const res = await signUpUser(fullName, email, password);
 
     if (res.success) {
-      router.push('/dashboard');
+      await invalidateUser();
+      router.replace('/dashboard');
     } else {
       setErrorMsg(res.error || 'Failed to create account in Supabase.');
       setLoading(false);
     }
   };
+
+  if (isLoading || user?.loggedIn) {
+    return <AuthLoadingScreen message="Redirecting to your Creator Studio..." />;
+  }
 
   return (
     <div className="min-h-screen pt-24 sm:pt-28 pb-12 bg-[#F5F5F7] flex items-center justify-center relative overflow-hidden bg-aiigen-dots">

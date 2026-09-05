@@ -41,15 +41,21 @@ import { PlanBadge } from '@/components/ui/plan-badge';
 import { getSecureCustomKey, setSecureCustomKey, removeSecureCustomKey } from '@/lib/key-storage';
 import { CustomKeySettings } from '@/components/settings/custom-key-settings';
 
+import { AuthLoadingScreen } from '@/components/ui/auth-loading';
+
 export default function DashboardPage() {
   const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && !user.loggedIn) {
-      router.push('/sign-in');
+      router.replace('/sign-in');
     }
   }, [isLoading, user.loggedIn, router]);
+
+  if (isLoading || !user.loggedIn) {
+    return <AuthLoadingScreen message="Accessing Studio Dashboard..." />;
+  }
 
   const usageCount = user.generationsUsedThisMonth;
   const usageLimit = user.monthlyGenerationLimit;

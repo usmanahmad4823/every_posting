@@ -6,15 +6,23 @@ import { Sparkles, ArrowRight, User, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signInUser } from '@/lib/supabase';
 
+import { useEffect } from 'react';
 import { useUser } from '@/components/providers/user-provider';
+import { AuthLoadingScreen } from '@/components/ui/auth-loading';
 
 export default function SignInPage() {
-  const { invalidateUser } = useUser();
+  const { user, isLoading, invalidateUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user?.loggedIn) {
+      router.replace('/dashboard');
+    }
+  }, [isLoading, user?.loggedIn, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +33,16 @@ export default function SignInPage() {
 
     if (res.success) {
       await invalidateUser();
-      router.push('/dashboard');
+      router.replace('/dashboard');
     } else {
       setErrorMsg(res.error || 'Failed to sign in. Please check your credentials.');
       setLoading(false);
     }
   };
+
+  if (isLoading || user?.loggedIn) {
+    return <AuthLoadingScreen message="Redirecting to your Creator Studio..." />;
+  }
 
   return (
     <div className="min-h-screen pt-24 sm:pt-28 pb-12 bg-[#F5F5F7] flex items-center justify-center relative overflow-hidden bg-aiigen-dots">

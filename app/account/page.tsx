@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
 import { CustomKeySettings } from '@/components/settings/custom-key-settings';
+import { AuthLoadingScreen } from '@/components/ui/auth-loading';
 
 export default function AccountPage() {
   const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
@@ -22,9 +23,13 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (!isLoading && !user.loggedIn) {
-      router.push('/sign-in');
+      router.replace('/sign-in');
     }
   }, [isLoading, user.loggedIn, router]);
+
+  if (isLoading || !user.loggedIn) {
+    return <AuthLoadingScreen message="Loading Account Settings..." />;
+  }
 
   useEffect(() => {
     setNameInput(user.fullName);
@@ -61,7 +66,8 @@ export default function AccountPage() {
 
   const handleSignOut = async () => {
     await signOutUser();
-    router.push('/sign-in');
+    await invalidateUser();
+    router.replace('/sign-in');
   };
 
   return (
