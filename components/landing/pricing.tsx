@@ -179,7 +179,7 @@ export function PricingSection() {
             </div>
           </motion.div>
 
-          {/* Card 2: Pro Monthly ($29/mo) */}
+          {/* Card 2: Pro Monthly ($19/mo) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -204,7 +204,7 @@ export function PricingSection() {
               </p>
 
               <div className="my-2.5 relative z-10">
-                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$29</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$19</span>
                 <span className="text-[#71717A] text-xs font-medium"> / month</span>
               </div>
 
@@ -224,7 +224,7 @@ export function PricingSection() {
                 ) : (
                   <>
                     <Zap className="w-3.5 h-3.5 fill-white" />
-                    <span>Choose Pro Monthly ($29/mo)</span>
+                    <span>Choose Pro Monthly ($19/mo)</span>
                   </>
                 )}
               </button>
@@ -280,12 +280,12 @@ export function PricingSection() {
                   ⚡ 2 Months Free
                 </span>
               </div>
-              <p className="text-[#71717A] text-[11px] font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
+              <p className="text-[#71717A] text-[11px] font-medium">Save ~16% with yearly billing. Maximum leverage.</p>
 
               <div className="my-2.5">
-                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$290</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$190</span>
                 <span className="text-[#71717A] text-xs font-medium"> / year</span>
-                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $24.16/mo (Save $58/year)</p>
+                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $15.83/mo (Save $38/year)</p>
               </div>
 
               {/* Action Button */}
@@ -304,7 +304,7 @@ export function PricingSection() {
                 ) : (
                   <>
                     <ShieldCheck className="w-3.5 h-3.5 text-white" />
-                    <span>Choose Pro Yearly ($290/yr)</span>
+                    <span>Choose Pro Yearly ($190/yr)</span>
                   </>
                 )}
               </button>

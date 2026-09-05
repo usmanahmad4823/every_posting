@@ -30,7 +30,7 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
     name: 'Pro Monthly',
     generationLimit: 150,
     interval: 'month',
-    price: 29,
+    price: 19,
     stripePriceEnvKey: 'NEXT_PUBLIC_STRIPE_PRO_PRICE_ID',
     features: [
       '150 AI Generations per month',
@@ -45,10 +45,10 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
     name: 'Pro Yearly',
     generationLimit: 1800,
     interval: 'year',
-    price: 290,
+    price: 190,
     stripePriceEnvKey: 'NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID', // Preserved env var key name
     features: [
-      '1,800 AI Generations per year (Save ~20% / 2 Months Free!)',
+      '1,800 AI Generations per year (Save ~16% / 2 Months Free!)',
       'Priority Claude 3.5 AI Engine speed',
       'All 3 creator niches & 4 output formats',
       'Brand Voice & Custom Tone customization',

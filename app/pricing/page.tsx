@@ -184,7 +184,7 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Card 2: Pro Monthly ($29/mo) */}
+          {/* Card 2: Pro Monthly ($19/mo) */}
           <div className="rounded-2xl bg-gradient-to-b from-white via-pink-50/70 to-white border-2 border-[#FF529A] transition-all duration-300 p-4 sm:p-5 flex flex-col justify-between backdrop-blur-2xl shadow-[0_8px_30px_rgba(255,82,154,0.18)] relative overflow-hidden group scale-[1.01]">
             {/* Top Pinkish Radial Header Glow */}
             <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#FF529A]/15 to-transparent pointer-events-none" />
@@ -203,7 +203,7 @@ export default function PricingPage() {
               </p>
 
               <div className="my-2.5 relative z-10">
-                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$29</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$19</span>
                 <span className="text-[#71717A] text-xs font-medium"> / month</span>
               </div>
 
@@ -223,7 +223,7 @@ export default function PricingPage() {
                 ) : (
                   <>
                     <Zap className="w-3.5 h-3.5 fill-white" />
-                    <span>Choose Pro Monthly ($29/mo)</span>
+                    <span>Choose Pro Monthly ($19/mo)</span>
                   </>
                 )}
               </button>
@@ -273,12 +273,12 @@ export default function PricingPage() {
                   ⚡ 2 Months Free
                 </span>
               </div>
-              <p className="text-[#71717A] text-[11px] font-medium">Save ~20% with yearly billing. Maximum leverage.</p>
+              <p className="text-[#71717A] text-[11px] font-medium">Save ~16% with yearly billing. Maximum leverage.</p>
 
               <div className="my-2.5">
-                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$290</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0A0A0C]">$190</span>
                 <span className="text-[#71717A] text-xs font-medium"> / year</span>
-                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $24.16/mo (Save $58/year)</p>
+                <p className="text-[10px] text-[#FF529A] font-extrabold mt-0.5">Equivalent to $15.83/mo (Save $38/year)</p>
               </div>
 
               {/* Action Button */}
@@ -297,7 +297,7 @@ export default function PricingPage() {
                 ) : (
                   <>
                     <ShieldCheck className="w-3.5 h-3.5 text-white" />
-                    <span>Choose Pro Yearly ($290/yr)</span>
+                    <span>Choose Pro Yearly ($190/yr)</span>
                   </>
                 )}
               </button>
