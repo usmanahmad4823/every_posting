@@ -210,11 +210,11 @@ export default function SignUpPage() {
             </div>
           )}
 
-          <form onSubmit={handleSignUp} className="space-y-2">
-            {/* Full Name Input */}
+          <form onSubmit={handleSignUp} className="space-y-3">
+            {/* Minimal Underline Full Name Input */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Full Name</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-1.5 transition-all">
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Full Name</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1 px-0.5 transition-colors">
                 <User className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type="text"
@@ -229,10 +229,10 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* Email Input */}
+            {/* Minimal Underline Email Input */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Email</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-1.5 transition-all">
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Email</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1 px-0.5 transition-colors">
                 <Mail className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type="email"
@@ -247,10 +247,10 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* Password Input with Eye Toggle */}
+            {/* Minimal Underline Password Input */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Password</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-1.5 transition-all">
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Password</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1 px-0.5 transition-colors">
                 <Lock className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -272,10 +272,10 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* Confirm Password Input with Eye Toggle */}
+            {/* Minimal Underline Confirm Password Input */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Confirm Password</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-1.5 transition-all">
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Confirm Password</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1 px-0.5 transition-colors">
                 <Lock className="w-3.5 h-3.5 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -298,7 +298,7 @@ export default function SignUpPage() {
             </div>
 
             {/* Terms Checkbox */}
-            <div className="pt-[1px]">
+            <div className="pt-1">
               <label className="flex items-center gap-1.5 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -386,6 +386,7 @@ export default function SignUpPage() {
     </div>
   );
 }
+
 
 
 

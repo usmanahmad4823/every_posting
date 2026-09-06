@@ -165,7 +165,7 @@ export default function SignInPage() {
         {/* Main Form Box */}
         <div className="my-auto max-w-sm w-full mx-auto py-2">
           {/* Logo & Headline */}
-          <div className="text-center mb-4">
+          <div className="text-center mb-5">
             <div className="hidden lg:inline-flex items-center justify-center w-10 h-10 rounded-xl bg-pink-50 text-[#FF529A] mb-2">
               <Sparkles className="w-5 h-5 fill-[#FF529A]" />
             </div>
@@ -192,12 +192,12 @@ export default function SignInPage() {
             </div>
           )}
 
-          <form onSubmit={handleSignIn} className="space-y-2.5">
-            {/* Email Input Field */}
+          <form onSubmit={handleSignIn} className="space-y-4">
+            {/* Minimal Underline Email Field */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Email</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-2 transition-all">
-                <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2" />
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Email</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1.5 px-0.5 transition-colors">
+                <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
                   type="email"
                   name="email"
@@ -211,11 +211,11 @@ export default function SignInPage() {
               </div>
             </div>
 
-            {/* Password Input Field with Eye Toggle */}
+            {/* Minimal Underline Password Field */}
             <div>
-              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Password</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-2 transition-all">
-                <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2" />
+              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Password</label>
+              <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1.5 px-0.5 transition-colors">
+                <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -237,7 +237,7 @@ export default function SignInPage() {
             </div>
 
             {/* Remember Me & Forgot Password Row */}
-            <div className="flex items-center justify-between pt-0.5">
+            <div className="flex items-center justify-between pt-1">
               <label className="flex items-center gap-1.5 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -263,7 +263,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-xs py-2.5 rounded-full shadow-md shadow-pink-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
+              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-xs py-3 rounded-full shadow-md shadow-pink-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-3"
             >
               {loading ? (
                 <span>Signing In...</span>
@@ -277,7 +277,7 @@ export default function SignInPage() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-3 text-center">
+          <div className="relative my-4 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E2E8F0]" />
             </div>
@@ -290,7 +290,7 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-xs py-2 rounded-full shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
+            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-xs py-2.5 rounded-full shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
               <path
@@ -330,6 +330,7 @@ export default function SignInPage() {
     </div>
   );
 }
+
 
 
 
