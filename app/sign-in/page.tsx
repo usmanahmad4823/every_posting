@@ -141,23 +141,23 @@ export default function SignInPage() {
       <div className="w-full lg:w-1/2 h-full max-h-screen flex flex-col justify-between p-5 sm:p-8 lg:p-10 bg-white relative overflow-y-auto lg:overflow-hidden shrink-0">
         {/* Top Header Row */}
         <div className="flex items-center justify-between mb-2 sm:mb-4">
-          <Link href="/" className="lg:hidden inline-flex items-center gap-2">
+          <Link href="/" className="lg:hidden inline-flex items-center gap-2 shrink-0">
             <div className="w-7 h-7 rounded-lg bg-[#FF529A] flex items-center justify-center text-white">
               <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-extrabold text-base tracking-tight text-[#1A1A2E]">
+            <span className="font-extrabold text-sm sm:text-base tracking-tight text-[#1A1A2E]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
 
-          <div className="ml-auto text-xs font-medium text-[#6B7280] flex items-center gap-2">
-            <span>Not an account?</span>
+          <div className="ml-auto inline-flex items-center gap-1.5 sm:gap-2.5 pl-2 sm:pl-3.5 pr-1 sm:pr-1.5 py-0.5 sm:py-1 rounded-full bg-[#FFF0F5]/80 border border-pink-100/90 shadow-2xs backdrop-blur-md text-[10px] sm:text-xs shrink-0">
+            <span className="hidden sm:inline text-xs font-medium text-[#6B7280]">Don&apos;t have an account?</span>
             <Link
               href="/sign-up"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-50 text-[#FF529A] font-bold hover:bg-pink-100 transition-colors text-xs"
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white text-[#FF529A] font-extrabold text-[10px] sm:text-xs shadow-xs border border-pink-100/80 hover:bg-[#FF529A] hover:text-white hover:border-[#FF529A] transition-all duration-200 group"
             >
               <span>Sign Up</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FF529A] group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
         </div>
@@ -192,10 +192,9 @@ export default function SignInPage() {
             </div>
           )}
 
-          <form onSubmit={handleSignIn} className="space-y-4">
-            {/* Minimal Underline Email Field */}
-            <div>
-              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Email</label>
+          <form onSubmit={handleSignIn} className="space-y-5">
+            {/* Animated Floating Label Email Field */}
+            <div className="relative pt-3">
               <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1.5 px-0.5 transition-colors">
                 <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
@@ -205,15 +204,20 @@ export default function SignInPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="w-full bg-transparent text-xs text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
+                  placeholder=" "
+                  className="peer w-full bg-transparent text-xs text-[#1A1A2E] outline-none font-medium"
                 />
+                <label
+                  htmlFor="email"
+                  className="absolute left-0 -top-3 text-[10px] font-bold uppercase tracking-wider text-[#A1A1AA] transition-all duration-200 pointer-events-none peer-placeholder-shown:top-1.5 peer-placeholder-shown:left-7 peer-placeholder-shown:text-xs peer-placeholder-shown:font-medium peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3 peer-focus:left-0 peer-focus:text-[10px] peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-wider peer-focus:text-[#FF529A]"
+                >
+                  Email Address
+                </label>
               </div>
             </div>
 
-            {/* Minimal Underline Password Field */}
-            <div>
-              <label className="block text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider mb-1">Password</label>
+            {/* Animated Floating Label Password Field */}
+            <div className="relative pt-3">
               <div className="relative flex items-center bg-transparent border-b-2 border-[#E2E8F0] focus-within:border-[#FF529A] py-1.5 px-0.5 transition-colors">
                 <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
@@ -223,9 +227,15 @@ export default function SignInPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full bg-transparent text-xs text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
+                  placeholder=" "
+                  className="peer w-full bg-transparent text-xs text-[#1A1A2E] outline-none font-medium"
                 />
+                <label
+                  htmlFor="password"
+                  className="absolute left-0 -top-3 text-[10px] font-bold uppercase tracking-wider text-[#A1A1AA] transition-all duration-200 pointer-events-none peer-placeholder-shown:top-1.5 peer-placeholder-shown:left-7 peer-placeholder-shown:text-xs peer-placeholder-shown:font-medium peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3 peer-focus:left-0 peer-focus:text-[10px] peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-wider peer-focus:text-[#FF529A]"
+                >
+                  Password
+                </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
