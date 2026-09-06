@@ -63,89 +63,89 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-x-hidden font-sans">
+    <div className="h-screen max-h-screen w-full max-w-full overflow-hidden flex flex-col lg:flex-row bg-white font-sans">
       {/* LEFT PANEL: Branded Marketing Side */}
-      <div className="hidden lg:flex w-1/2 min-h-screen bg-gradient-to-br from-[#FFF0F5] via-[#FCE4EC] to-[#FFD1E3] p-10 lg:p-12 flex-col justify-between relative overflow-hidden">
+      <div className="hidden lg:flex w-1/2 h-full max-h-screen bg-gradient-to-br from-[#FFF0F5] via-[#FCE4EC] to-[#FFD1E3] p-8 lg:p-10 flex-col justify-between relative overflow-hidden shrink-0">
         {/* Background Ambient Glow Circles */}
-        <div className="absolute top-10 right-10 w-80 h-80 bg-white/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-72 h-72 bg-pink-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-10 right-10 w-72 h-72 bg-white/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-pink-400/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-[#FF529A] flex items-center justify-center text-white shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-white" />
+          <Link href="/" className="inline-flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-xl bg-[#FF529A] flex items-center justify-center text-white shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight text-[#1A1A2E]">
+            <span className="font-extrabold text-lg tracking-tight text-[#1A1A2E]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
         </div>
 
         {/* Middle Value Proposition & Headline */}
-        <div className="relative z-10 my-auto max-w-md">
+        <div className="relative z-10 my-auto max-w-sm">
           {/* Niche Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-pink-200/60 shadow-sm text-[11px] font-bold text-[#FF529A] mb-4">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/80 backdrop-blur-md border border-pink-200/60 shadow-sm text-[10px] font-bold text-[#FF529A] mb-3">
             <Sparkles className="w-3 h-3 fill-[#FF529A]" />
             <span>AI-Powered Content Repurposing</span>
           </div>
 
           {/* Headline with Two-Tone Styling */}
-          <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1A1A2E] leading-[1.18]">
+          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#1A1A2E] leading-[1.2]">
             Turn Your Content <br />
             <span className="text-[#FF529A]">Into Multiple Platforms</span>
           </h1>
 
-          <p className="text-xs lg:text-sm text-[#6B7280] mt-3 leading-relaxed font-medium">
-            Repurpose your podcasts, YouTube videos, and client calls into engaging social posts — effortlessly. Save time, reach more people, grow faster.
+          <p className="text-xs text-[#6B7280] mt-2.5 leading-relaxed font-medium">
+            Repurpose your podcasts, YouTube videos, and client calls into engaging social posts — effortlessly.
           </p>
 
           {/* 3 Persona Pills */}
-          <div className="grid grid-cols-3 gap-2.5 mt-6">
-            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
-              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
-                <Mic className="w-3.5 h-3.5" />
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="bg-white/70 backdrop-blur-md p-2.5 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-6 h-6 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1">
+                <Mic className="w-3 h-3" />
               </div>
-              <h4 className="text-[11px] font-bold text-[#1A1A2E]">Podcasters</h4>
-              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Show notes, tweets, graphics</p>
+              <h4 className="text-[10px] font-bold text-[#1A1A2E]">Podcasters</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Show notes, tweets</p>
             </div>
 
-            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
-              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
-                <Video className="w-3.5 h-3.5" />
+            <div className="bg-white/70 backdrop-blur-md p-2.5 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-6 h-6 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1">
+                <Video className="w-3 h-3" />
               </div>
-              <h4 className="text-[11px] font-bold text-[#1A1A2E]">YouTube Creators</h4>
-              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Threads, blogs, captions</p>
+              <h4 className="text-[10px] font-bold text-[#1A1A2E]">YouTube Creators</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Threads, captions</p>
             </div>
 
-            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
-              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
-                <Users className="w-3.5 h-3.5" />
+            <div className="bg-white/70 backdrop-blur-md p-2.5 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-6 h-6 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1">
+                <Users className="w-3 h-3" />
               </div>
-              <h4 className="text-[11px] font-bold text-[#1A1A2E]">Coaches</h4>
-              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">LinkedIn, newsletters</p>
+              <h4 className="text-[10px] font-bold text-[#1A1A2E]">Coaches</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">LinkedIn, emails</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Tagline */}
-        <div className="relative z-10 pt-4 border-t border-pink-200/50 flex items-center justify-between">
-          <span className="font-serif italic text-lg text-[#FF529A] font-bold tracking-tight">
+        <div className="relative z-10 pt-3 border-t border-pink-200/50 flex items-center justify-between">
+          <span className="font-serif italic text-base text-[#FF529A] font-bold tracking-tight">
             Create more. Do less. ✨
           </span>
-          <span className="text-[11px] text-[#6B7280] font-medium">© {new Date().getFullYear()} EveryPosting</span>
+          <span className="text-[10px] text-[#6B7280] font-medium">© {new Date().getFullYear()} EveryPosting</span>
         </div>
       </div>
 
       {/* RIGHT PANEL: Form Container Side */}
-      <div className="w-full lg:w-1/2 min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white relative">
+      <div className="w-full lg:w-1/2 h-full max-h-screen flex flex-col justify-between p-5 sm:p-8 lg:p-10 bg-white relative overflow-y-auto lg:overflow-hidden shrink-0">
         {/* Top Header Row */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2 sm:mb-4">
           <Link href="/" className="lg:hidden inline-flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-[#FF529A] flex items-center justify-center text-white">
               <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-extrabold text-lg tracking-tight text-[#1A1A2E]">
+            <span className="font-extrabold text-base tracking-tight text-[#1A1A2E]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
@@ -163,41 +163,41 @@ export default function SignInPage() {
         </div>
 
         {/* Main Form Box */}
-        <div className="my-auto max-w-sm w-full mx-auto">
+        <div className="my-auto max-w-sm w-full mx-auto py-2">
           {/* Logo & Headline */}
-          <div className="text-center mb-6">
-            <div className="hidden lg:inline-flex items-center justify-center w-11 h-11 rounded-xl bg-pink-50 text-[#FF529A] mb-2.5">
-              <Sparkles className="w-5.5 h-5.5 fill-[#FF529A]" />
+          <div className="text-center mb-4">
+            <div className="hidden lg:inline-flex items-center justify-center w-10 h-10 rounded-xl bg-pink-50 text-[#FF529A] mb-2">
+              <Sparkles className="w-5 h-5 fill-[#FF529A]" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A2E] tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-[#1A1A2E] tracking-tight">
               Welcome <span className="text-[#FF529A]">Back</span>
             </h2>
-            <p className="text-xs text-[#6B7280] mt-1 font-medium leading-relaxed max-w-xs mx-auto">
+            <p className="text-xs text-[#6B7280] mt-0.5 font-medium leading-tight max-w-xs mx-auto">
               Sign in to your account and continue creating content with AI.
             </p>
           </div>
 
           {/* Error & Info Alerts */}
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 font-medium">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="mb-3 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {googleNotice && (
-            <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2 font-medium">
-              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+            <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{googleNotice}</span>
             </div>
           )}
 
-          <form onSubmit={handleSignIn} className="space-y-3.5">
+          <form onSubmit={handleSignIn} className="space-y-2.5">
             {/* Email Input Field */}
             <div>
-              <label className="block text-[11px] font-bold text-[#1A1A2E] mb-1 uppercase tracking-wider">Email</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3.5 py-2.5 transition-all">
-                <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
+              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Email</label>
+              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-2 transition-all">
+                <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type="email"
                   name="email"
@@ -213,9 +213,9 @@ export default function SignInPage() {
 
             {/* Password Input Field with Eye Toggle */}
             <div>
-              <label className="block text-[11px] font-bold text-[#1A1A2E] mb-1 uppercase tracking-wider">Password</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3.5 py-2.5 transition-all">
-                <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
+              <label className="block text-[10px] font-bold text-[#1A1A2E] mb-0.5 uppercase tracking-wider">Password</label>
+              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3 py-2 transition-all">
+                <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -229,7 +229,7 @@ export default function SignInPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#A1A1AA] hover:text-[#1A1A2E] focus:outline-none ml-2"
+                  className="text-[#A1A1AA] hover:text-[#1A1A2E] focus:outline-none ml-1.5"
                 >
                   {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
@@ -247,13 +247,13 @@ export default function SignInPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-3.5 h-3.5 rounded border-gray-300 text-[#FF529A] focus:ring-[#FF529A]"
                 />
-                <span className="text-[11px] text-[#6B7280] font-medium">Remember me</span>
+                <span className="text-[10px] text-[#6B7280] font-medium">Remember me</span>
               </label>
 
               <button
                 type="button"
                 onClick={() => setErrorMsg('Password reset link has been sent to your email if registered.')}
-                className="text-[11px] text-[#FF529A] font-bold hover:underline"
+                className="text-[10px] text-[#FF529A] font-bold hover:underline"
               >
                 Forgot password?
               </button>
@@ -263,7 +263,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-xs py-3 rounded-full shadow-md shadow-pink-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-3"
+              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-xs py-2.5 rounded-full shadow-md shadow-pink-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <span>Signing In...</span>
@@ -277,11 +277,11 @@ export default function SignInPage() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-5 text-center">
+          <div className="relative my-3 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E2E8F0]" />
             </div>
-            <span className="relative bg-white px-3 text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider">
+            <span className="relative bg-white px-2.5 text-[9px] font-bold text-[#A1A1AA] uppercase tracking-wider">
               OR
             </span>
           </div>
@@ -290,9 +290,9 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-xs py-2.5 rounded-full shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-[0.99]"
+            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-xs py-2 rounded-full shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -314,7 +314,7 @@ export default function SignInPage() {
           </button>
 
           {/* Bottom Nav Link */}
-          <div className="mt-6 text-center text-xs text-[#6B7280] font-medium">
+          <div className="mt-4 text-center text-xs text-[#6B7280] font-medium">
             Don&apos;t have an account?{' '}
             <Link href="/sign-up" className="text-[#FF529A] font-bold hover:underline ml-0.5">
               Sign Up
@@ -323,13 +323,14 @@ export default function SignInPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-[10px] text-[#A1A1AA] font-medium mt-auto pt-4">
+        <div className="text-center text-[10px] text-[#A1A1AA] font-medium mt-auto pt-2">
           Protected by Supabase Auth & Terms of Service.
         </div>
       </div>
     </div>
   );
 }
+
 
 
 
