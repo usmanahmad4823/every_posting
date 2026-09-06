@@ -90,3 +90,7 @@ temp/
 scratch/
 
 /lib/generated/prisma
+
+# 12. INTERNAL DOCUMENTS (LOCAL ONLY)
+growth_plan.md
+
