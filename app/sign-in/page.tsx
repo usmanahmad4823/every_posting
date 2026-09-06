@@ -64,140 +64,140 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-x-hidden font-sans">
-      {/* LEFT PANEL: Branded Marketing Side (Hidden on Mobile, Visible on LG+) */}
-      <div className="hidden lg:flex w-1/2 min-h-screen bg-gradient-to-br from-[#FFF0F5] via-[#FCE4EC] to-[#FFD1E3] p-12 lg:p-16 flex-col justify-between relative overflow-hidden">
+      {/* LEFT PANEL: Branded Marketing Side */}
+      <div className="hidden lg:flex w-1/2 min-h-screen bg-gradient-to-br from-[#FFF0F5] via-[#FCE4EC] to-[#FFD1E3] p-10 lg:p-12 flex-col justify-between relative overflow-hidden">
         {/* Background Ambient Glow Circles */}
-        <div className="absolute top-10 right-10 w-96 h-96 bg-white/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-pink-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-10 right-10 w-80 h-80 bg-white/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-72 h-72 bg-pink-400/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-2xl bg-[#FF529A] flex items-center justify-center text-white shadow-lg shadow-pink-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-6 h-6 text-white" />
+          <Link href="/" className="inline-flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-xl bg-[#FF529A] flex items-center justify-center text-white shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-[#1A1A2E]">
+            <span className="font-extrabold text-xl tracking-tight text-[#1A1A2E]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
         </div>
 
         {/* Middle Value Proposition & Headline */}
-        <div className="relative z-10 my-auto max-w-lg">
+        <div className="relative z-10 my-auto max-w-md">
           {/* Niche Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-pink-200/60 shadow-sm text-xs font-bold text-[#FF529A] mb-6">
-            <Sparkles className="w-3.5 h-3.5 fill-[#FF529A]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-pink-200/60 shadow-sm text-[11px] font-bold text-[#FF529A] mb-4">
+            <Sparkles className="w-3 h-3 fill-[#FF529A]" />
             <span>AI-Powered Content Repurposing</span>
           </div>
 
           {/* Headline with Two-Tone Styling */}
-          <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-[#1A1A2E] leading-[1.15]">
+          <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1A1A2E] leading-[1.18]">
             Turn Your Content <br />
             <span className="text-[#FF529A]">Into Multiple Platforms</span>
           </h1>
 
-          <p className="text-sm lg:text-base text-[#6B7280] mt-4 leading-relaxed font-medium">
+          <p className="text-xs lg:text-sm text-[#6B7280] mt-3 leading-relaxed font-medium">
             Repurpose your podcasts, YouTube videos, and client calls into engaging social posts — effortlessly. Save time, reach more people, grow faster.
           </p>
 
           {/* 3 Persona Pills */}
-          <div className="grid grid-cols-3 gap-3 mt-8">
-            <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-sm">
-              <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-[#FF529A] mb-2">
-                <Mic className="w-4 h-4" />
+          <div className="grid grid-cols-3 gap-2.5 mt-6">
+            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
+                <Mic className="w-3.5 h-3.5" />
               </div>
-              <h4 className="text-xs font-bold text-[#1A1A2E]">Podcasters</h4>
-              <p className="text-[10px] text-[#6B7280] mt-0.5 font-medium leading-tight">Show notes, tweets, quote graphics</p>
+              <h4 className="text-[11px] font-bold text-[#1A1A2E]">Podcasters</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Show notes, tweets, graphics</p>
             </div>
 
-            <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-sm">
-              <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-[#FF529A] mb-2">
-                <Video className="w-4 h-4" />
+            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
+                <Video className="w-3.5 h-3.5" />
               </div>
-              <h4 className="text-xs font-bold text-[#1A1A2E]">YouTube Creators</h4>
-              <p className="text-[10px] text-[#6B7280] mt-0.5 font-medium leading-tight">Threads, blog posts, captions</p>
+              <h4 className="text-[11px] font-bold text-[#1A1A2E]">YouTube Creators</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">Threads, blogs, captions</p>
             </div>
 
-            <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-sm">
-              <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center text-[#FF529A] mb-2">
-                <Users className="w-4 h-4" />
+            <div className="bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-pink-100 flex items-center justify-center text-[#FF529A] mb-1.5">
+                <Users className="w-3.5 h-3.5" />
               </div>
-              <h4 className="text-xs font-bold text-[#1A1A2E]">Coaches</h4>
-              <p className="text-[10px] text-[#6B7280] mt-0.5 font-medium leading-tight">LinkedIn posts, email newsletters</p>
+              <h4 className="text-[11px] font-bold text-[#1A1A2E]">Coaches</h4>
+              <p className="text-[9px] text-[#6B7280] mt-0.5 font-medium leading-tight">LinkedIn, newsletters</p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Graphic & Tagline */}
-        <div className="relative z-10 pt-6 border-t border-pink-200/50 flex items-center justify-between">
-          <span className="font-serif italic text-2xl text-[#FF529A] font-bold tracking-tight">
+        {/* Bottom Tagline */}
+        <div className="relative z-10 pt-4 border-t border-pink-200/50 flex items-center justify-between">
+          <span className="font-serif italic text-lg text-[#FF529A] font-bold tracking-tight">
             Create more. Do less. ✨
           </span>
-          <span className="text-xs text-[#6B7280] font-semibold">© {new Date().getFullYear()} EveryPosting</span>
+          <span className="text-[11px] text-[#6B7280] font-medium">© {new Date().getFullYear()} EveryPosting</span>
         </div>
       </div>
 
       {/* RIGHT PANEL: Form Container Side */}
-      <div className="w-full lg:w-1/2 min-h-screen flex flex-col justify-between p-6 sm:p-12 lg:p-16 bg-white relative">
-        {/* Top Header Row with Switch Link */}
-        <div className="flex items-center justify-between mb-8">
+      <div className="w-full lg:w-1/2 min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white relative">
+        {/* Top Header Row */}
+        <div className="flex items-center justify-between mb-6">
           <Link href="/" className="lg:hidden inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#FF529A] flex items-center justify-center text-white">
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="w-7 h-7 rounded-lg bg-[#FF529A] flex items-center justify-center text-white">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight text-[#1A1A2E]">
+            <span className="font-extrabold text-lg tracking-tight text-[#1A1A2E]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
 
-          <div className="ml-auto text-xs sm:text-sm font-medium text-[#6B7280] flex items-center gap-2">
+          <div className="ml-auto text-xs font-medium text-[#6B7280] flex items-center gap-2">
             <span>Not an account?</span>
             <Link
               href="/sign-up"
-              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-pink-50 text-[#FF529A] font-bold hover:bg-pink-100 transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-50 text-[#FF529A] font-bold hover:bg-pink-100 transition-colors text-xs"
             >
               <span>Sign Up</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
 
         {/* Main Form Box */}
-        <div className="my-auto max-w-md w-full mx-auto">
+        <div className="my-auto max-w-sm w-full mx-auto">
           {/* Logo & Headline */}
-          <div className="text-center mb-8">
-            <div className="hidden lg:inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-pink-50 text-[#FF529A] mb-4">
-              <Sparkles className="w-7 h-7 fill-[#FF529A]" />
+          <div className="text-center mb-6">
+            <div className="hidden lg:inline-flex items-center justify-center w-11 h-11 rounded-xl bg-pink-50 text-[#FF529A] mb-2.5">
+              <Sparkles className="w-5.5 h-5.5 fill-[#FF529A]" />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A2E] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A2E] tracking-tight">
               Welcome <span className="text-[#FF529A]">Back</span>
             </h2>
-            <p className="text-xs sm:text-sm text-[#6B7280] mt-2 font-medium">
-              Sign in to your account and continue creating amazing content with AI.
+            <p className="text-xs text-[#6B7280] mt-1 font-medium leading-relaxed max-w-xs mx-auto">
+              Sign in to your account and continue creating content with AI.
             </p>
           </div>
 
           {/* Error & Info Alerts */}
           {errorMsg && (
-            <div className="mb-5 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 font-medium">
-              <AlertCircle className="w-4.5 h-4.5 text-rose-600 shrink-0" />
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {googleNotice && (
-            <div className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2.5 font-medium">
-              <AlertCircle className="w-4.5 h-4.5 text-amber-600 shrink-0" />
+            <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2 font-medium">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
               <span>{googleNotice}</span>
             </div>
           )}
 
-          <form onSubmit={handleSignIn} className="space-y-4">
+          <form onSubmit={handleSignIn} className="space-y-3.5">
             {/* Email Input Field */}
             <div>
-              <label className="block text-xs font-bold text-[#1A1A2E] mb-1.5">Email</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-2xl px-4 py-3.5 transition-all">
-                <Mail className="w-5 h-5 text-[#A1A1AA] shrink-0 mr-3" />
+              <label className="block text-[11px] font-bold text-[#1A1A2E] mb-1 uppercase tracking-wider">Email</label>
+              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3.5 py-2.5 transition-all">
+                <Mail className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
                   type="email"
                   name="email"
@@ -206,16 +206,16 @@ export default function SignInPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full bg-transparent text-sm text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
+                  className="w-full bg-transparent text-xs text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
                 />
               </div>
             </div>
 
             {/* Password Input Field with Eye Toggle */}
             <div>
-              <label className="block text-xs font-bold text-[#1A1A2E] mb-1.5">Password</label>
-              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-2xl px-4 py-3.5 transition-all">
-                <Lock className="w-5 h-5 text-[#A1A1AA] shrink-0 mr-3" />
+              <label className="block text-[11px] font-bold text-[#1A1A2E] mb-1 uppercase tracking-wider">Password</label>
+              <div className="relative flex items-center bg-[#F8FAFC] border border-[#E2E8F0] focus-within:border-[#FF529A] focus-within:ring-2 focus-within:ring-[#FF529A]/10 rounded-xl px-3.5 py-2.5 transition-all">
+                <Lock className="w-4 h-4 text-[#A1A1AA] shrink-0 mr-2.5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -224,36 +224,36 @@ export default function SignInPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full bg-transparent text-sm text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
+                  className="w-full bg-transparent text-xs text-[#1A1A2E] placeholder:text-[#A1A1AA] outline-none font-medium"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="text-[#A1A1AA] hover:text-[#1A1A2E] focus:outline-none ml-2"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
             {/* Remember Me & Forgot Password Row */}
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
+            <div className="flex items-center justify-between pt-0.5">
+              <label className="flex items-center gap-1.5 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   name="rememberMe"
                   id="rememberMe"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-[#FF529A] focus:ring-[#FF529A]"
+                  className="w-3.5 h-3.5 rounded border-gray-300 text-[#FF529A] focus:ring-[#FF529A]"
                 />
-                <span className="text-xs text-[#6B7280] font-medium">Remember me</span>
+                <span className="text-[11px] text-[#6B7280] font-medium">Remember me</span>
               </label>
 
               <button
                 type="button"
                 onClick={() => setErrorMsg('Password reset link has been sent to your email if registered.')}
-                className="text-xs text-[#FF529A] font-bold hover:underline"
+                className="text-[11px] text-[#FF529A] font-bold hover:underline"
               >
                 Forgot password?
               </button>
@@ -263,25 +263,25 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-sm py-4 rounded-full shadow-lg shadow-pink-500/25 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
+              className="w-full bg-[#FF529A] hover:bg-[#E04385] text-white font-bold text-xs py-3 rounded-full shadow-md shadow-pink-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-3"
             >
               {loading ? (
                 <span>Signing In...</span>
               ) : (
                 <>
                   <span>Sign In</span>
-                  <ArrowRight className="w-4 h-4 text-white" />
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
                 </>
               )}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="relative my-6 text-center">
+          <div className="relative my-5 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E2E8F0]" />
             </div>
-            <span className="relative bg-white px-4 text-xs font-bold text-[#A1A1AA] uppercase tracking-wider">
+            <span className="relative bg-white px-3 text-[10px] font-bold text-[#A1A1AA] uppercase tracking-wider">
               OR
             </span>
           </div>
@@ -290,9 +290,9 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-sm py-3.5 rounded-full shadow-sm transition-all flex items-center justify-center gap-3 active:scale-[0.99]"
+            className="w-full bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1A1A2E] font-semibold text-xs py-2.5 rounded-full shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-[0.99]"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -314,7 +314,7 @@ export default function SignInPage() {
           </button>
 
           {/* Bottom Nav Link */}
-          <div className="mt-8 text-center text-xs sm:text-sm text-[#6B7280] font-medium">
+          <div className="mt-6 text-center text-xs text-[#6B7280] font-medium">
             Don&apos;t have an account?{' '}
             <Link href="/sign-up" className="text-[#FF529A] font-bold hover:underline ml-0.5">
               Sign Up
@@ -323,12 +323,13 @@ export default function SignInPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-xs text-[#A1A1AA] font-medium mt-auto pt-6">
+        <div className="text-center text-[10px] text-[#A1A1AA] font-medium mt-auto pt-4">
           Protected by Supabase Auth & Terms of Service.
         </div>
       </div>
     </div>
   );
 }
+
 
 
