@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, User, Mail, Lock, AlertCircle, ArrowRight, Check } from 'lucide-react';
+import Image from 'next/image';
+import { Sparkles, Eye, EyeOff, AlertCircle, ArrowRight, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signUpUser } from '@/lib/supabase';
 import { useUser } from '@/components/providers/user-provider';
@@ -14,6 +15,8 @@ export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -67,106 +70,170 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen pt-12 sm:pt-14 pb-10 bg-gradient-to-b from-[#FAF8F5] via-[#F5F3EF] to-[#EAE5DD] flex items-center justify-center relative overflow-hidden px-4">
-      {/* Background Soft Glow Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-[250px] h-[250px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row p-2 sm:p-3 lg:p-4 font-sans selection:bg-[#FF529A]/20 selection:text-[#FF529A]">
+      {/* LEFT COLUMN: Visual Hero Banner Card (Hidden on small screens, flex on lg) */}
+      <div className="hidden lg:flex flex-col justify-between p-10 lg:p-14 relative overflow-hidden rounded-[32px] bg-[#0A0A0C] w-1/2 min-h-[calc(100vh-2rem)] text-white shadow-2xl">
+        {/* Background Visual Banner Image */}
+        <div className="absolute inset-0 z-0 opacity-80 mix-blend-screen scale-105 transition-transform duration-1000 hover:scale-100">
+          <Image
+            src="/auth-banner.png"
+            alt="EveryPosting Visual Art"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+        </div>
 
-      <div className="max-w-[350px] w-full relative z-10">
-        {/* Header Branding */}
-        <div className="text-center mb-4 sm:mb-5">
-          <Link href="/" className="inline-flex items-center gap-2 mb-2.5 group">
+        {/* Gradient Overlay for Text Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/40 to-transparent z-10 pointer-events-none" />
+
+        {/* Top Header Tagline */}
+        <div className="relative z-20 flex items-center gap-3">
+          <span className="text-[11px] font-bold tracking-[0.2em] text-white/90 uppercase">
+            CREATOR WORKFLOW
+          </span>
+          <div className="h-[1px] w-16 bg-white/30" />
+        </div>
+
+        {/* Bottom Hero Quote Content */}
+        <div className="relative z-20 max-w-lg mb-4">
+          <h2 className="font-serif text-4xl lg:text-5xl font-normal leading-[1.12] text-white tracking-tight">
+            Build Your Content Empire
+          </h2>
+          <p className="text-sm text-white/80 mt-4 leading-relaxed font-normal max-w-md">
+            Join thousands of creators using AI to save 5+ hours every week on social media distribution.
+          </p>
+        </div>
+      </div>
+
+      {/* RIGHT COLUMN: Form Container */}
+      <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-white min-h-[95vh] lg:min-h-0">
+        {/* Top Logo */}
+        <div className="flex justify-center mb-6 lg:mb-10">
+          <Link href="/" className="inline-flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-lg bg-[#0A0A0C] flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
               <Sparkles className="w-4 h-4 text-[#FF529A]" />
             </div>
-            <span className="font-extrabold text-lg tracking-tight text-[#0A0A0C]">
+            <span className="font-extrabold text-xl tracking-tight text-[#0A0A0C]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
-
-          <h1 className="text-xl font-extrabold text-[#0A0A0C] tracking-tight">
-            Create Account
-          </h1>
-          <p className="text-[11px] text-[#71717A] mt-0.5 font-medium max-w-[280px] mx-auto leading-tight">
-            Start repurposing content in seconds.
-          </p>
         </div>
 
-        {/* Form Container Card */}
-        <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl p-4 sm:p-5 shadow-xl shadow-black/5">
+        {/* Center Form Box */}
+        <div className="max-w-sm w-full mx-auto my-auto">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="font-serif text-3xl sm:text-4xl text-[#0A0A0C] font-normal tracking-tight">
+              Create Account
+            </h1>
+            <p className="text-xs sm:text-sm text-[#71717A] mt-2 font-medium">
+              Enter your details to create your EveryPosting account
+            </p>
+          </div>
+
           {errorMsg && (
-            <div className="mb-3 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-[11px] flex items-center gap-2 font-medium">
-              <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+            <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {googleNotice && (
-            <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] flex items-center gap-2 font-medium">
-              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <div className="mb-5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2.5 font-medium">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
               <span>{googleNotice}</span>
             </div>
           )}
 
-          <form onSubmit={handleSignUp} className="space-y-2.5">
-            {/* Full Name Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
-              <User className="w-4 h-4 text-[#71717A] shrink-0" />
-              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
+          <form onSubmit={handleSignUp} className="space-y-3.5">
+            {/* Full Name Input */}
+            <div>
+              <label className="block text-xs font-semibold text-[#0A0A0C] mb-1">
+                Full Name
+              </label>
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Full Name"
-                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                placeholder="Enter your full name"
+                className="w-full bg-[#F4F4F5]/80 hover:bg-[#F4F4F5] border border-[#E4E4E7] focus:border-[#0A0A0C] focus:bg-white rounded-xl px-4 py-2.5 text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none transition-all font-medium"
               />
             </div>
 
-            {/* Email Address Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
-              <Mail className="w-4 h-4 text-[#71717A] shrink-0" />
-              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
+            {/* Email Input */}
+            <div>
+              <label className="block text-xs font-semibold text-[#0A0A0C] mb-1">
+                Email
+              </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="hi@potarastudio.com"
-                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                placeholder="Enter your email"
+                className="w-full bg-[#F4F4F5]/80 hover:bg-[#F4F4F5] border border-[#E4E4E7] focus:border-[#0A0A0C] focus:bg-white rounded-xl px-4 py-2.5 text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none transition-all font-medium"
               />
             </div>
 
-            {/* Password Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
-              <Lock className="w-4 h-4 text-[#71717A] shrink-0" />
-              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
-              />
+            {/* Password Input */}
+            <div>
+              <label className="block text-xs font-semibold text-[#0A0A0C] mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Create a password"
+                  className="w-full bg-[#F4F4F5]/80 hover:bg-[#F4F4F5] border border-[#E4E4E7] focus:border-[#0A0A0C] focus:bg-white rounded-xl px-4 py-2.5 pr-10 text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none transition-all font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#0A0A0C] transition-colors p-1"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* Confirm Password Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
-              <Lock className="w-4 h-4 text-[#71717A] shrink-0" />
-              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
-              <input
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
-              />
+            {/* Confirm Password Input */}
+            <div>
+              <label className="block text-xs font-semibold text-[#0A0A0C] mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your password"
+                  className="w-full bg-[#F4F4F5]/80 hover:bg-[#F4F4F5] border border-[#E4E4E7] focus:border-[#0A0A0C] focus:bg-white rounded-xl px-4 py-2.5 pr-10 text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none transition-all font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#0A0A0C] transition-colors p-1"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* Checkbox / Click to Verify Confirmation */}
-            <div className="flex items-center gap-2 pt-0.5 px-1">
+            {/* Terms Checkbox */}
+            <div className="flex items-center gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setAgreedToTerms(!agreedToTerms)}
@@ -180,7 +247,7 @@ export default function SignUpPage() {
               </button>
               <label
                 onClick={() => setAgreedToTerms(!agreedToTerms)}
-                className="text-[10px] text-[#71717A] font-medium leading-tight cursor-pointer select-none"
+                className="text-xs text-[#71717A] font-medium leading-tight cursor-pointer select-none"
               >
                 I confirm my details & agree to{' '}
                 <span className="text-[#0A0A0C] font-semibold underline">Terms & Privacy</span>
@@ -191,36 +258,26 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#0A0A0C] hover:bg-[#27272A] text-white font-bold text-xs py-2.5 rounded-full shadow-md shadow-black/10 transition-all active:scale-[0.99] flex items-center justify-center gap-1.5 mt-2"
+              className="w-full bg-[#0A0A0C] hover:bg-[#27272A] text-white font-semibold text-sm py-3.5 rounded-xl shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
             >
               {loading ? (
                 <span>Creating Account...</span>
               ) : (
                 <>
                   <span>Sign Up</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-white" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-3 text-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E4E4E7]" />
-            </div>
-            <span className="relative bg-white px-2.5 text-[10px] font-semibold text-[#A1A1AA] uppercase tracking-wider">
-              Or
-            </span>
-          </div>
-
           {/* Formality Google Sign In Button */}
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-white hover:bg-slate-50 border border-[#E4E4E7] text-[#0A0A0C] font-semibold text-xs py-2 rounded-full shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
+            className="w-full bg-white hover:bg-slate-50 border border-[#E4E4E7] text-[#0A0A0C] font-semibold text-sm py-3.5 rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-sm mt-3 active:scale-[0.99]"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <svg className="w-4.5 h-4.5" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -238,19 +295,18 @@ export default function SignUpPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            <span>Sign in with Google</span>
+            <span>Sign In with Google</span>
           </button>
+        </div>
 
-          {/* Footer Navigation Link */}
-          <div className="mt-3.5 text-center text-[11px] text-[#71717A] font-medium">
-            Already have an account?{' '}
-            <Link href="/sign-in" className="text-[#0A0A0C] font-bold hover:underline ml-0.5">
-              Login
-            </Link>
-          </div>
+        {/* Bottom Footer Navigation */}
+        <div className="mt-8 text-center text-xs text-[#71717A] font-medium">
+          Already have an account?{' '}
+          <Link href="/sign-in" className="text-[#0A0A0C] font-bold hover:underline ml-0.5">
+            Sign In
+          </Link>
         </div>
       </div>
     </div>
   );
 }
-
