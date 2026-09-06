@@ -5,7 +5,7 @@ import { Sparkles, Zap, User, Menu, X, ArrowRight, ShieldCheck, Settings, Credit
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSparkleBurst } from '@/components/ui/sparkle-burst';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signOutUser } from '@/lib/supabase';
 
 import { useUser } from '@/components/providers/user-provider';
@@ -20,6 +20,7 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeHover, setActiveHover] = useState<string | null>(null);
@@ -29,6 +30,17 @@ export function Navbar() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Hide navbar on login & signup screens automatically
+  if (
+    pathname === '/sign-in' ||
+    pathname === '/sign-up' ||
+    pathname === '/login' ||
+    pathname === '/signup'
+  ) {
+    return null;
+  }
+
 
   const { triggerBurst, SparkleContainer } = useSparkleBurst();
 
