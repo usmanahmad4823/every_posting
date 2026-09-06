@@ -67,123 +67,123 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 pb-12 bg-gradient-to-b from-[#FAF8F5] via-[#F5F3EF] to-[#EAE5DD] flex items-center justify-center relative overflow-hidden px-4">
+    <div className="min-h-screen pt-12 sm:pt-14 pb-10 bg-gradient-to-b from-[#FAF8F5] via-[#F5F3EF] to-[#EAE5DD] flex items-center justify-center relative overflow-hidden px-4">
       {/* Background Soft Glow Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-[250px] h-[250px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-md w-full relative z-10">
+      <div className="max-w-[350px] w-full relative z-10">
         {/* Header Branding */}
-        <div className="text-center mb-6 sm:mb-8">
-          <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-            <div className="w-10 h-10 rounded-xl bg-[#0A0A0C] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-[#FF529A]" />
+        <div className="text-center mb-4 sm:mb-5">
+          <Link href="/" className="inline-flex items-center gap-2 mb-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-[#0A0A0C] flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+              <Sparkles className="w-4 h-4 text-[#FF529A]" />
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-[#0A0A0C]">
+            <span className="font-extrabold text-lg tracking-tight text-[#0A0A0C]">
               Every<span className="text-[#FF529A]">Posting</span>
             </span>
           </Link>
 
-          <h1 className="text-3xl font-extrabold text-[#0A0A0C] tracking-tight">
-            Welcome to EveryPosting
+          <h1 className="text-xl font-extrabold text-[#0A0A0C] tracking-tight">
+            Create Account
           </h1>
-          <p className="text-xs sm:text-sm text-[#71717A] mt-2 font-medium max-w-sm mx-auto leading-relaxed">
-            Create your account to start repurposing content in seconds.
+          <p className="text-[11px] text-[#71717A] mt-0.5 font-medium max-w-[280px] mx-auto leading-tight">
+            Start repurposing content in seconds.
           </p>
         </div>
 
         {/* Form Container Card */}
-        <div className="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/5">
+        <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl p-4 sm:p-5 shadow-xl shadow-black/5">
           {errorMsg && (
-            <div className="mb-5 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 font-medium">
-              <AlertCircle className="w-4.5 h-4.5 text-rose-600 shrink-0" />
+            <div className="mb-3 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-[11px] flex items-center gap-2 font-medium">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {googleNotice && (
-            <div className="mb-5 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2.5 font-medium">
-              <AlertCircle className="w-4.5 h-4.5 text-amber-600 shrink-0" />
+            <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] flex items-center gap-2 font-medium">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{googleNotice}</span>
             </div>
           )}
 
-          <form onSubmit={handleSignUp} className="space-y-3.5">
+          <form onSubmit={handleSignUp} className="space-y-2.5">
             {/* Full Name Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-2 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-4 py-3.5 transition-all">
-              <User className="w-5 h-5 text-[#71717A] shrink-0" />
-              <div className="h-5 w-[1px] bg-[#E4E4E7] mx-3 shrink-0" />
+            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
+              <User className="w-4 h-4 text-[#71717A] shrink-0" />
+              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Full Name"
-                className="w-full bg-transparent text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
               />
             </div>
 
             {/* Email Address Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-2 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-4 py-3.5 transition-all">
-              <Mail className="w-5 h-5 text-[#71717A] shrink-0" />
-              <div className="h-5 w-[1px] bg-[#E4E4E7] mx-3 shrink-0" />
+            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
+              <Mail className="w-4 h-4 text-[#71717A] shrink-0" />
+              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="hi@potarastudio.com"
-                className="w-full bg-transparent text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
               />
             </div>
 
             {/* Password Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-2 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-4 py-3.5 transition-all">
-              <Lock className="w-5 h-5 text-[#71717A] shrink-0" />
-              <div className="h-5 w-[1px] bg-[#E4E4E7] mx-3 shrink-0" />
+            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
+              <Lock className="w-4 h-4 text-[#71717A] shrink-0" />
+              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full bg-transparent text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
               />
             </div>
 
             {/* Confirm Password Field */}
-            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-2 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-4 py-3.5 transition-all">
-              <Lock className="w-5 h-5 text-[#71717A] shrink-0" />
-              <div className="h-5 w-[1px] bg-[#E4E4E7] mx-3 shrink-0" />
+            <div className="relative flex items-center bg-white border border-[#E4E4E7] focus-within:border-[#0A0A0C] focus-within:ring-1 focus-within:ring-[#0A0A0C]/10 rounded-full shadow-sm px-3.5 py-2 transition-all">
+              <Lock className="w-4 h-4 text-[#71717A] shrink-0" />
+              <div className="h-4 w-[1px] bg-[#E4E4E7] mx-2.5 shrink-0" />
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                className="w-full bg-transparent text-sm text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
+                className="w-full bg-transparent text-xs text-[#0A0A0C] placeholder:text-[#A1A1AA] outline-none font-medium"
               />
             </div>
 
             {/* Checkbox / Click to Verify Confirmation */}
-            <div className="flex items-center gap-3 pt-1 px-1">
+            <div className="flex items-center gap-2 pt-0.5 px-1">
               <button
                 type="button"
                 onClick={() => setAgreedToTerms(!agreedToTerms)}
-                className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors shrink-0 ${
+                className={`w-4 h-4 rounded border flex items-center justify-center transition-colors shrink-0 ${
                   agreedToTerms
                     ? 'bg-[#0A0A0C] border-[#0A0A0C] text-white'
                     : 'bg-white border-[#D4D4D8] text-transparent hover:border-[#A1A1AA]'
                 }`}
               >
-                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                <Check className="w-3 h-3 stroke-[3]" />
               </button>
               <label
                 onClick={() => setAgreedToTerms(!agreedToTerms)}
-                className="text-xs text-[#71717A] font-medium leading-tight cursor-pointer select-none"
+                className="text-[10px] text-[#71717A] font-medium leading-tight cursor-pointer select-none"
               >
-                I confirm my details & agree to the{' '}
-                <span className="text-[#0A0A0C] font-semibold underline">Terms & Privacy Policy</span>
+                I confirm my details & agree to{' '}
+                <span className="text-[#0A0A0C] font-semibold underline">Terms & Privacy</span>
               </label>
             </div>
 
@@ -191,25 +191,25 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#0A0A0C] hover:bg-[#27272A] text-white font-bold text-sm py-4 rounded-full shadow-lg shadow-black/10 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-3"
+              className="w-full bg-[#0A0A0C] hover:bg-[#27272A] text-white font-bold text-xs py-2.5 rounded-full shadow-md shadow-black/10 transition-all active:scale-[0.99] flex items-center justify-center gap-1.5 mt-2"
             >
               {loading ? (
                 <span>Creating Account...</span>
               ) : (
                 <>
                   <span>Sign Up</span>
-                  <ArrowRight className="w-4 h-4 text-white" />
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
                 </>
               )}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="relative my-5 text-center">
+          <div className="relative my-3 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E4E4E7]" />
             </div>
-            <span className="relative bg-white/90 px-3 text-[11px] font-semibold text-[#A1A1AA] uppercase tracking-wider">
+            <span className="relative bg-white px-2.5 text-[10px] font-semibold text-[#A1A1AA] uppercase tracking-wider">
               Or
             </span>
           </div>
@@ -218,9 +218,9 @@ export default function SignUpPage() {
           <button
             type="button"
             onClick={handleGoogleSignUp}
-            className="w-full bg-white hover:bg-slate-50 border border-[#E4E4E7] text-[#0A0A0C] font-semibold text-sm py-3.5 rounded-full shadow-sm transition-all flex items-center justify-center gap-3 active:scale-[0.99]"
+            className="w-full bg-white hover:bg-slate-50 border border-[#E4E4E7] text-[#0A0A0C] font-semibold text-xs py-2 rounded-full shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -242,7 +242,7 @@ export default function SignUpPage() {
           </button>
 
           {/* Footer Navigation Link */}
-          <div className="mt-6 text-center text-xs sm:text-sm text-[#71717A] font-medium">
+          <div className="mt-3.5 text-center text-[11px] text-[#71717A] font-medium">
             Already have an account?{' '}
             <Link href="/sign-in" className="text-[#0A0A0C] font-bold hover:underline ml-0.5">
               Login
