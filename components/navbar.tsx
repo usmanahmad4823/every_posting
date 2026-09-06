@@ -91,7 +91,7 @@ export function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-6 py-2.5 sm:py-4 pointer-events-none max-w-full">
-      <div className="max-w-6xl mx-auto pointer-events-auto max-w-full">
+      <div className="max-w-5xl mx-auto pointer-events-auto max-w-full">
         {/* Floating Creative Glass Capsule Navbar - Mobile Compact Scaling */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
