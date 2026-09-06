@@ -154,8 +154,13 @@ export function Footer() {
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C] mb-4">Product</h4>
               <ul className="space-y-3 text-xs font-semibold text-[#52525B]">
                 <li>
-                  <Link href="/features" className="hover:text-[#FF529A] transition-colors">
-                    Features
+                  <Link href="/niches" className="hover:text-[#FF529A] transition-colors">
+                    Niches
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/how-it-works" className="hover:text-[#FF529A] transition-colors">
+                    How it works
                   </Link>
                 </li>
                 <li>
@@ -164,13 +169,8 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/integrations" className="hover:text-[#FF529A] transition-colors">
-                    Integrations
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/changelog" className="hover:text-[#FF529A] transition-colors">
-                    Changelog
+                  <Link href="/testimonials" className="hover:text-[#FF529A] transition-colors">
+                    Testimonials
                   </Link>
                 </li>
               </ul>
@@ -181,8 +181,8 @@ export function Footer() {
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0A0A0C] mb-4">Resources</h4>
               <ul className="space-y-3 text-xs font-semibold text-[#52525B]">
                 <li>
-                  <Link href="/docs" className="hover:text-[#FF529A] transition-colors">
-                    Documentation
+                  <Link href="/faq" className="hover:text-[#FF529A] transition-colors">
+                    FAQ
                   </Link>
                 </li>
                 <li>

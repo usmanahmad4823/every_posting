@@ -12,11 +12,11 @@ import { useUser } from '@/components/providers/user-provider';
 import { PlanBadge } from '@/components/ui/plan-badge';
 
 const NAV_LINKS = [
-  { href: '/#niches', label: 'Niches' },
-  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/niches', label: 'Niches' },
+  { href: '/how-it-works', label: 'How it works' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/#testimonials', label: 'Testimonials' },
-  { href: '/#faq', label: 'FAQ' },
+  { href: '/testimonials', label: 'Testimonials' },
+  { href: '/faq', label: 'FAQ' },
 ];
 
 export function Navbar() {
@@ -314,7 +314,7 @@ export function Navbar() {
                 {/* Clean Typography Menu List (NO ICONS with menu text) */}
                 <nav className="flex flex-col space-y-4 pt-2">
                   <Link
-                    href="/#niches"
+                    href="/niches"
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
                   >
@@ -322,7 +322,7 @@ export function Navbar() {
                   </Link>
 
                   <Link
-                    href="/#how-it-works"
+                    href="/how-it-works"
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
                   >
@@ -338,7 +338,7 @@ export function Navbar() {
                   </Link>
 
                   <Link
-                    href="/#testimonials"
+                    href="/testimonials"
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
                   >
@@ -346,7 +346,7 @@ export function Navbar() {
                   </Link>
 
                   <Link
-                    href="/#faq"
+                    href="/faq"
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-2xl sm:text-3xl font-extrabold text-[#0A0A0C] hover:text-[#FF529A] transition-colors tracking-tight text-left"
                   >
