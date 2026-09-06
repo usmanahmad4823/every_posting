@@ -32,22 +32,47 @@ export async function generateContentWithClaude(
       request.brandVoice
     );
 
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 4000,
-      temperature: 0.7,
-      system: systemPrompt,
-      messages: [
-        {
-          role: 'user',
-          content: `Here is the transcript to repurpose:\n\n${request.transcript}\n\nGenerate requested formats: ${request.selectedFormats.join(
-            ', '
-          )}`,
-        },
-      ],
-    });
+    const modelsToTry = [
+      'claude-3-5-sonnet-20241022',
+      'claude-3-5-sonnet-latest',
+      'claude-3-haiku-20240307',
+    ];
 
-    const responseText = message.content[0]?.type === 'text' ? message.content[0].text : '';
+    let lastModelError: any = null;
+    let responseText = '';
+
+    for (const model of modelsToTry) {
+      try {
+        const message = await anthropic.messages.create({
+          model,
+          max_tokens: 4000,
+          temperature: 0.7,
+          system: systemPrompt,
+          messages: [
+            {
+              role: 'user',
+              content: `Here is the transcript to repurpose:\n\n${request.transcript}\n\nGenerate requested formats: ${request.selectedFormats.join(
+                ', '
+              )}`,
+            },
+          ],
+        });
+        responseText = message.content[0]?.type === 'text' ? message.content[0].text : '';
+        break;
+      } catch (err: any) {
+        lastModelError = err;
+        const status = err?.status || err?.statusCode;
+        const errMsg = (err?.message || '').toLowerCase();
+        // If 401 Auth error, stop testing models
+        if (status === 401 || err instanceof Anthropic.AuthenticationError || errMsg.includes('401') || errMsg.includes('auth')) {
+          throw err;
+        }
+      }
+    }
+
+    if (!responseText && lastModelError) {
+      throw lastModelError;
+    }
 
     // Clean up potential markdown formatting wrappers if model adds any
     const cleanedText = responseText
