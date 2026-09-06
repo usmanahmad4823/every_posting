@@ -31,17 +31,7 @@ export function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Hide navbar on login & signup screens automatically
-  if (
-    pathname === '/sign-in' ||
-    pathname === '/sign-up' ||
-    pathname === '/login' ||
-    pathname === '/signup'
-  ) {
-    return null;
-  }
-
-
+  // Custom Sparkle Burst Hook
   const { triggerBurst, SparkleContainer } = useSparkleBurst();
 
   useEffect(() => {
@@ -69,6 +59,16 @@ export function Navbar() {
       setProfileDropdownOpen(false);
     }
   }, [user?.loggedIn]);
+
+  // Hide navbar on login & signup screens automatically
+  if (
+    pathname === '/sign-in' ||
+    pathname === '/sign-up' ||
+    pathname === '/login' ||
+    pathname === '/signup'
+  ) {
+    return null;
+  }
 
   const handleSignOut = async () => {
     setProfileDropdownOpen(false);
