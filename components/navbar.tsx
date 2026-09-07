@@ -102,18 +102,15 @@ export function Navbar() {
               : 'bg-white/90 backdrop-blur-lg border-white/80 shadow-slate-900/5'
             }`}
         >
-          {/* Logo Mark with Animated Ring */}
+          {/* Logo Mark with Clean Pinkish Theme */}
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group relative shrink-0">
-            <div className="relative">
-              <span className="absolute -inset-1 rounded-xl bg-gradient-to-r from-[#FF529A] via-purple-500 to-[#FF007A] blur-xs opacity-70 group-hover:opacity-100 transition-opacity animate-pulse" />
-              <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#0A0A0C] flex items-center justify-center text-white relative shadow-md group-hover:scale-105 transition-transform duration-200">
-                <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#FF529A] group-hover:rotate-12 transition-transform duration-300" />
-              </div>
+            <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#FF529A] flex items-center justify-center text-white shadow-md shadow-pink-500/25 group-hover:scale-105 transition-transform duration-200">
+              <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white fill-white group-hover:rotate-12 transition-transform duration-300" />
             </div>
 
             <div className="flex flex-col">
               <span className="font-extrabold text-xs sm:text-lg tracking-tight text-[#0A0A0C] flex items-center gap-0.5 sm:gap-1">
-                Every<span className="text-gradient-aura">Posting</span>
+                Every<span className="text-[#FF529A]">Posting</span>
               </span>
               <span className="text-[8px] uppercase tracking-widest text-[#71717A] font-bold -mt-0.5 hidden sm:block">
                 AI Content Engine
