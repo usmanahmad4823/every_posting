@@ -97,11 +97,10 @@ export function Navbar() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className={`transition-all duration-300 rounded-full border px-3 sm:px-6 py-1.5 sm:py-3 flex items-center justify-between shadow-xl relative max-w-full ${
-            scrolled
+          className={`transition-all duration-300 rounded-full border px-3 sm:px-6 py-1.5 sm:py-3 flex items-center justify-between shadow-xl relative max-w-full ${scrolled
               ? 'bg-white/95 backdrop-blur-xl border-[#FFC2DA] shadow-pink-500/10'
               : 'bg-white/90 backdrop-blur-lg border-white/80 shadow-slate-900/5'
-          }`}
+            }`}
         >
           {/* Logo Mark with Animated Ring */}
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group relative shrink-0">

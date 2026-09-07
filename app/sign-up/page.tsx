@@ -28,7 +28,7 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(true);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [googleNotice, setGoogleNotice] = useState<string | null>(null);
@@ -46,33 +46,31 @@ export default function SignUpPage() {
     setErrorMsg(null);
     setGoogleNotice(null);
 
-    // Validation 1: Confirm Password
     if (password !== confirmPassword) {
-      setErrorMsg('Passwords do not match. Please ensure both password fields match.');
+      setErrorMsg('Passwords do not match. Please try again.');
       setLoading(false);
       return;
     }
 
-    // Validation 2: Terms & Confirmation Checkbox
     if (!agreedToTerms) {
-      setErrorMsg('Please check the confirmation box to agree to the terms.');
+      setErrorMsg('You must agree to the Terms & Privacy Policy to sign up.');
       setLoading(false);
       return;
     }
 
-    const res = await signUpUser(fullName, email, password);
+    const res = await signUpUser(email, password, fullName);
 
     if (res.success) {
       await invalidateUser();
       router.replace('/dashboard');
     } else {
-      setErrorMsg(res.error || 'Failed to create account in Supabase.');
+      setErrorMsg(res.error || 'Failed to create account. Please check your inputs.');
       setLoading(false);
     }
   };
 
   const handleGoogleSignUp = () => {
-    setGoogleNotice('Google Sign-In will be available soon! Please sign up with your email and password.');
+    setGoogleNotice('Google Sign-Up will be available soon! Please create an account with your email.');
     setTimeout(() => setGoogleNotice(null), 5000);
   };
 

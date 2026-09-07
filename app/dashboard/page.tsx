@@ -47,20 +47,6 @@ export default function DashboardPage() {
   const { user, isLoading, invalidateUser, updateUserLocally } = useUser();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isLoading && !user.loggedIn) {
-      router.replace('/sign-in');
-    }
-  }, [isLoading, user.loggedIn, router]);
-
-  if (isLoading || !user.loggedIn) {
-    return <AuthLoadingScreen message="Accessing Studio Dashboard..." />;
-  }
-
-  const usageCount = user.generationsUsedThisMonth;
-  const usageLimit = user.monthlyGenerationLimit;
-  const tier = user.plan;
-
   const [selectedNiche, setSelectedNiche] = useState<NicheType>('podcaster');
   const [transcript, setTranscript] = useState<string>('');
   const [selectedFormats, setSelectedFormats] = useState<OutputFormat[]>([
@@ -97,12 +83,17 @@ export default function DashboardPage() {
   const [inputError, setInputError] = useState<boolean>(false);
   const [shakeInput, setShakeInput] = useState<boolean>(false);
 
-  const activeConfig = NICHE_CONFIGS[selectedNiche];
-
   const [paymentSuccessMsg, setPaymentSuccessMsg] = useState<string | null>(null);
   const [isHistoryExpanded, setIsHistoryExpanded] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!isLoading && !user.loggedIn) {
+      router.replace('/sign-in');
+    }
+  }, [isLoading, user.loggedIn, router]);
+
+  useEffect(() => {
+    if (!user?.loggedIn) return;
     async function loadUserData() {
       // Check for payment success URL parameters
       const urlParams = new URLSearchParams(window.location.search);
@@ -150,7 +141,16 @@ export default function DashboardPage() {
       }
     }
     loadUserData();
-  }, []);
+  }, [user?.loggedIn]);
+
+  if (isLoading || !user.loggedIn) {
+    return <AuthLoadingScreen message="Accessing Studio Dashboard..." />;
+  }
+
+  const usageCount = user.generationsUsedThisMonth;
+  const usageLimit = user.monthlyGenerationLimit;
+  const tier = user.plan;
+  const activeConfig = NICHE_CONFIGS[selectedNiche];
 
   const handleCloseMilestoneModal = () => {
     setShowMilestoneModal(false);

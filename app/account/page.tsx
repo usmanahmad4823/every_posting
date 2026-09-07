@@ -16,7 +16,7 @@ export default function AccountPage() {
 
   // Profile Edit State
   const [isEditingName, setIsEditingName] = useState(false);
-  const [nameInput, setNameInput] = useState(user.fullName);
+  const [nameInput, setNameInput] = useState(user?.fullName || '');
   const [isSavingName, setIsSavingName] = useState(false);
 
   const router = useRouter();
@@ -27,13 +27,13 @@ export default function AccountPage() {
     }
   }, [isLoading, user.loggedIn, router]);
 
+  useEffect(() => {
+    setNameInput(user?.fullName || '');
+  }, [user?.fullName]);
+
   if (isLoading || !user.loggedIn) {
     return <AuthLoadingScreen message="Loading Account Settings..." />;
   }
-
-  useEffect(() => {
-    setNameInput(user.fullName);
-  }, [user.fullName]);
 
   const handleSaveName = async () => {
     if (!nameInput.trim()) return;
