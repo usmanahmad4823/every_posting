@@ -40,8 +40,8 @@ export function isSupabaseConfigured(): boolean {
 }
 
 // REAL SUPABASE SIGN UP FUNCTION
-export async function signUpUser(fullName: string, email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> {
-  const cleanName = fullName.trim() || email.split('@')[0];
+export async function signUpUser(email: string, password: string, fullName?: string): Promise<{ success: boolean; user?: any; error?: string }> {
+  const cleanName = (fullName || '').trim() || email.split('@')[0];
 
   if (!isSupabaseConfigured()) {
     // Demo Mode Fallback
